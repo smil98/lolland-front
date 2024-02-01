@@ -9,8 +9,8 @@ export function GameBoardListYouTube() {
   const [searchedVideos, setSearchedVideos] = useState([]);
 
   const opts = {
-    width: "550px",
-    height: "400px",
+    width: "450px",
+    height: "300px",
     playerVars: {
       autoplay: 0,
     },
@@ -65,9 +65,14 @@ export function GameBoardListYouTube() {
                 <SwiperSlide key={item.videoId}>
                   <Box key={item.videoId} mb={"50px"}>
                     <YouTube videoId={item.videoId} opts={opts} />
-                    <div style={{ width: 400 }}>
+                    <Box
+                      fontSize={"1.2em"}
+                      mt={"5px"}
+                      fontWeight={"bold"}
+                      textAlign={"center"}
+                    >
                       {item.title.replace(/&QUOT;/gi, '"')}
-                    </div>
+                    </Box>
                   </Box>
                 </SwiperSlide>
               ))}
