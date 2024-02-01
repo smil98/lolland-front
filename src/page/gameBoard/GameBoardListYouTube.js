@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, Card, CardBody, CardHeader, Heading } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+  Heading,
+} from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination as SwiperPagination } from "swiper/modules";
 import YouTube from "react-youtube";
@@ -46,10 +53,11 @@ export function GameBoardListYouTube() {
   return (
     <Card>
       <CardHeader size={"md"}>
-        <Heading fontSize={"1.5rem"} textAlign={"center"} p={"20px"}>
+        <Heading fontSize={"1.5rem"} textAlign={"center"}>
           실시간 인기 게임 영상
         </Heading>
       </CardHeader>
+      <Divider color={"whitesmoke"} />
       <CardBody>
         <Box>
           <Swiper
@@ -66,7 +74,7 @@ export function GameBoardListYouTube() {
                   <Box key={item.videoId} mb={"50px"}>
                     <YouTube videoId={item.videoId} opts={opts} />
                     <Box
-                      fontSize={"1.2em"}
+                      fontSize={"1.1em"}
                       mt={"5px"}
                       fontWeight={"bold"}
                       textAlign={"center"}
