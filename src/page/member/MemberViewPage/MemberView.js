@@ -12,9 +12,11 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { MemberNavBarTest } from "../../admin/MemberNavBarTest";
 import { useContext, useEffect } from "react";
 import { LoginContext } from "../../../component/LoginProvider";
+import { ScreenContext } from "../../../component/ScreenContext";
 
 export function MemberView() {
   const { isAuthenticated } = useContext(LoginContext);
+  const { isSmallScreen } = useContext(ScreenContext);
 
   const navigate = useNavigate();
 
@@ -32,7 +34,11 @@ export function MemberView() {
 
   return (
     <Card shadow={"none"}>
-      <Flex position="relative" justifyContent="space-between">
+      <Flex
+        position="relative"
+        flexDir={isSmallScreen ? "column" : "row"}
+        justifyContent="space-between"
+      >
         <MemberNavBarTest />
         <Box
           w="full"
@@ -44,15 +50,6 @@ export function MemberView() {
           <Outlet />
         </Box>
       </Flex>
-      {/* 기존 */}
-      {/*<Card w={"1500px"}>*/}
-      {/*  <CardHeader>*/}
-      {/*    <MemberNavBar />*/}
-      {/*  </CardHeader>*/}
-      {/*  <CardBody>*/}
-      {/*    <Outlet />*/}
-      {/*  </CardBody>*/}
-      {/*</Card>*/}
     </Card>
   );
 }
