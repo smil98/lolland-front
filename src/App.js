@@ -52,9 +52,9 @@ import PaymentPage from "./page/order/PaymentPage";
 import SuccessPage from "./page/order/SuccessPage";
 import FailPage from "./page/order/FailPage";
 import { MemberPurchase } from "./page/order/MemberPurchase";
-import { PurchaseInfo } from "./PurchaseInfo";
 import { CancelReqList } from "./page/admin/CancelReqList";
 import ScreenProvider from "./component/ScreenContext";
+import { PurchaseInfo } from "./page/order/PurchaseInfo";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(

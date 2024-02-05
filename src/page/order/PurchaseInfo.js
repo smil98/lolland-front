@@ -25,21 +25,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
-import { LoginContext } from "./component/LoginProvider";
 import axios from "axios";
 import * as PropTypes from "prop-types";
 import { format } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-
-function Input(props) {
-  return null;
-}
-
-Input.propTypes = {
-  readOnly: PropTypes.bool,
-  value: PropTypes.string,
-};
+import { LoginContext } from "../../component/LoginProvider";
 
 export function PurchaseInfo() {
   const { orderId } = useParams();
@@ -161,13 +152,19 @@ export function PurchaseInfo() {
   }
 
   return (
-    <Card w="70%">
+    <Card mx={{ base: "0", md: "15%" }}>
       {orderInfo && (
         <>
           <CardHeader p={10}>
-            <Heading textAlign="left" mb={5}>
+            <Text
+              textAlign="left"
+              mb={5}
+              fontSize="2xl"
+              fontWeight="bold"
+              className="specialHeadings"
+            >
               결제 내역 상세정보
-            </Heading>
+            </Text>
             <HStack>
               <Tag
                 colorScheme={getStatusStyle(orderInfo.order_status).colorScheme}
@@ -175,10 +172,11 @@ export function PurchaseInfo() {
                 borderRadius="full"
                 px={3}
                 mr={3}
+                minW="80px"
               >
                 {getStatusStyle(orderInfo.order_status).content}
               </Tag>
-              <Text as="span" fontSize="lg">
+              <Text as="span" fontSize="lg" textAlign="left">
                 {orderInfo.order_name}
               </Text>
             </HStack>

@@ -156,7 +156,7 @@ export function MemberPurchase() {
   };
 
   return (
-    <Card w="full">
+    <Card mx={{ base: "0", md: "10%", lg: "20%", xl: "25%" }} w="full">
       <CardHeader px={10} pt={10}>
         <Heading size="lg" textAlign="left">
           결제 내역
