@@ -157,22 +157,18 @@ export function NavBar() {
 
               {/* --------- 로고 --------- */}
               <Box
-                w={"100%"}
                 display="flex"
+                textAlign="center"
                 alignItems="center"
                 justifyContent="center"
+                onClick={() => navigate("/")}
+                _hover={{
+                  cursor: "pointer",
+                }}
+                fontSize="3xl"
+                className="logo"
               >
-                <Box
-                  textAlign="center"
-                  onClick={() => navigate("/")}
-                  _hover={{
-                    cursor: "pointer",
-                  }}
-                  fontSize="3xl"
-                  className="logo"
-                >
-                  LOLLAND
-                </Box>
+                LOLLAND
               </Box>
             </>
           )}
@@ -183,7 +179,6 @@ export function NavBar() {
             justifyContent="center"
             size="lg"
           >
-            {/*<IconButton icon={<FontAwesomeIcon icon={faMagnifyingGlass} />} />*/}
             <IconButton
               icon={<FontAwesomeIcon icon={faBagShopping} />}
               onClick={() => {
@@ -248,8 +243,15 @@ export function NavBar() {
         <Drawer placement="left" onClose={onClose} isOpen={isOpen} size="xs">
           <DrawerOverlay />
           <DrawerContent>
-            <DrawerHeader fontSize="3xl" className="logo">
-              LOLLAND
+            <DrawerHeader>
+              <Text
+                fontSize="3xl"
+                className="logo"
+                onClick={() => navigate("/")}
+                _hover={{ cursor: "pointer" }}
+              >
+                LOLLAND
+              </Text>
               <DrawerCloseButton mt={1} size="lg" />
             </DrawerHeader>
             <DrawerBody>
@@ -305,6 +307,25 @@ export function NavBar() {
                     <AccordionIcon />
                   </AccordionButton>
                   <AccordionPanel whiteSpace="pre-wrap" pb={4}>
+                    <Text
+                      className="labels"
+                      fontSize="md"
+                      px="6%"
+                      mb={4}
+                      onClick={() => navigate("/product/list/")}
+                    >
+                      신상품
+                    </Text>
+                    <Text
+                      className="labels"
+                      fontSize="md"
+                      px="6%"
+                      mb={2}
+                      onClick={() => navigate("/productEvent")}
+                    >
+                      이벤트
+                    </Text>
+
                     {categories.length > 0 &&
                       categories.map((category) => (
                         <Accordion w="100%" allowMultiple id="myAccordian">
