@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Card,
   CardBody,
   CardFooter,
@@ -20,6 +21,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Text,
   Textarea,
   useDisclosure,
   useToast,
@@ -42,37 +44,41 @@ export function MemberManage() {
 
   // 버튼 css
   const buttonStyle = {
-    background: "black",
-    color: "whitesmoke",
-    shadow: "1px 1px 3px 1px #dadce0",
-    _hover: {
-      backgroundColor: "whitesmoke",
-      color: "black",
-      transition:
-        "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-      shadow: "1px 1px 3px 1px #dadce0 inset",
-    },
+    background: "none",
+    border: "1px solid black",
+    variant: "none",
+    color: "black",
+    borderRadius: 0,
+    _hover: { border: "1px solid orange", color: "white", bgColor: "orange" },
   };
 
   // FormLabel 스타일
   const formLabelStyle = {
-    width: "100px",
+    width: "130px",
     height: "50px",
     lineHeight: "50px",
-    fontSize: "1.1rem",
-    fontWeight: "500",
+    fontSize: "md",
+    fontWeight: "bold",
   };
 
   // readonly input 스타일
   const readOnlyStyle = {
-    style: {
-      boxShadow: "1px 1px 3px 2px #dadce0 inset",
-      width: "600px",
-      height: "50px",
-      borderRadius: "6px",
-      textIndent: "15px",
-      fontSize: "16px",
+    height: "50px",
+    py: "0",
+    textIndent: "15px",
+    fontSize: "md",
+    border: "none",
+    _focus: {
+      border: "none",
+      shadow: "none",
     },
+  };
+
+  // TextArea 스타일
+  const textAreaStyle = {
+    ml: "15px",
+    h: "150px",
+    border: "none",
   };
 
   useEffect(() => {
@@ -125,22 +131,17 @@ export function MemberManage() {
   }
 
   return (
-    <Center>
-      <Card w={"700px"}>
-        <CardHeader
-          textAlign={"left"}
-          lineHeight={"70px"}
-          fontSize={"1.7rem"}
-          fontWeight={"bold"}
-        >
-          <Flex>
-            <Box fontSize={"1.8rem"} color={"#E87F06"}>
+    <>
+      <Card w="full" mx={{ base: 0, md: "10%", lg: "15%", xl: "25%" }}>
+        <CardHeader textAlign="left" fontSize="3xl" fontWeight="bold">
+          <Text>
+            <Text as="span" fontSize="3xl" color="#E87F06">
               {member.member_name}
-            </Box>
-            <Box>님 정보 입니다.</Box>
-          </Flex>
+            </Text>
+            님 정보 입니다.
+          </Text>
         </CardHeader>
-        <CardBody>
+        <CardBody px={10}>
           {/* 프로필 사진 */}
           <FormControl mt={4}>
             <Flex>
@@ -157,7 +158,7 @@ export function MemberManage() {
               />
             </Flex>
             {member.memberImageDto.image_type === "default" && (
-              <FormHelperText ml={"110px"}>기본 이미지 입니다.</FormHelperText>
+              <FormHelperText ml={"110px"}>기본 이미지입니다.</FormHelperText>
             )}
           </FormControl>
 
@@ -165,7 +166,7 @@ export function MemberManage() {
           <FormControl mt={6}>
             <Flex>
               <FormLabel {...formLabelStyle}>이름</FormLabel>
-              <input {...readOnlyStyle} readOnly value={member.member_name} />
+              <Input {...readOnlyStyle} readOnly value={member.member_name} />
             </Flex>
           </FormControl>
 
@@ -173,9 +174,9 @@ export function MemberManage() {
           <FormControl mt={4}>
             <Flex>
               <FormLabel {...formLabelStyle}>아이디</FormLabel>
-              <input
-                {...readOnlyStyle}
+              <Input
                 readOnly
+                {...readOnlyStyle}
                 value={member.member_login_id}
               />
             </Flex>
@@ -185,7 +186,7 @@ export function MemberManage() {
           <FormControl mt={4}>
             <Flex>
               <FormLabel {...formLabelStyle}>휴대폰번호</FormLabel>
-              <input
+              <Input
                 {...readOnlyStyle}
                 readOnly
                 value={member.member_phone_number}
@@ -197,7 +198,7 @@ export function MemberManage() {
           <FormControl mt={4}>
             <Flex>
               <FormLabel {...formLabelStyle}>이메일</FormLabel>
-              <input {...readOnlyStyle} readOnly value={member.member_email} />
+              <Input {...readOnlyStyle} readOnly value={member.member_email} />
             </Flex>
           </FormControl>
 
@@ -205,7 +206,7 @@ export function MemberManage() {
           <FormControl mt={4}>
             <Flex>
               <FormLabel {...formLabelStyle}>우편번호</FormLabel>
-              <input
+              <Input
                 {...readOnlyStyle}
                 readOnly
                 value={member.memberAddressDto.member_post_code}
@@ -217,7 +218,7 @@ export function MemberManage() {
           <FormControl mt={4}>
             <Flex>
               <FormLabel {...formLabelStyle}>주소</FormLabel>
-              <input
+              <Input
                 {...readOnlyStyle}
                 readOnly
                 value={member.memberAddressDto.member_address}
@@ -229,7 +230,7 @@ export function MemberManage() {
           <FormControl mt={4}>
             <Flex>
               <FormLabel {...formLabelStyle}>상세주소</FormLabel>
-              <input
+              <Input
                 {...readOnlyStyle}
                 readOnly
                 value={member.memberAddressDto.member_detail_address}
@@ -242,31 +243,14 @@ export function MemberManage() {
             <Flex>
               <FormLabel {...formLabelStyle}>자기소개</FormLabel>
               {member.member_introduce.length !== 0 ? (
-                <textarea
-                  style={{
-                    boxShadow: "1px 1px 3px 2px #dadce0 inset",
-                    width: "600px",
-                    height: "150px",
-                    borderRadius: "6px",
-                    textIndent: "15px",
-                    fontSize: "16px",
-                    paddingTop: "15px",
-                  }}
+                <Textarea
                   readOnly
+                  {...textAreaStyle}
                   value={member.member_introduce}
                 />
               ) : (
-                <textarea
-                  style={{
-                    boxShadow: "1px 1px 3px 2px #dadce0 inset",
-                    width: "600px",
-                    height: "150px",
-                    borderRadius: "6px",
-                    textIndent: "15px",
-                    fontSize: "16px",
-                    paddingTop: "15px",
-                    color: "gray",
-                  }}
+                <Textarea
+                  {...textAreaStyle}
                   readOnly
                   value={"자기 소개를 작성해 주세요."}
                 />
@@ -275,58 +259,56 @@ export function MemberManage() {
           </FormControl>
         </CardBody>
 
-        <CardFooter>
-          <Flex gap={60}>
-            {/* 내 주소록 조회 버튼 */}
+        <CardFooter display="flex" justifyContent="center">
+          {/* 내 주소록 조회 버튼 */}
+          <ButtonGroup display="flex" justifyContent="space-between">
             <Button
-              bg={"none"}
-              shadow={"3px 3px 3px 3px #f5f6f6"}
-              w={"180px"}
               {...buttonStyle}
               onClick={() => navigate("/memberPage/addressInfo")}
             >
-              내 주소록 조회 하기
+              내 주소록 조회하기
             </Button>
             <Flex gap={2}>
               <Button
-                bg={"none"}
-                w={"100px"}
                 {...buttonStyle}
                 onClick={() => navigate("/memberPage/memberEdit")}
               >
                 수정하기
               </Button>
-              <Button {...buttonStyle} w={"100px"} bg={"red"} onClick={onOpen}>
+              <Button
+                bg="red"
+                color="white"
+                borderRadius="none"
+                onClick={onOpen}
+              >
                 회원 탈퇴
               </Button>
             </Flex>
-          </Flex>
+          </ButtonGroup>
         </CardFooter>
       </Card>
 
       {/* 삭제 모달창 */}
-      <>
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>회원 탈퇴 😭</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Box>정말 탈퇴 하시겠습니까?</Box>
-              <Box color={"red"}>탈퇴 버튼 클릭시 즉시 탈퇴 처리 됩니다.</Box>
-            </ModalBody>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>회원 탈퇴 😭</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Box>정말 탈퇴 하시겠습니까?</Box>
+            <Box color={"red"}>탈퇴 버튼 클릭시 즉시 탈퇴 처리 됩니다.</Box>
+          </ModalBody>
 
-            <ModalFooter>
-              <Button mr={3} onClick={onClose}>
-                취소
-              </Button>
-              <Button colorScheme={"red"} onClick={handleMemberDeleteClick}>
-                탈퇴
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </>
-    </Center>
+          <ModalFooter>
+            <Button mr={3} onClick={onClose}>
+              취소
+            </Button>
+            <Button colorScheme={"red"} onClick={handleMemberDeleteClick}>
+              탈퇴
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
