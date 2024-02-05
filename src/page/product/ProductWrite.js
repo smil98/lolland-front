@@ -41,20 +41,7 @@ export function ProductWrite() {
     axios
       .get("/api/product/category")
       .then((response) => {
-        //left join했기 때문에 자바스크립트 reduce 함수 이용해서 대분류 중복 제거한 데이터 리턴
-        const uniqueCategories = response.data.reduce((acc, category) => {
-          //카테고리가 존재하는지 category_id로 확인 (existingCategory : 논리값)
-          const existingCategory = acc.find(
-            (c) => c.category_id === category.category_id,
-          );
-          // 없으면 추가, 있으면 스킵
-          if (!existingCategory) {
-            acc.push(category);
-          }
-          //acc(누산기) 리턴해서 반복
-          return acc;
-        }, []);
-        setCategories(uniqueCategories);
+        setCategories(response.data);
       })
       .catch((error) => {
         toast({

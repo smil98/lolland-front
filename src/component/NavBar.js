@@ -1,11 +1,26 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Button,
   ButtonGroup,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
   Flex,
+  Heading,
   HStack,
   IconButton,
   Image,
+  List,
+  ListItem,
   Tab,
   TabList,
   TabPanel,
@@ -13,10 +28,12 @@ import {
   Tabs,
   Text,
   Tooltip,
+  useBreakpointValue,
+  useDisclosure,
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -27,9 +44,11 @@ import {
   faMagnifyingGlass,
   faPowerOff,
   faUsersGear,
+  faHouse,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LoginContext } from "./LoginProvider";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
 export function NavBar() {
   const navigate = useNavigate();
@@ -38,22 +57,15 @@ export function NavBar() {
   const toast = useToast();
   const { fetchLogin, isAdmin, isAuthenticated, hasAccess } =
     useContext(LoginContext);
+  const isSmallScreen = useBreakpointValue({ base: true, md: false });
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   // 카테고리 불러오기
   useEffect(() => {
     axios
       .get("/api/product/category")
       .then((response) => {
-        const uniqueCategories = response.data.reduce((acc, category) => {
-          const existingCategory = acc.find(
-            (c) => c.category_id === category.category_id,
-          );
-          if (!existingCategory) {
-            acc.push(category);
-          }
-          return acc;
-        }, []);
-        setCategories(uniqueCategories);
+        setCategories(response.data);
       })
       .catch((error) => {
         toast({
@@ -102,51 +114,70 @@ export function NavBar() {
 
   return (
     <>
-      <Box minW={"1400px"}>
+      <Box>
         {/* ------------------- 상단 네브 바 ------------------- */}
         <Flex
           top={0}
           justifyContent="space-between"
           p={5}
           w="full"
-          minW={"1400px"}
           shadow="sm"
           position="fixed"
           zIndex={100}
           backgroundColor="white"
         >
-          <Flex w={"400px"}>
-            <ButtonGroup variant="undefined" size="md" alignItems={"center"}>
-              <Button onClick={() => navigate("/")}>HOME</Button>
-              <Button onClick={() => navigate("/product/list/")}>신상품</Button>
-              <Button onClick={() => navigate("/productEvent")}>이벤트</Button>
-            </ButtonGroup>
-          </Flex>
+          {isSmallScreen ? (
+            <IconButton
+              variant="undefined"
+              fontSize="xl"
+              mr={5}
+              p={0}
+              onClick={() => onOpen()}
+              icon={<HamburgerIcon />}
+              transition="all 1s ease"
+            />
+          ) : (
+            <>
+              <Flex>
+                <ButtonGroup
+                  variant="undefined"
+                  size="md"
+                  alignItems={"center"}
+                >
+                  <Button onClick={() => navigate("/")}>HOME</Button>
+                  <Button onClick={() => navigate("/product/list/")}>
+                    신상품
+                  </Button>
+                  <Button onClick={() => navigate("/productEvent")}>
+                    이벤트
+                  </Button>
+                </ButtonGroup>
+              </Flex>
 
-          <Box
-            w={"100%"}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Box>
-              {/* --------- 로고 --------- */}
               <Box
-                w="100px"
-                // border="1px dashed black"
-                textAlign="center"
-                onClick={() => navigate("/")}
-                _hover={{
-                  cursor: "pointer",
-                }}
+                w={"100%"}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
               >
-                <Image src="/logo.png" boxSize="100%" objectFit="fit" />
+                <Box>
+                  {/* --------- 로고 --------- */}
+                  <Box
+                    w="100px"
+                    // border="1px dashed black"
+                    textAlign="center"
+                    onClick={() => navigate("/")}
+                    _hover={{
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Image src="/logo.png" boxSize="100%" objectFit="fit" />
+                  </Box>
+                </Box>
               </Box>
-            </Box>
-          </Box>
-
+            </>
+          )}
           <ButtonGroup
-            w={"400px"}
             variant="undefined"
             display="flex"
             alignItems="center"
@@ -214,21 +245,185 @@ export function NavBar() {
           </ButtonGroup>
         </Flex>
 
+        {/* 화면 작을 때 나오는 Drawer */}
+        <Drawer placement="left" onClose={onClose} isOpen={isOpen} size="xs">
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerHeader fontSize="3xl" className="logo">
+              LOLLAND
+              <DrawerCloseButton mt={1} size="lg" />
+            </DrawerHeader>
+            <DrawerBody>
+              <Accordion
+                id="myAccordian"
+                w={"100%"}
+                allowMultiple
+                defaultIndex={[0, 1]}
+              >
+                <AccordionItem className="accordianItem">
+                  <AccordionButton>
+                    <Box
+                      as="span"
+                      flex="1"
+                      textAlign="left"
+                      fontWeight="bold"
+                      fontSize="xl"
+                      className="specialHeadings"
+                    >
+                      <Text as="span" mr={5}>
+                        <FontAwesomeIcon icon={faHouse} />
+                      </Text>
+                      커뮤니티
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                  <AccordionPanel whiteSpace="pre-wrap" pb={4} px={7}>
+                    <List spacing={3} className="labels" fontSize="md">
+                      <ListItem onClick={() => navigate("/gameboard/list")}>
+                        게임 커뮤니티
+                      </ListItem>
+                      <ListItem onClick={() => navigate("/gearlistlayout")}>
+                        게임 장비 커뮤니티
+                      </ListItem>
+                    </List>
+                  </AccordionPanel>
+                </AccordionItem>
+                <AccordionItem className="accordianItem">
+                  <AccordionButton>
+                    <Box
+                      as="span"
+                      flex="1"
+                      textAlign="left"
+                      fontWeight="bold"
+                      fontSize="xl"
+                      className="specialHeadings"
+                    >
+                      <Text as="span" mr={5}>
+                        <FontAwesomeIcon icon={faBagShopping} />
+                      </Text>
+                      쇼핑
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                  <AccordionPanel whiteSpace="pre-wrap" pb={4}>
+                    {categories.length > 0 &&
+                      categories.map((category) => (
+                        <Accordion w="100%" allowMultiple id="myAccordian">
+                          <AccordionItem
+                            key={category.category_id}
+                            className="accordianItem"
+                          >
+                            <AccordionButton>
+                              <Box
+                                as="span"
+                                flex="1"
+                                textAlign="left"
+                                className="labels"
+                              >
+                                {category.category_name}
+                              </Box>
+                              <AccordionIcon />
+                            </AccordionButton>
+                            <AccordionPanel whiteSpace="pre-wrap" pb={4}>
+                              <List spacing={3} className="labels">
+                                <ListItem
+                                  onClick={() =>
+                                    navigate(
+                                      `/category/${category.category_id}`,
+                                    )
+                                  }
+                                >
+                                  {category.category_name} 전체보기
+                                </ListItem>
+                                {category.subCategory &&
+                                  category.subCategory.map((subCategory) => (
+                                    <ListItem
+                                      key={subCategory.subcategory_id}
+                                      onClick={() =>
+                                        navigate(
+                                          `/category/${category.category_id}/${subCategory.subcategory_id}`,
+                                        )
+                                      }
+                                    >
+                                      {subCategory.subcategory_name}
+                                    </ListItem>
+                                  ))}
+                              </List>
+                            </AccordionPanel>
+                          </AccordionItem>
+                        </Accordion>
+                      ))}
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+            </DrawerBody>
+            <DrawerFooter></DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+
         {/* ------------------- 하단 네브바 ------------------- */}
-        <Tabs
-          index={index}
-          variant="soft-rounded"
-          colorScheme="blackAlpha"
-          mt="100px"
-          justifyContent={"center"}
-          display={"flex"}
-          alignItems={"center"}
-          background={"white"}
-        >
-          <TabList w={"900px"} py={3}>
-            <HStack spacing={2}>
-              <Tab
-                onClick={() => navigate("/gameboard/list")}
+        {isSmallScreen || (
+          <Tabs
+            index={index}
+            variant="soft-rounded"
+            colorScheme="blackAlpha"
+            mt="100px"
+            justifyContent={"center"}
+            display={"flex"}
+            alignItems={"center"}
+            background={"white"}
+          >
+            <TabList w={"900px"} py={3}>
+              <HStack spacing={2}>
+                <Tab
+                  onClick={() => navigate("/gameboard/list")}
+                  onMouseEnter={() => {
+                    setIndex(0);
+                    setOverlayVisible(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIndex(null);
+                    setOverlayVisible(false);
+                  }}
+                >
+                  커뮤니티
+                </Tab>
+                {categories.map((category) => (
+                  <Tab
+                    key={category.category_id}
+                    onMouseEnter={() => {
+                      setIndex(category.category_id);
+                      setOverlayVisible(true);
+                    }}
+                    onMouseLeave={() => {
+                      setIndex(null);
+                      setOverlayVisible(false);
+                    }}
+                    onClick={() =>
+                      navigate(`/category/${category.category_id}`)
+                    }
+                  >
+                    {category.category_name}
+                  </Tab>
+                ))}
+              </HStack>
+            </TabList>
+            <TabPanels
+              px={10}
+              left={0}
+              right={0}
+              top="53px"
+              zIndex={100}
+              backgroundColor="white"
+              position="absolute"
+              justifyContent={"center"}
+              display={"flex"}
+              alignItems={"center"}
+            >
+              <TabPanel
+                py={10}
+                w={"900px"}
+                fontSize="sm"
                 onMouseEnter={() => {
                   setIndex(0);
                   setOverlayVisible(true);
@@ -238,11 +433,25 @@ export function NavBar() {
                   setOverlayVisible(false);
                 }}
               >
-                커뮤니티
-              </Tab>
+                <VStack
+                  _hover={{ cursor: "pointer" }}
+                  spacing={2}
+                  align="flex-start"
+                >
+                  <Text onClick={() => navigate("/gameboard/list")}>
+                    게임 커뮤니티
+                  </Text>
+                  <Text onClick={() => navigate("/gearlistlayout")}>
+                    게임 장비 커뮤니티
+                  </Text>
+                </VStack>
+              </TabPanel>
               {categories.map((category) => (
-                <Tab
+                <TabPanel
                   key={category.category_id}
+                  display="flex"
+                  py={10}
+                  w={"900px"}
                   onMouseEnter={() => {
                     setIndex(category.category_id);
                     setOverlayVisible(true);
@@ -251,99 +460,43 @@ export function NavBar() {
                     setIndex(null);
                     setOverlayVisible(false);
                   }}
-                  onClick={() => navigate(`/category/${category.category_id}`)}
                 >
-                  {category.category_name}
-                </Tab>
+                  {createSubcategoryArrays(category.subCategory).map(
+                    (subCategoryArray, arrayIndex) => (
+                      <VStack
+                        _hover={{
+                          cursor: "pointer",
+                        }}
+                        key={arrayIndex}
+                        align="start"
+                        spacing={2}
+                        w="200px"
+                        mr={10}
+                      >
+                        {subCategoryArray.map((subCategory) => (
+                          <Text
+                            key={subCategory.subcategory_id}
+                            fontSize="sm"
+                            _hover={{
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              navigate(
+                                `/category/${category.category_id}/${subCategory.subcategory_id}`,
+                              )
+                            }
+                          >
+                            {subCategory.subcategory_name}
+                          </Text>
+                        ))}
+                      </VStack>
+                    ),
+                  )}
+                </TabPanel>
               ))}
-            </HStack>
-          </TabList>
-          <TabPanels
-            px={10}
-            left={0}
-            right={0}
-            top="53px"
-            zIndex={100}
-            backgroundColor="white"
-            position="absolute"
-            justifyContent={"center"}
-            display={"flex"}
-            alignItems={"center"}
-          >
-            <TabPanel
-              py={10}
-              w={"900px"}
-              fontSize="sm"
-              onMouseEnter={() => {
-                setIndex(0);
-                setOverlayVisible(true);
-              }}
-              onMouseLeave={() => {
-                setIndex(null);
-                setOverlayVisible(false);
-              }}
-            >
-              <VStack
-                _hover={{ cursor: "pointer" }}
-                spacing={2}
-                align="flex-start"
-              >
-                <Text>게임 커뮤니티</Text>
-                <Text onClick={() => navigate("/gearlistlayout")}>
-                  게임 장비 커뮤니티
-                </Text>
-              </VStack>
-            </TabPanel>
-            {categories.map((category) => (
-              <TabPanel
-                key={category.category_id}
-                display="flex"
-                py={10}
-                w={"900px"}
-                onMouseEnter={() => {
-                  setIndex(category.category_id);
-                  setOverlayVisible(true);
-                }}
-                onMouseLeave={() => {
-                  setIndex(null);
-                  setOverlayVisible(false);
-                }}
-              >
-                {createSubcategoryArrays(category.subCategory).map(
-                  (subCategoryArray, arrayIndex) => (
-                    <VStack
-                      _hover={{
-                        cursor: "pointer",
-                      }}
-                      key={arrayIndex}
-                      align="start"
-                      spacing={2}
-                      w="200px"
-                      mr={10}
-                    >
-                      {subCategoryArray.map((subCategory) => (
-                        <Text
-                          key={subCategory.subcategory_id}
-                          fontSize="sm"
-                          _hover={{
-                            cursor: "pointer",
-                          }}
-                          onClick={() =>
-                            navigate(
-                              `/category/${category.category_id}/${subCategory.subcategory_id}`,
-                            )
-                          }
-                        >
-                          {subCategory.subcategory_name}
-                        </Text>
-                      ))}
-                    </VStack>
-                  ),
-                )}
-              </TabPanel>
-            ))}
-          </TabPanels>
-        </Tabs>
+            </TabPanels>
+          </Tabs>
+        )}
       </Box>
       {overlayVisible && (
         <Box
