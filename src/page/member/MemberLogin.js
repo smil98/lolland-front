@@ -4,18 +4,27 @@ import {
   Button,
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   Center,
   Flex,
   FormControl,
   FormLabel,
+  IconButton,
   Input,
+  InputGroup,
+  InputRightElement,
+  Text,
   useToast,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChessRook, faGamepad } from "@fortawesome/free-solid-svg-icons";
+import { ScreenContext } from "../../component/ScreenContext";
 
 export function MemberLogin() {
   const { isAuthenticated, fetchLogin } = useContext(LoginContext);
@@ -23,6 +32,8 @@ export function MemberLogin() {
   // 회원 로그인 정보 입력
   const [member_login_id, setMember_login_id] = useState("");
   const [member_password, setMember_password] = useState("");
+  // 비밀번호 보여주기
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -41,23 +52,6 @@ export function MemberLogin() {
   if (isAuthenticated()) {
     return null;
   }
-
-  const inputStyle = {
-    shadow: "1px 1px 3px 1px #dadce0 inset",
-  };
-
-  const buttonStyle = {
-    background: "black",
-    color: "whitesmoke",
-    shadow: "1px 1px 3px 1px #dadce0",
-    _hover: {
-      backgroundColor: "whitesmoke",
-      color: "black",
-      transition:
-        "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-      shadow: "1px 1px 3px 1px #dadce0 inset",
-    },
-  };
 
   // 로그인 버튼 클릭
   function handleLoginClick() {
@@ -95,108 +89,123 @@ export function MemberLogin() {
       handleLoginClick();
     }
   };
-  return (
-    <Center mt={8} mb={20}>
-      <Card w={"1000px"} shadow={"1px 1px 3px 1px #dadce0"}>
-        <CardHeader
-          mt={4}
-          textAlign={"center"}
-          fontSize={"2rem"}
-          fontWeight={"bold"}
-          alignItems={"center"}
-        >
-          로그인
-        </CardHeader>
 
-        <CardBody>
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                아이디
-              </FormLabel>
+  return (
+    <Card mx={{ base: "full", md: "20%", lg: "25%", xl: "35%" }} my="5%">
+      <CardHeader
+        textAlign="center"
+        fontSize="4xl"
+        alignItems="center"
+        className="logo"
+        mt={5}
+      >
+        <IconButton
+          icon={<FontAwesomeIcon icon={faChessRook} />}
+          color="white"
+          bgColor="orange"
+          size="sm"
+          mt={-2}
+          mr={2}
+          variant="undefined"
+        />
+        LOLLAND
+      </CardHeader>
+      <CardBody>
+        <FormControl>
+          <Flex justifyContent="center" alignItems="center" mx="5%">
+            <FormLabel w="20%" h="100%" fontSize="md" lineHeight="50px" my="1%">
+              아이디
+            </FormLabel>
+            <Input
+              h="50px"
+              lineHeight="50px"
+              borderRadius="full"
+              value={member_login_id}
+              placeholder="아이디"
+              onChange={(e) => setMember_login_id(e.target.value)}
+            />
+          </Flex>
+        </FormControl>
+        <FormControl mt={2}>
+          <Flex justifyContent="center" alignItems="center" mx="5%">
+            <FormLabel w="20%" h="100%" fontSize="md" lineHeight="50px" my="1%">
+              비밀번호
+            </FormLabel>
+            <InputGroup>
               <Input
-                {...inputStyle}
-                value={member_login_id}
-                w={"500px"}
-                h={"50px"}
-                onChange={(e) => setMember_login_id(e.target.value)}
-              />
-            </Flex>
-          </FormControl>
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                비밀번호
-              </FormLabel>
-              <Input
-                {...inputStyle}
+                placeholder="비밀번호"
                 onKeyDown={handleKeyDown}
                 value={member_password}
-                type={"password"}
-                w={"500px"}
-                h={"50px"}
+                type={showPassword ? "text" : "password"}
+                h="50px"
+                borderRadius="full"
+                lineHeight="50px"
                 onChange={(e) => setMember_password(e.target.value)}
               />
-            </Flex>
-          </FormControl>
-          <FormControl mt={4}>
-            <Flex justifyContent={"center"}>
-              <Button
-                {...buttonStyle}
-                w={"600px"}
-                h={"50px"}
-                onClick={handleLoginClick}
-              >
-                로그인
-              </Button>
-            </Flex>
-          </FormControl>
-          <FormControl mt={4}>
-            <Flex justifyContent={"center"}>
-              <Button
-                w={"200px"}
-                h={"20px"}
-                borderRadius={"0"}
-                style={{ backgroundColor: "white" }}
-                onClick={() => navigate("/findId")}
-              >
-                아이디 찾기
-              </Button>
-              <Box>|</Box>
-              <Button
-                w={"200px"}
-                h={"20px"}
-                borderRadius={"0"}
-                bg={"none"}
-                style={{ backgroundColor: "white" }}
-                onClick={() => navigate("/findPassword")}
-              >
-                비밀번호 찾기
-              </Button>
-            </Flex>
-          </FormControl>
-          <FormControl mt={20} mb={10}>
-            <Flex justifyContent={"center"}>
-              <Button
-                w={"600px"}
-                h={"50px"}
-                color={"black"}
-                bg={"whitesmoke"}
-                _hover={{
-                  backgroundColor: "black",
-                  color: "whitesmoke",
-                  transition:
-                    "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-                  shadow: "1px 1px 3px 1px #dadce0 inset",
-                }}
-                onClick={() => navigate("/signup")}
-              >
-                회원 가입하기
-              </Button>
-            </Flex>
-          </FormControl>
-        </CardBody>
-      </Card>
-    </Center>
+              <InputRightElement width="5rem" h="50px">
+                <IconButton
+                  isDisabled={member_password.length <= 0}
+                  w="3rem"
+                  size="md"
+                  color="gray.300"
+                  variant="undefined"
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                  icon={showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                />
+              </InputRightElement>
+            </InputGroup>
+          </Flex>
+        </FormControl>
+        <FormControl mt={5}>
+          <Flex justifyContent={"center"}>
+            <Button
+              mx="5%"
+              w="full"
+              h="50px"
+              onClick={handleLoginClick}
+              bgColor="orange"
+              color="white"
+            >
+              로그인
+            </Button>
+          </Flex>
+        </FormControl>
+        <FormControl mt={4}>
+          <Flex justifyContent={"center"}>
+            <Button
+              w="200px"
+              h="20px"
+              variant="undefined"
+              onClick={() => navigate("/findId")}
+            >
+              아이디 찾기
+            </Button>
+            <Box>|</Box>
+            <Button
+              w="200px"
+              h="20px"
+              variant="undefined"
+              onClick={() => navigate("/findPassword")}
+            >
+              비밀번호 찾기
+            </Button>
+          </Flex>
+        </FormControl>
+      </CardBody>
+      <CardFooter display="flex" justifyContent="center">
+        <Button
+          mx="5%"
+          w="full"
+          h="50px"
+          color="black"
+          bg="whitesmoke"
+          onClick={() => navigate("/signup")}
+        >
+          회원 가입하기
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

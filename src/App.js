@@ -54,6 +54,7 @@ import FailPage from "./page/order/FailPage";
 import { MemberPurchase } from "./page/order/MemberPurchase";
 import { PurchaseInfo } from "./PurchaseInfo";
 import { CancelReqList } from "./page/admin/CancelReqList";
+import ScreenProvider from "./component/ScreenContext";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -141,9 +142,11 @@ const routes = createBrowserRouter(
 
 function App() {
   return (
-    <LoginProvider>
-      <RouterProvider router={routes} />
-    </LoginProvider>
+    <ScreenProvider>
+      <LoginProvider>
+        <RouterProvider router={routes} />
+      </LoginProvider>
+    </ScreenProvider>
   );
 }
 

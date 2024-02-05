@@ -49,6 +49,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LoginContext } from "./LoginProvider";
 import { HamburgerIcon } from "@chakra-ui/icons";
+import { ScreenContext } from "./ScreenContext";
 
 export function NavBar() {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ export function NavBar() {
   const toast = useToast();
   const { fetchLogin, isAdmin, isAuthenticated, hasAccess } =
     useContext(LoginContext);
-  const isSmallScreen = useBreakpointValue({ base: true, md: false });
+  const { isSmallScreen } = useContext(ScreenContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // 카테고리 불러오기
@@ -114,7 +115,7 @@ export function NavBar() {
 
   return (
     <>
-      <Box>
+      <Box mb={isSmallScreen ? "25%" : "0%"}>
         {/* ------------------- 상단 네브 바 ------------------- */}
         <Flex
           top={0}
@@ -154,25 +155,23 @@ export function NavBar() {
                 </ButtonGroup>
               </Flex>
 
+              {/* --------- 로고 --------- */}
               <Box
                 w={"100%"}
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
               >
-                <Box>
-                  {/* --------- 로고 --------- */}
-                  <Box
-                    w="100px"
-                    // border="1px dashed black"
-                    textAlign="center"
-                    onClick={() => navigate("/")}
-                    _hover={{
-                      cursor: "pointer",
-                    }}
-                  >
-                    <Image src="/logo.png" boxSize="100%" objectFit="fit" />
-                  </Box>
+                <Box
+                  textAlign="center"
+                  onClick={() => navigate("/")}
+                  _hover={{
+                    cursor: "pointer",
+                  }}
+                  fontSize="3xl"
+                  className="logo"
+                >
+                  LOLLAND
                 </Box>
               </Box>
             </>
