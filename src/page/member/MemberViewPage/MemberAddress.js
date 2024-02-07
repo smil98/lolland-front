@@ -208,7 +208,11 @@ export function MemberAddress() {
 
   return (
     <>
-      <Card mx={{ base: 0, md: "10%", lg: "10%", xl: "15%" }}>
+      <Card
+        w="full"
+        minH={isSmallScreen ? "full" : "560px"}
+        mx={{ base: 0, md: "10%", lg: "10%", xl: "15%" }}
+      >
         <CardHeader
           display="flex"
           alignItems="center"

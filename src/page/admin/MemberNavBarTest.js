@@ -41,6 +41,7 @@ export function MemberNavBarTest() {
       borderRadius="full"
       textAlign="center"
       bgColor="#FFF"
+      border="1px solid #F4F4F4"
       shadow="md"
     >
       <Stack
@@ -83,14 +84,14 @@ export function MemberNavBarTest() {
             onClick={() => navigate("qna")}
           />
         </Tooltip>
-        <Tooltip hasArrow label="내가 남긴 리뷰 보기" {...toolTipDir}>
+        <Tooltip hasArrow label="내 리뷰 관리" {...toolTipDir}>
           <IconButton
             {...buttonStyle}
             icon={<FontAwesomeIcon icon={faComments} />}
             onClick={() => navigate("review")}
           />
         </Tooltip>
-        <Tooltip hasArrow label="추천한 게시물 보기" {...toolTipDir}>
+        <Tooltip hasArrow label="추천 게시물 관리" {...toolTipDir}>
           <IconButton
             {...buttonStyle}
             icon={<FontAwesomeIcon icon={faThumbsUp} />}

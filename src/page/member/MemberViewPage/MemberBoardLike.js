@@ -8,6 +8,7 @@ import {
   CardHeader,
   Checkbox,
   Flex,
+  IconButton,
   Select,
   Table,
   Tbody,
@@ -26,6 +27,7 @@ import {
   faBan,
   faCaretLeft,
   faCaretRight,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -221,7 +223,11 @@ export function MemberBoardLike() {
   }
 
   return (
-    <Card mx={{ base: 0, md: "10%", lg: "15%", xl: "25%" }}>
+    <Card
+      w="full"
+      minH={{ base: "full", md: "560px" }}
+      mx={{ base: 0, md: "10%", lg: "15%", xl: "10%" }}
+    >
       <CardHeader
         display="flex"
         alignItems="center"
@@ -235,7 +241,7 @@ export function MemberBoardLike() {
         </Text>
         추천 게시글 목록
       </CardHeader>
-      <CardBody>
+      <CardBody alignItems="flex-start">
         <Flex justifyContent="space-between" w="100%">
           <Select
             defaultValue={"전체"}
@@ -266,10 +272,7 @@ export function MemberBoardLike() {
             </Button>
           </ButtonGroup>
         </Flex>
-      </CardBody>
-
-      <CardBody>
-        <Table textAlign={"center"}>
+        <Table mt={10} textAlign={"center"}>
           <Thead>
             <Tr>
               <Th textAlign="center">선택</Th>
@@ -279,7 +282,6 @@ export function MemberBoardLike() {
               <Th textAlign="center">추천 삭제</Th>
             </Tr>
           </Thead>
-
           <Tbody>
             {gameBoardList.map((gameBoard) => (
               <Tr key={gameBoard.id}>
@@ -316,21 +318,19 @@ export function MemberBoardLike() {
                     ? gameBoard.board_content.slice(0, 15) + "..."
                     : gameBoard.board_content}
                 </Td>
-                <Td textAlign={"center"}>
-                  <Button
-                    {...buttonStyle}
-                    bg={"gray"}
+                <Td textAlign="center">
+                  <IconButton
+                    variant="ghost"
+                    colorScheme="red"
+                    icon={<FontAwesomeIcon icon={faTrash} />}
                     onClick={() => handleLikeDeleteClick(gameBoard.id)}
-                  >
-                    <FontAwesomeIcon icon={faBan} fontSize={"2rem"} />
-                  </Button>
+                  />
                 </Td>
               </Tr>
             ))}
           </Tbody>
         </Table>
       </CardBody>
-
       <CardFooter display="flex" justifyContent="center">
         <MemberBoardLikePagination pageInfo={pageInfo} />
       </CardFooter>

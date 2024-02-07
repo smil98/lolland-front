@@ -21,7 +21,7 @@ import {
 import { useContext } from "react";
 import { ScreenContext } from "./ScreenContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPhone } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight, faPhone } from "@fortawesome/free-solid-svg-icons";
 
 export function Footer() {
   const { isSmallScreen } = useContext(ScreenContext);
@@ -31,9 +31,12 @@ export function Footer() {
       <Spacer h={5} />
       {isSmallScreen ? (
         <Box bgColor="#F4F4F4" px={5} pt={8} pb={5}>
-          <Heading size="md" className="labels">
-            고객센터 >
-          </Heading>
+          <Text fontSize="xl" fontWeight="bold" className="labels">
+            고객센터{" "}
+            <Text as="span" fontSize="md" mt={-10}>
+              <FontAwesomeIcon icon={faChevronRight} />
+            </Text>
+          </Text>
           <Text my={5}>
             <Text as="span" fontSize="md" fontWeight="bold" mr={3}>
               <FontAwesomeIcon icon={faPhone} /> 0000-0000

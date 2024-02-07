@@ -91,7 +91,7 @@ export function MemberLogin() {
   };
 
   return (
-    <Card mx={{ base: "full", md: "20%", lg: "25%", xl: "35%" }} my="5%">
+    <Card mx={{ base: "full", md: "15%", lg: "20%", xl: "25%" }} my="5%">
       <CardHeader
         textAlign="center"
         fontSize="4xl"

@@ -33,7 +33,7 @@ export function MemberView() {
   }
 
   return (
-    <Card shadow={"none"}>
+    <Card shadow="none">
       <Flex
         position="relative"
         flexDir={isSmallScreen ? "column" : "row"}
@@ -42,9 +42,11 @@ export function MemberView() {
         <MemberNavBarTest />
         <Box
           w="full"
+          minH={isSmallScreen ? "full" : "560px"}
+          my={isSmallScreen ? 2 : 5}
           display="flex"
           justifyContent="center"
-          alignItems="center"
+          alignItems="flex-start"
           textAlign="center"
         >
           <Outlet />

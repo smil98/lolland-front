@@ -249,13 +249,28 @@ export function MemberQuestion() {
   }
 
   return (
-    <VStack w="full" mr={5} spacing={5}>
-      <Card w="full">
-        <CardHeader>
-          <Heading>문의 목록</Heading>
+    <VStack
+      w="full"
+      mx={{ base: 0, md: "5%", lg: "15%", xl: "20%" }}
+      spacing={5}
+    >
+      <Card
+        w="full"
+        minH={{ base: "full", md: "560px" }}
+        mx={{ base: 0, md: "5%", lg: "15%", xl: "20%" }}
+      >
+        <CardHeader
+          display="flex"
+          alignItems="center"
+          fontWeight="bold"
+          textAlign="left"
+          fontSize="2xl"
+          className="specialHeadings"
+        >
+          내 문의 목록
         </CardHeader>
         <CardBody>
-          <Flex justifyContent="space-between" mx={10} mb={5}>
+          <Flex justifyContent="space-between" mb={5}>
             <Checkbox
               py={2}
               px={3}
@@ -340,7 +355,13 @@ export function MemberQuestion() {
                   ))
                 ) : (
                   <Tr>
-                    <Td colSpan={5} h={5} textAlign="center">
+                    <Td
+                      colSpan={5}
+                      h={{ base: "200px", md: "400px" }}
+                      textAlign="center"
+                      opacity={0.4}
+                      fontSize="lg"
+                    >
                       아직 등록된 문의가 없습니다
                     </Td>
                   </Tr>

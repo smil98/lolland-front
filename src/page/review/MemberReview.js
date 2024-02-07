@@ -10,6 +10,8 @@ import {
   Checkbox,
   Flex,
   Heading,
+  HStack,
+  StackDivider,
   Table,
   TableContainer,
   Tbody,
@@ -33,8 +35,9 @@ import {
   faAngleRight,
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { ScreenContext } from "../../component/ScreenContext";
 
 function PageButton({ variant, pageNumber, children }) {
   const [params] = useSearchParams();
@@ -102,6 +105,7 @@ export function MemberReview() {
   const [pageInfo, setPageInfo] = useState(null);
   const location = useLocation();
   const [selectedReviews, setSelectedReviews] = useState([]);
+  const { isSmallScreen } = useContext(ScreenContext);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -257,102 +261,116 @@ export function MemberReview() {
   }
 
   return (
-    <VStack w="full" mr={5} spacing={5}>
-      <Card w="full">
-        <CardHeader>
-          <Heading>리뷰 목록</Heading>
-        </CardHeader>
-        <CardBody>
-          <Flex justifyContent="space-between" mx={10} mb={5}>
-            <Checkbox
-              py={2}
-              px={3}
-              colorScheme="orange"
-              isChecked={
-                reviewList?.length > 0 &&
-                selectedReviews?.length === reviewList?.length
-              }
-              onChange={(e) => handleSelectAllReviews(e.target.checked)}
+    <Card w="full" mx={{ base: 0, md: "5%", lg: "15%", xl: "20%" }}>
+      <CardHeader
+        display="flex"
+        alignItems="center"
+        fontWeight="bold"
+        textAlign="left"
+        fontSize="2xl"
+        className="specialHeadings"
+      >
+        내 리뷰 관리
+      </CardHeader>
+      <CardBody>
+        <Flex justifyContent="space-between" mb={5}>
+          <Checkbox
+            py={2}
+            px={3}
+            colorScheme="orange"
+            isChecked={
+              reviewList?.length > 0 &&
+              selectedReviews?.length === reviewList?.length
+            }
+            onChange={(e) => handleSelectAllReviews(e.target.checked)}
+          >
+            전체 선택
+          </Checkbox>
+          <ButtonGroup>
+            <Button
+              {...buttonStyles}
+              onClick={() => handleDelete(selectedReviews)}
             >
-              전체 선택
-            </Checkbox>
-            <ButtonGroup>
-              <Button
-                {...buttonStyles}
-                onClick={() => handleDelete(selectedReviews)}
+              선택 삭제
+            </Button>
+            <Button {...buttonStyles} onClick={() => handleDeleteAll()}>
+              전체 삭제
+            </Button>
+          </ButtonGroup>
+        </Flex>
+        <VStack spacing={5} align="stretch">
+          {reviewList && reviewList?.length > 0 ? (
+            reviewList.map((review) => (
+              <Card
+                key={review.review_id}
+                onClick={() => {
+                  navigate(`/product/${review.product_id}`);
+                }}
+                shadow="md"
+                border="1px solid #F4F4F4"
+                borderRadius={5}
               >
-                선택 삭제
-              </Button>
-              <Button {...buttonStyles} onClick={() => handleDeleteAll()}>
-                전체 삭제
-              </Button>
-            </ButtonGroup>
-          </Flex>
-          <TableContainer>
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th textAlign="center">선택</Th>
-                  <Th textAlign="center">상품명</Th>
-                  <Th textAlign="center">리뷰 내용</Th>
-                  <Th textAlign="center">별점</Th>
-                  <Th textAlign="center">등록일자</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {reviewList && reviewList?.length > 0 ? (
-                  reviewList.map((review) => (
-                    <Tr
-                      key={review.review_id}
-                      onClick={() => {
-                        navigate(`/product/${review.product_id}`);
-                        const targetElement =
-                          document.getElementById("reviewSection");
-                        if (targetElement) {
-                          targetElement.scrollIntoView({ behavior: "smooth" });
-                        }
-                      }}
+                <CardHeader
+                  display="flex"
+                  flexDir="column"
+                  justifyContent="flex-start"
+                  textAlign="left"
+                  mb={-5}
+                >
+                  <Flex justifyContent="space-between" alignItems="center">
+                    <Text className="labels" fontWeight="bold" fontSize="md">
+                      {review.product_name}
+                    </Text>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      onClick={(e) => e.stopPropagation()}
                     >
-                      <Td
-                        textAlign="center"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Checkbox
-                          colorScheme="orange"
-                          isChecked={selectedReviews.includes(review.review_id)}
-                          onChange={() => {
-                            handleCheckBoxChange(review);
-                          }}
-                        />
-                      </Td>
-                      <Td textAlign="center">{review.product_name}</Td>
-                      <Td textAlign="center">{review.review_content}</Td>
-                      <Td textAlign="center">
-                        <StarRating rate={review.rate} />
-                      </Td>
-                      <Td textAlign="center">
-                        <Text fontSize="xs" opacity="0.5">
-                          {formattedDate(review.review_reg_time)}
-                        </Text>
-                      </Td>
-                    </Tr>
-                  ))
-                ) : (
-                  <Tr>
-                    <Td colSpan={5} h={5} textAlign="center">
-                      아직 등록된 리뷰가 없습니다
-                    </Td>
-                  </Tr>
-                )}
-              </Tbody>
-            </Table>
-          </TableContainer>
-        </CardBody>
-        <CardFooter display="flex" justifyContent="center" id="reviewSection">
-          <Pagination pageInfo={pageInfo} />
-        </CardFooter>
-      </Card>
-      <Outlet />
-    </VStack>
+                      <Checkbox
+                        colorScheme="orange"
+                        isChecked={selectedReviews.includes(review.review_id)}
+                        onChange={() => {
+                          handleCheckBoxChange(review);
+                        }}
+                      />
+                    </Box>
+                  </Flex>
+                  <Text mt={2}>
+                    <StarRating rate={review.rate} />
+                    <Text as="span" ml={3} opacity={0.4}>
+                      {formattedDate(review.review_reg_time)}
+                    </Text>
+                  </Text>
+                </CardHeader>
+                <CardBody textAlign="left">
+                  <Text>{review.review_content}</Text>
+                  <ButtonGroup
+                    size="sm"
+                    display="flex"
+                    justifyContent="flex-end"
+                    mt={5}
+                  >
+                    <Button border="1px solid #E1E1E1" bgColor="white">
+                      수정 {/* TODO: 수정 로직 추가 */}
+                    </Button>
+                    <Button border="1px solid #E1E1E1" bgColor="white">
+                      삭제 {/* TODO: 삭제 로직 추가 */}
+                    </Button>
+                  </ButtonGroup>
+                </CardBody>
+              </Card>
+            ))
+          ) : (
+            <Text textAlign="center" my={10}>
+              리뷰 없음
+            </Text>
+          )}
+        </VStack>
+      </CardBody>
+      <CardFooter display="flex" justifyContent="center" id="reviewSection">
+        <Pagination pageInfo={pageInfo} />
+      </CardFooter>
+    </Card>
   );
 }

@@ -159,7 +159,7 @@ export function MemberPurchase() {
   };
 
   return (
-    <Card mx={{ base: "0", md: "10%", lg: "15%", xl: "20%" }} w="full">
+    <Card w="full" mx={{ base: 0, md: "5%", lg: "15%", xl: "20%" }}>
       <CardHeader
         px={10}
         pt={10}
