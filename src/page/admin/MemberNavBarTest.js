@@ -36,7 +36,7 @@ export function MemberNavBarTest() {
       mt={isSmallScreen ? -5 : 5}
       mb={5}
       px={2}
-      py={5}
+      py={isSmallScreen ? 2 : 5}
       justifyContent="center"
       borderRadius="full"
       textAlign="center"

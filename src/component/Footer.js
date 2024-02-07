@@ -90,16 +90,16 @@ export function Footer() {
                   <ListItem>개인정보보호책임자 없음</ListItem>
                   <ListItem>조장 이승원</ListItem>
                   <ListItem>팀원 조대훈 최재희 이승원 이정훈 이승미</ListItem>
-                  <ListItem fontWeight="bold">
-                    본 페이지는 졸업 프로젝트로 어떠한 영리적 활동도 하지 않는
-                    사이트임을 알립니다.
-                  </ListItem>
                 </List>
               </AccordionPanel>
             </AccordionItem>
           </Accordion>
-          <Text mt={2} fontSize="xs">
+          <Text my={2} fontSize="xs">
             Copyright © 0000 LOLLAND KOREA, INC. All rights reserved.
+          </Text>
+          <Text fontSize="xs" fontWeight="bold">
+            본 페이지는 졸업 프로젝트로 어떠한 영리적 활동도 하지 않는
+            사이트임을 알립니다.
           </Text>
         </Box>
       ) : (

@@ -9,6 +9,7 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  IconButton,
   Input,
   Modal,
   ModalBody,
@@ -19,36 +20,25 @@ import {
   ModalOverlay,
   Switch,
   Table,
+  TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPenNib, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { ScreenContext } from "../../../component/ScreenContext";
 
 export function MemberAddress() {
-  // 버튼 css
-  const buttonStyle = {
-    background: "black",
-    color: "whitesmoke",
-    shadow: "1px 1px 3px 1px #dadce0",
-    _hover: {
-      backgroundColor: "whitesmoke",
-      color: "black",
-      transition:
-        "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-      shadow: "1px 1px 3px 1px #dadce0 inset",
-    },
-  };
-
   const [memberAddress, setMemberAddress] = useState([]);
   const [member, setMember] = useState("");
 
@@ -61,6 +51,7 @@ export function MemberAddress() {
 
   const toast = useToast();
   const navigate = useNavigate();
+  const { isSmallScreen } = useContext(ScreenContext);
 
   // 수정 모달 -----------------------------------------------------------------
   const {
@@ -216,106 +207,79 @@ export function MemberAddress() {
   }
 
   return (
-    <Center>
-      <Card w={"1200px"} shadow={"1px 1px 3px 1px #dadce0"}>
-        <CardHeader mt={4}>
-          <Flex gap={4} alignItems={"flex-end"}>
-            <Box
-              mt={4}
-              textAlign={"center"}
-              fontSize={"2rem"}
-              fontWeight={"bold"}
-              alignItems={"center"}
-              color={"orange"}
-            >
+    <>
+      <Card>
+        <CardHeader mt={4} display="flex" justifyContent="flex-start">
+          <Text mt={4} fontWeight="bold" textAlign="left" fontSize="2xl">
+            <Text as="span" color="orange" fontSize="3xl" mr={1}>
               {member.member_name}
-            </Box>
-            <Box fontWeight={"bold"} fontSize={"1.2rem"}>
-              님의 주소 목록 입니다.
-            </Box>
-          </Flex>
+            </Text>
+            님의 주소 목록
+          </Text>
         </CardHeader>
         <CardBody>
           <Table>
             <Thead>
               <Tr>
-                <Th fontSize={"1.2rem"} w={"130px"} textAlign={"center"}>
-                  주소 별명
-                </Th>
-                <Th fontSize={"1.2rem"} w={"130px"} textAlign={"center"}>
-                  우편 번호
-                </Th>
-                <Th fontSize={"1.2rem"} w={"250px"} textAlign={"center"}>
-                  주소
-                </Th>
-                <Th fontSize={"1.2rem"} w={"200px"} textAlign={"center"}>
-                  상세 주소
-                </Th>
-                <Th fontSize={"1.2rem"} w={"170px"} textAlign={"center"}>
-                  기본 주소 여부
-                </Th>
-                <Th fontSize={"1.2rem"} w={"50px"} textAlign={"center"}></Th>
-                <Th fontSize={"1.2rem"} w={"50px"} textAlign={"center"}></Th>
+                <Th textAlign="center">기본 주소</Th>
+                <Th textAlign="center">주소 별명</Th>
+                {!isSmallScreen && (
+                  <>
+                    <Th textAlign="center">우편 번호</Th>
+                    <Th textAlign="center">주소</Th>
+                    <Th textAlign="center">상세 주소</Th>
+                  </>
+                )}
+                <Th textAlign="center">수정</Th>
+                <Th textAlign="center">삭제</Th>
               </Tr>
             </Thead>
-
-            <>
-              {memberAddress != null &&
-                memberAddress.map((address) => (
-                  <Tbody key={address.id}>
-                    <Tr>
-                      <Td textAlign={"center"}>
-                        {address.member_address_name}
-                      </Td>
-                      <Td textAlign={"center"}>{address.member_post_code}</Td>
-                      <Td textAlign={"center"}>{address.member_address}</Td>
-                      <Td w={"130px"} textAlign={"center"}>
-                        {address.member_detail_address}
-                      </Td>
-                      <Td w={"130px"} textAlign={"center"}>
-                        {address.member_address_type === "main" ? (
-                          <Box as="span">메인주소</Box>
-                        ) : (
-                          <Box as="span"> - </Box>
-                        )}
-                      </Td>
-                      <Td>
-                        <Button
-                          {...buttonStyle}
-                          onClick={() => openEditModal(address)}
-                        >
-                          수정
-                        </Button>
-                      </Td>
-                      <Td>
-                        <Button
-                          onClick={() => openDeleteModal(address)}
-                          backgroundColor={"orange"}
-                          color={"whitesmoke"}
-                          shadow="1px 1px 3px 1px #dadce0"
-                          _hover={{
-                            backgroundColor: "whitesmoke",
-                            color: "black",
-                            transition:
-                              "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-                            shadow: "1px 1px 3px 1px #dadce0 inset",
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faTrash} />
-                        </Button>
-                      </Td>
-                    </Tr>
-                  </Tbody>
-                ))}
-            </>
+            {memberAddress != null &&
+              memberAddress.map((address) => (
+                <Tbody key={address.id}>
+                  <Tr>
+                    <Td textAlign="center">
+                      {address.member_address_type === "main" ? (
+                        <Box as="span">메인주소</Box>
+                      ) : (
+                        <Box as="span"> - </Box>
+                      )}
+                    </Td>
+                    <Td textAlign="center">{address.member_address_name}</Td>
+                    {!isSmallScreen && (
+                      <>
+                        <Td textAlign="center">{address.member_post_code}</Td>
+                        <Td textAlign="center">{address.member_address}</Td>
+                        <Td textAlign="center">
+                          {address.member_detail_address}
+                        </Td>
+                      </>
+                    )}
+                    <Td>
+                      <IconButton
+                        variant="ghost"
+                        _hover={{ bgColor: "black", color: "white" }}
+                        icon={<FontAwesomeIcon icon={faPenNib} />}
+                        onClick={() => openEditModal(address)}
+                      ></IconButton>
+                    </Td>
+                    <Td>
+                      <IconButton
+                        icon={<FontAwesomeIcon icon={faTrash} />}
+                        onClick={() => openDeleteModal(address)}
+                        color="orange"
+                        _hover={{ bgColor: "orange", color: "white" }}
+                        variant="ghost"
+                      />
+                    </Td>
+                  </Tr>
+                </Tbody>
+              ))}
           </Table>
         </CardBody>
 
-        <CardFooter>
-          <Button
-            {...buttonStyle}
-            onClick={() => navigate("/memberPage/addressWrite")}
-          >
+        <CardFooter display="flex">
+          <Button w="full" onClick={() => navigate("/memberPage/addressWrite")}>
             <FontAwesomeIcon icon={faPlus} />
           </Button>
         </CardFooter>
@@ -332,148 +296,146 @@ export function MemberAddress() {
         >
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>주소 수정</ModalHeader>
+            <ModalHeader py={5}>
+              <Text as="span" mr={3}>
+                <FontAwesomeIcon icon={faPenNib} />
+              </Text>
+              주소 수정
+            </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <CardBody>
                 {/* 주소 별명 */}
-                <FormControl mt={2}>
-                  <Flex justifyContent={"center"}>
-                    <FormLabel
-                      w={"100px"}
-                      fontSize={"1.1rem"}
-                      lineHeight={"50px"}
-                    >
-                      주소 별명
-                    </FormLabel>
-                    <Input
-                      w={"500px"}
-                      h={"50px"}
-                      borderRadius={"0"}
-                      placeholder={"주소 별명을 입력해 주세요."}
-                      value={selectedAddress.member_address_name}
-                      onChange={(e) =>
-                        setSelectedAddress({
-                          ...selectedAddress,
-                          member_address_name: e.target.value,
-                        })
-                      }
-                    />
-                  </Flex>
+                <FormControl mt={2} display="flex" justifyContent="center">
+                  <FormLabel
+                    minW="100px"
+                    fontSize="md"
+                    fontWeight="bold"
+                    className="labels"
+                    lineHeight="50px"
+                  >
+                    주소 별명
+                  </FormLabel>
+                  <Input
+                    h="50px"
+                    borderRadius={0}
+                    placeholder={"주소 별명"}
+                    value={selectedAddress.member_address_name}
+                    onChange={(e) =>
+                      setSelectedAddress({
+                        ...selectedAddress,
+                        member_address_name: e.target.value,
+                      })
+                    }
+                  />
                 </FormControl>
                 {/* 우편번호 */}
-                <FormControl mt={2}>
-                  <Flex justifyContent={"center"}>
-                    <FormLabel
-                      w={"100px"}
-                      fontSize={"1.1rem"}
-                      lineHeight={"50px"}
-                    >
-                      우편번호
-                    </FormLabel>
-                    <Input
-                      placeholder={"주소 검색을 클릭 해주세요."}
-                      w={"350px"}
-                      h={"50px"}
-                      borderRadius={"0"}
-                      readOnly
-                      value={selectedAddress.member_post_code}
-                    />
-                    <Button
-                      w={"140px"}
-                      h={"50px"}
-                      ml={"10px"}
-                      onClick={handlePostCodeClick}
-                    >
-                      주소검색
-                    </Button>
-                  </Flex>
+                <FormControl mt={2} display="flex" justifyContent="center">
+                  <FormLabel
+                    minW="100px"
+                    fontSize="md"
+                    fontWeight="bold"
+                    className="labels"
+                    lineHeight="50px"
+                  >
+                    우편번호
+                  </FormLabel>
+                  <Input
+                    placeholder={"주소 검색 클릭"}
+                    h="50px"
+                    borderRadius={0}
+                    readOnly
+                    value={selectedAddress.member_post_code}
+                  />
+                  <Button
+                    minW="80px"
+                    h="50px"
+                    ml={3}
+                    onClick={handlePostCodeClick}
+                    className="labels"
+                  >
+                    주소검색
+                  </Button>
                 </FormControl>
                 {/* 주소 */}
-                <FormControl mt={2}>
-                  <Flex justifyContent={"center"}>
-                    <FormLabel
-                      w={"100px"}
-                      fontSize={"1.1rem"}
-                      lineHeight={"50px"}
-                    >
-                      주소
-                    </FormLabel>
-                    <Input
-                      w={"500px"}
-                      h={"50px"}
-                      borderRadius={"0"}
-                      readOnly
-                      value={selectedAddress.member_address}
-                    />
-                  </Flex>
+                <FormControl mt={2} display="flex" justifyContent="center">
+                  <FormLabel
+                    minW="100px"
+                    fontSize="md"
+                    fontWeight="bold"
+                    className="labels"
+                    lineHeight="50px"
+                  >
+                    주소
+                  </FormLabel>
+                  <Input
+                    w={"500px"}
+                    h={"50px"}
+                    borderRadius={"0"}
+                    readOnly
+                    value={selectedAddress.member_address}
+                  />
                 </FormControl>
                 {/* 상세주소 */}
-                <FormControl mt={2}>
-                  <Flex justifyContent={"center"}>
-                    <FormLabel
-                      w={"100px"}
-                      fontSize={"1.1rem"}
-                      lineHeight={"50px"}
-                    >
-                      상세주소
-                    </FormLabel>
-                    <Input
-                      placeholder={"상세주소를 입력해 주세요"}
-                      w={"500px"}
-                      h={"50px"}
-                      borderRadius={"0"}
-                      value={selectedAddress.member_detail_address}
-                      onChange={(e) =>
-                        setSelectedAddress({
-                          ...selectedAddress,
-                          member_detail_address: e.target.value,
-                        })
-                      }
-                    />
-                  </Flex>
+                <FormControl mt={2} display="flex" justifyContent="center">
+                  <FormLabel
+                    minW="100px"
+                    fontSize="md"
+                    fontWeight="bold"
+                    className="labels"
+                    lineHeight="50px"
+                  >
+                    상세주소
+                  </FormLabel>
+                  <Input
+                    placeholder={"상세주소를 입력해 주세요"}
+                    h="50px"
+                    borderRadius={"0"}
+                    value={selectedAddress.member_detail_address}
+                    onChange={(e) =>
+                      setSelectedAddress({
+                        ...selectedAddress,
+                        member_detail_address: e.target.value,
+                      })
+                    }
+                  />
                 </FormControl>
-                <FormControl mt={2}>
-                  <Flex align="center" justify="center">
-                    <FormLabel
-                      w={"130px"}
-                      fontSize={"1.1rem"}
-                      lineHeight={"50px"}
-                    >
-                      기본 주소 설정
-                    </FormLabel>
-                    <Box
-                      w={"470px"}
-                      h={"50px"}
-                      display={"flex"}
-                      alignItems={"center"}
-                    >
-                      <Switch
-                        size="lg"
-                        colorScheme={"gray"}
-                        isChecked={
-                          selectedAddress.member_address_type === "main"
-                        }
-                        onChange={handleMainAddressSwitch}
-                      />
-                    </Box>
-                  </Flex>
+                <FormControl mt={2} display="flex" justifyContent="center">
+                  <FormLabel
+                    minW="100px"
+                    fontSize="md"
+                    fontWeight="bold"
+                    className="labels"
+                    lineHeight="50px"
+                  >
+                    기본 주소 설정
+                  </FormLabel>
+                  <Box
+                    w={"470px"}
+                    h={"50px"}
+                    display={"flex"}
+                    alignItems={"center"}
+                  >
+                    <Switch
+                      size="lg"
+                      colorScheme={"gray"}
+                      isChecked={selectedAddress.member_address_type === "main"}
+                      onChange={handleMainAddressSwitch}
+                    />
+                  </Box>
                 </FormControl>
               </CardBody>
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter display="flex" justifyContent="center" gap={5}>
               <Button
-                mr={3}
+                w="40%"
+                bgColor="orange"
+                color="white"
                 onClick={handleEditAddressClick}
-                style={{ backgroundColor: "black", color: "whitesmoke" }}
               >
                 수정
               </Button>
-              <Button
-                colorScheme={"gray"}
-                border={"1px solid whitesmoke"}
-                onClick={onEditClose}
-              >
+              <Button w="40%" onClick={onEditClose}>
                 취소
               </Button>
             </ModalFooter>
@@ -482,29 +444,27 @@ export function MemberAddress() {
       </>
 
       {/* 삭제 모달 */}
-      <>
-        <Modal
-          isCentered
-          onClose={onDeleteClose}
-          isOpen={isDeleteOpen}
-          motionPreset="slideInBottom"
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>삭제 확인</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
-            <ModalFooter>
-              <Button colorScheme="red" mr={3} onClick={handleDeleteClick}>
-                삭제
-              </Button>
-              <Button variant="ghost" onClick={onDeleteClose}>
-                취소
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </>
-    </Center>
+      <Modal
+        isCentered
+        onClose={onDeleteClose}
+        isOpen={isDeleteOpen}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>삭제 확인</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button colorScheme="red" mr={3} onClick={handleDeleteClick}>
+              삭제
+            </Button>
+            <Button variant="ghost" onClick={onDeleteClose}>
+              취소
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
