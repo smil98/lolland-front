@@ -261,14 +261,15 @@ export function MemberManage() {
 
         <CardFooter display="flex" justifyContent="center">
           {/* 내 주소록 조회 버튼 */}
-          <ButtonGroup display="flex" justifyContent="space-between">
+          <ButtonGroup w="80%" display="flex" justifyContent="space-between">
             <Button
+              maxW="40%"
               {...buttonStyle}
               onClick={() => navigate("/memberPage/addressInfo")}
             >
               내 주소록 조회하기
             </Button>
-            <Flex gap={2}>
+            <Flex gap={2} maxW="60%">
               <Button
                 {...buttonStyle}
                 onClick={() => navigate("/memberPage/memberEdit")}

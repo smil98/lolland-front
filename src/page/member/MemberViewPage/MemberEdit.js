@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Card,
   CardBody,
   CardFooter,
@@ -346,7 +347,7 @@ export function MemberEdit() {
       })
       .then(() => {
         toast({
-          description: "인증번호를 입력해주세요.",
+          description: "이메일로 인증번호가 전송되었습니다",
           status: "success",
         });
       })
@@ -369,27 +370,28 @@ export function MemberEdit() {
     }
   }
 
-  return (
-    <Center>
-      <Card w={"700px"}>
-        <CardHeader
-          mt={4}
-          textAlign={"center"}
-          fontSize={"2rem"}
-          fontWeight={"bold"}
-          alignItems={"center"}
-        >
-          회원 정보 수정 페이지 입니다.
-        </CardHeader>
+  const labelStyle = {
+    fontSize: "md",
+    fontWeight: "bold",
+    w: "100px",
+    minW: "100px",
+    maxW: "100px",
+    h: "50px",
+    lineHeight: "50px",
+  };
 
-        <CardBody>
-          {/* 프로필 사진 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                프로필 사진
-              </FormLabel>
-              <img
+  return (
+    <Card mx={{ base: 0, md: "10%", lg: "15%", xl: "25%" }}>
+      <CardHeader textAlign="left" mt={4} fontSize="2rem" fontWeight="bold">
+        회원 정보 수정
+      </CardHeader>
+      <CardBody>
+        {/* 프로필 사진 */}
+        <FormControl mt={2}>
+          <Flex justifyContent="flex-start" mb={5}>
+            <FormLabel {...labelStyle}>프로필 사진</FormLabel>
+            <Flex flexDir="column">
+              <Image
                 src={file_url}
                 style={{
                   borderRadius: "100%",
@@ -399,38 +401,36 @@ export function MemberEdit() {
                 alt={file_name}
               />
               <Checkbox
-                mt={"180px"}
-                ml={"100px"}
-                w={"200px"}
-                size={"lg"}
-                colorScheme={"orange"}
+                mt={5}
+                size="lg"
+                colorScheme="orange"
                 onChange={handleImageChangeClick}
               >
                 사진을 변경합니다.
               </Checkbox>
             </Flex>
-            {image_type === "default" && (
-              <FormHelperText ml={"180px"}>기본 이미지 입니다.</FormHelperText>
-            )}
-          </FormControl>
+          </Flex>
+          {image_type === "default" && (
+            <FormHelperText ml={"180px"}>기본 이미지 입니다.</FormHelperText>
+          )}
+        </FormControl>
 
-          {/* 새 프로필 사진 등록 하기 */}
-          {changeImageCheck && (
-            <FormControl mt={6}>
-              <Flex justifyContent={"center"} alignItems={"center"}>
-                <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                  변경할 사진
-                </FormLabel>
+        {/* 새 프로필 사진 등록 하기 */}
+        {changeImageCheck && (
+          <FormControl mt={5}>
+            <Flex>
+              <FormLabel {...labelStyle}>사진 선택</FormLabel>
+              <Flex flexDir="column">
                 <Input
                   ref={fileInputRef}
                   mt={2}
-                  border={"none"}
-                  type={"file"}
+                  px={0}
+                  border="none"
+                  type="file"
                   accept="image/*"
-                  w={"250px"}
-                  h={"50px"}
-                  borderRadius={"0"}
-                  alignItems={"center"}
+                  h="50px"
+                  borderRadius="0"
+                  alignItems="center"
                   isDisabled={fileInputStatus}
                   onChange={(e) => {
                     setEditChangeCheck(false);
@@ -440,10 +440,8 @@ export function MemberEdit() {
                 />
                 <Checkbox
                   mt={-2}
-                  ml={"50px"}
-                  w={"200px"}
-                  size={"lg"}
-                  colorScheme={"orange"}
+                  size="md"
+                  colorScheme="orange"
                   onChange={(e) => {
                     if (e.target.checked === true) {
                       // 기본 이미지 체크 상태
@@ -461,350 +459,253 @@ export function MemberEdit() {
                     }
                   }}
                 >
-                  기본 이미지로 변경
+                  기본 이미지
                 </Checkbox>
               </Flex>
-            </FormControl>
-          )}
-
-          {/* 이름 */}
-          <FormControl mt={6}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                이 름
-              </FormLabel>
-              <input {...readOnlyStyle} readOnly value={member_name} />
             </Flex>
           </FormControl>
+        )}
 
-          {/* 아이디 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                아이디
-              </FormLabel>
-              <input {...readOnlyStyle} readOnly value={member_login_id} />
-            </Flex>
-            <Center mb={4}>
-              <FormHelperText fontSize={"1.1rem"}>
-                이름과 아이디는 수정 불가능 합니다.
-              </FormHelperText>
-            </Center>
-          </FormControl>
+        {/* 이름 */}
+        <FormControl mt={6}>
+          <Flex justifyContent="center">
+            <FormLabel {...labelStyle}>이름</FormLabel>
+            <Input px={0} h="50px" border="none" readOnly value={member_name} />
+          </Flex>
+        </FormControl>
 
-          {/* 비밀번호 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                비밀번호
-              </FormLabel>
-              <Button
-                {...buttonStyle}
-                type={"password"}
-                w={"500px"}
-                h={"50px"}
-                style={{
-                  fontWeight: "700",
-                }}
-                onClick={handleEditPasswordClick}
-              >
-                비밀번호 수정
-              </Button>
-            </Flex>
-          </FormControl>
+        {/* 아이디 */}
+        <FormControl mt={2}>
+          <Flex justifyContent="center">
+            <FormLabel {...labelStyle}>아이디</FormLabel>
+            <Input
+              px={0}
+              h="50px"
+              border="none"
+              readOnly
+              value={member_login_id}
+            />
+          </Flex>
+        </FormControl>
 
-          {/* 핸드폰번호 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                휴대폰번호
-              </FormLabel>
-              <Input
-                {...inputStyle}
-                type={"number"}
-                id="member_phone_number1"
-                maxLength={3}
-                w={"140px"}
-                h={"50px"}
-                value={member_phone_number1}
-                onChange={handlePhoneInput1Change}
-              />
-              <Box
-                fontSize={"1.1rem"}
-                lineHeight={"50px"}
-                ml={"15px"}
-                mr={"15px"}
-              >
-                -
-              </Box>
-              <Input
-                type={"number"}
-                id="member_phone_number2"
-                ref={phoneInput2Ref}
-                maxLength={4}
-                w={"140px"}
-                h={"50px"}
-                {...inputStyle}
-                value={member_phone_number2}
-                onChange={handlePhoneInput2Change}
-              />
-              <Box
-                fontSize={"1.1rem"}
-                lineHeight={"50px"}
-                ml={"15px"}
-                mr={"15px"}
-              >
-                -
-              </Box>
-              <Input
-                type={"number"}
-                id="member_phone_number3"
-                ref={phoneInput3Ref}
-                maxLength={4}
-                w={"140px"}
-                h={"50px"}
-                {...inputStyle}
-                value={member_phone_number3}
-                onChange={handlePhoneInput3Change}
-              />
-            </Flex>
-          </FormControl>
+        {/* 비밀번호 */}
+        <FormControl
+          mt={2}
+          display="flex"
+          justifyContent="flex-start"
+          alignItems="center"
+        >
+          <FormLabel {...labelStyle}>비밀번호</FormLabel>
+          <Button
+            mt={-2}
+            type="password"
+            h="50px"
+            _hover={{ bgColor: "orange", color: "white" }}
+            onClick={handleEditPasswordClick}
+          >
+            비밀번호 수정
+          </Button>
+        </FormControl>
 
-          {/* 이메일 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                이메일
-              </FormLabel>
-              <Input
-                id="member_email1"
-                w={"150px"}
-                h={"50px"}
-                {...inputStyle}
-                value={member_email1}
-                onChange={(e) => {
-                  setMember_email1(e.target.value);
-                  setEmailOverlapStatus(false);
-                  setSendCodeStatus(false);
-                  setEmailCodeCheckedState(false);
-                  setEditChangeCheck(false);
-                }}
-              />
-              <Box
-                fontSize={"1.1rem"}
-                lineHeight={"50px"}
-                ml={"15px"}
-                mr={"15px"}
-              >
-                @
-              </Box>
-              <Input
-                id="member_email2"
-                w={"150px"}
-                h={"50px"}
-                {...inputStyle}
-                value={member_email2}
-                onChange={(e) => {
-                  setMember_email2(e.target.value);
-                  setEmailOverlapStatus(false);
-                  setSendCodeStatus(false);
-                  setEditChangeCheck(false);
-                }}
-              />
-              <Button
-                {...buttonStyle}
-                isDisabled={emailOverlapStatus}
-                w={"140px"}
-                h={"50px"}
-                ml={"10px"}
-                onClick={handleEmailCheckClick}
-              >
-                중복확인
-              </Button>
-            </Flex>
+        {/* 핸드폰번호 */}
+        <FormControl mt={2} display="flex">
+          <FormLabel {...labelStyle}>휴대폰번호</FormLabel>
+          <Box display="flex">
+            <Input
+              type="number"
+              id="member_phone_number1"
+              maxLength={3}
+              textAlign="center"
+              h="50px"
+              maxW="130px"
+              value={member_phone_number1}
+              onChange={handlePhoneInput1Change}
+            />
+            <Box fontSize="lg" lineHeight="50px" mx={3}>
+              -
+            </Box>
+            <Input
+              type={"number"}
+              id="member_phone_number2"
+              textAlign="center"
+              ref={phoneInput2Ref}
+              maxLength={4}
+              h="50px"
+              maxW="130px"
+              value={member_phone_number2}
+              onChange={handlePhoneInput2Change}
+            />
+            <Box fontSize="lg" lineHeight="50px" mx={3}>
+              -
+            </Box>
+            <Input
+              type="number"
+              id="member_phone_number3"
+              ref={phoneInput3Ref}
+              textAlign="center"
+              maxLength={4}
+              h="50px"
+              maxW="130px"
+              value={member_phone_number3}
+              onChange={handlePhoneInput3Change}
+            />
+          </Box>
+        </FormControl>
 
-            {/* 인증번호 발송 버튼 */}
-            {sendCodeStatus && (
-              <Flex justifyContent={"center"} mt={2} mb={4}>
-                <Button
-                  w={"600px"}
-                  h={"50px"}
-                  colorScheme={"orange"}
-                  color={"black"}
-                  shadow={"1px 1px 3px 1px #dadce0"}
-                  _hover={{
-                    backgroundColor: "whitesmoke",
-                    color: "black",
-                    transition:
-                      "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-                    shadow: "1px 1px 3px 1px #dadce0 inset",
-                  }}
-                  onClick={handleSendEmailCodeClick}
-                >
-                  인증번호 발송
-                </Button>
-              </Flex>
-            )}
-          </FormControl>
-
-          {/* 인증번호 입력 */}
-          {inputRandomStatus && (
-            <FormControl mt={2}>
-              <Flex justifyContent={"center"}>
-                <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                  인증번호 입력
-                </FormLabel>
-                <Input
-                  shadow={"1px 1px 3px 1px #dadce0 inset"}
-                  placeholder={"메일로 전송된 인증번호를 입력해 주세요."}
-                  w={"350px"}
-                  h={"50px"}
-                  type={"number"}
-                  value={randomNumberCheck}
-                  onChange={(e) => {
-                    setRandomNumberCheck(e.target.value);
-                  }}
-                />
-                <Button
-                  bg={"black"}
-                  color={"whitesmoke"}
-                  isDisabled={emailCodeCheckedState}
-                  ml={"10px"}
-                  w={"140px"}
-                  h={"50px"}
-                  onClick={handleCodeCheckClick}
-                  shadow={"1px 1px 3px 1px #dadce0"}
-                  _hover={{
-                    backgroundColor: "whitesmoke",
-                    color: "black",
-                    transition:
-                      "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-                    shadow: "1px 1px 3px 1px #dadce0 inset",
-                  }}
-                >
-                  인증번호 확인
-                </Button>
-              </Flex>
-            </FormControl>
-          )}
-
-          {/* 우편번호 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                우편번호
-              </FormLabel>
-              <input
-                style={{
-                  boxShadow: "1px 1px 3px 2px #dadce0 inset",
-                  width: "350px",
-                  height: "50px",
-                  borderRadius: "6px",
-                  textIndent: "15px",
-                  fontSize: "16px",
-                }}
-                readOnly
-                value={member_post_code}
-              />
-              <Button
-                w={"140px"}
-                h={"50px"}
-                ml={"10px"}
-                onClick={handlePostCodeClick}
-                {...buttonStyle}
-              >
-                주소검색
-              </Button>
-            </Flex>
-          </FormControl>
-
-          {/* 주소 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                주소
-              </FormLabel>
-              <input {...readOnlyStyle} readOnly value={member_address} />
-            </Flex>
-          </FormControl>
-          {/* 상세주소 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                상세주소
-              </FormLabel>
-              <Input
-                w={"500px"}
-                h={"50px"}
-                {...inputStyle}
-                value={member_detail_address}
-                onChange={(e) => {
-                  setMember_detail_address(e.target.value);
-                  setEditChangeCheck(false);
-                }}
-              />
-            </Flex>
-          </FormControl>
-
-          {/* 자기소개 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                자기소개
-              </FormLabel>
-              <Textarea
-                w={"500px"}
-                h={"150px"}
-                {...inputStyle}
-                value={member_introduce}
-                onChange={(e) => {
-                  setMember_introduce(e.target.value);
-                  setEditChangeCheck(false);
-                }}
-              />
-            </Flex>
-          </FormControl>
-        </CardBody>
-
-        <CardFooter>
-          <Flex gap={10}>
+        {/* 이메일 */}
+        <FormControl mt={2} display="flex">
+          <FormLabel {...labelStyle}>이메일</FormLabel>
+          <Input
+            id="member_email1"
+            h="50px"
+            value={member_email1}
+            onChange={(e) => {
+              setMember_email1(e.target.value);
+              setEmailOverlapStatus(false);
+              setSendCodeStatus(false);
+              setEmailCodeCheckedState(false);
+              setEditChangeCheck(false);
+            }}
+          />
+          <Box fontSize="lg" lineHeight="50px" mx={3}>
+            @
+          </Box>
+          <Input
+            id="member_email2"
+            h={"50px"}
+            value={member_email2}
+            onChange={(e) => {
+              setMember_email2(e.target.value);
+              setEmailOverlapStatus(false);
+              setSendCodeStatus(false);
+              setEditChangeCheck(false);
+            }}
+          />
+          <Button
+            vairant="undefined"
+            _hover={{ bgColor: "orange", color: "white" }}
+            isDisabled={emailOverlapStatus}
+            minW="80px"
+            ml={3}
+            h="50px"
+            onClick={handleEmailCheckClick}
+          >
+            중복확인
+          </Button>
+        </FormControl>
+        {/* 인증번호 발송 버튼 */}
+        {sendCodeStatus && (
+          <Flex justifyContent={"center"} mt={2} mb={4}>
             <Button
-              w="300px"
-              {...buttonStyle}
-              style={{
-                fontSize: "1.1rem",
-                fontWeight: "900",
-              }}
-              bg={"whitesmoke"}
-              color="black"
+              w="full"
+              h="50px"
               _hover={{
-                backgroundColor: "black",
-                color: "whitesmoke",
-                transition:
-                  "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-                shadow: "1px 1px 3px 1px #dadce0 inset",
+                bgColor: "orange",
+                color: "white",
               }}
-              onClick={() => navigate(-1)}
+              onClick={handleSendEmailCodeClick}
             >
-              수정 취소
-            </Button>
-            <Button
-              w={"300px"}
-              {...buttonStyle}
-              style={{
-                fontSize: "1.1rem",
-                fontWeight: "900",
-              }}
-              onClick={handleEditClick}
-              isDisabled={
-                editChangeCheck || !emailOverlapStatus || !emailCodeCheckedState
-              }
-            >
-              수정 하기
+              인증번호 발송
             </Button>
           </Flex>
-        </CardFooter>
-      </Card>
-    </Center>
+        )}
+
+        {/* 인증번호 입력 */}
+        {inputRandomStatus && (
+          <FormControl mt={2} display="flex">
+            <FormLabel {...labelStyle}>인증번호 입력</FormLabel>
+            <Input
+              placeholder="인증번호 입력"
+              h="50px"
+              type="number"
+              value={randomNumberCheck}
+              onChange={(e) => {
+                setRandomNumberCheck(e.target.value);
+              }}
+            />
+            <Button
+              isDisabled={emailCodeCheckedState}
+              ml={3}
+              minW="100px"
+              h="50px"
+              onClick={handleCodeCheckClick}
+              _hover={{
+                bgColor: "orange",
+                color: "white",
+              }}
+            >
+              인증번호 확인
+            </Button>
+          </FormControl>
+        )}
+
+        {/* 우편번호 */}
+        <FormControl mt={2} display="flex">
+          <FormLabel {...labelStyle}>우편번호</FormLabel>
+          <Input h="50px" readOnly value={member_post_code} />
+          <Button
+            minW="100px"
+            h="50px"
+            ml={3}
+            onClick={handlePostCodeClick}
+            bgColor="orange"
+            color="white"
+          >
+            주소검색
+          </Button>
+        </FormControl>
+
+        {/* 주소 */}
+        <FormControl mt={2} display="flex">
+          <FormLabel {...labelStyle}>주소</FormLabel>
+          <Input h="50px" readOnly value={member_address} />
+        </FormControl>
+
+        {/* 상세주소 */}
+        <FormControl mt={2} display="flex">
+          <FormLabel {...labelStyle}>상세주소</FormLabel>
+          <Input
+            h="50px"
+            value={member_detail_address}
+            onChange={(e) => {
+              setMember_detail_address(e.target.value);
+              setEditChangeCheck(false);
+            }}
+          />
+        </FormControl>
+
+        {/* 자기소개 */}
+        <FormControl mt={2} display="flex">
+          <FormLabel {...labelStyle}>자기소개</FormLabel>
+          <Textarea
+            h="150px"
+            value={member_introduce}
+            onChange={(e) => {
+              setMember_introduce(e.target.value);
+              setEditChangeCheck(false);
+            }}
+          />
+        </FormControl>
+      </CardBody>
+
+      <CardFooter display="flex">
+        <ButtonGroup w="full" justifyContent="center" spacing={5}>
+          <Button w="40%" onClick={() => navigate(-1)}>
+            취소
+          </Button>
+          <Button
+            w="40%"
+            bgColor="orange"
+            color="white"
+            onClick={handleEditClick}
+            isDisabled={
+              editChangeCheck || !emailOverlapStatus || !emailCodeCheckedState
+            }
+          >
+            수정
+          </Button>
+        </ButtonGroup>
+      </CardFooter>
+    </Card>
   );
 }
