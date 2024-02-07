@@ -29,10 +29,11 @@ import {
   faChevronRight,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "date-fns";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { ScreenContext } from "../../component/ScreenContext";
 
 function PageButton({ variant, pageNumber, children }) {
   const [params] = useSearchParams();
@@ -99,6 +100,8 @@ export function MemberPurchase() {
   const location = useLocation();
   const [pageInfo, setPageInfo] = useState(null);
 
+  const { isSmallScreen } = useContext(ScreenContext);
+
   useEffect(() => {
     axios
       .get("/api/payment/my?" + params)
@@ -156,13 +159,20 @@ export function MemberPurchase() {
   };
 
   return (
-    <Card mx={{ base: "0", md: "10%", lg: "20%", xl: "25%" }} w="full">
-      <CardHeader px={10} pt={10}>
-        <Heading size="lg" textAlign="left">
-          결제 내역
-        </Heading>
+    <Card mx={{ base: "0", md: "10%", lg: "15%", xl: "20%" }} w="full">
+      <CardHeader
+        px={10}
+        pt={10}
+        display="flex"
+        alignItems="center"
+        fontWeight="bold"
+        textAlign="left"
+        fontSize="2xl"
+        className="specialHeadings"
+      >
+        결제 내역
       </CardHeader>
-      <CardBody p={10}>
+      <CardBody pb={10} px={10}>
         <VStack
           divider={<StackDivider borderColor="gray.200" />}
           spacing={7}
@@ -184,13 +194,18 @@ export function MemberPurchase() {
                 }
                 onClick={() => navigate(`order/${order.id}`)}
               >
-                <HStack alignItems="center" spacing={4}>
-                  <Image src={order.main_img_uri} w="90px" h="90px" />
+                <HStack alignItems="center" spacing={2}>
+                  <Image
+                    src={order.main_img_uri}
+                    w={isSmallScreen ? "50px" : "90px"}
+                    h={isSmallScreen ? "50px" : "90px"}
+                  />
                   <VStack alignItems="flex-start" h="90px" spacing={2}>
                     <HStack alignItems="center" mt={4}>
                       <Tag
                         borderRadius="full"
                         variant="outline"
+                        size={isSmallScreen ? "sm" : "base"}
                         px={3}
                         colorScheme={
                           getStatusStyle(order.order_status).colorScheme
@@ -205,19 +220,27 @@ export function MemberPurchase() {
                         {formatOrderDate(order.order_reg_time)}
                       </Text>
                     </HStack>
-                    <Heading size="sm">{order.order_name}</Heading>
+                    <Text
+                      fontWeight="bold"
+                      className="labels"
+                      fontSize={isSmallScreen ? "sm" : "md"}
+                    >
+                      {order.order_name}
+                    </Text>
                   </VStack>
                 </HStack>
-                <HStack spacing={5}>
-                  <Heading
+                <HStack spacing={isSmallScreen ? 1 : 5}>
+                  <Text
+                    fontWeight="bold"
+                    className="labels"
                     color={getStatusStyle(order.order_status).color}
-                    size="md"
+                    fontSize={isSmallScreen ? "sm" : "lg"}
                   >
                     {formatPrice(order.total_price)} 원
-                  </Heading>
-                  <Heading size="md" opacity={0.4}>
+                  </Text>
+                  <Text fontSize={isSmallScreen ? 0 : "md"} opacity={0.4}>
                     <FontAwesomeIcon icon={faChevronRight} />
-                  </Heading>
+                  </Text>
                 </HStack>
               </Box>
             ))}

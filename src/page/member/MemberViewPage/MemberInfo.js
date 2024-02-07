@@ -87,6 +87,7 @@ export function MemberInfo() {
         fontSize="2rem"
         fontWeight="bold"
         alignItems="center"
+        className="specialHeadings"
       >
         <Text as="span" mr={3}>
           <FontAwesomeIcon icon={faShieldHalved} />

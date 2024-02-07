@@ -133,13 +133,18 @@ export function MemberManage() {
   return (
     <>
       <Card w="full" mx={{ base: 0, md: "10%", lg: "15%", xl: "25%" }}>
-        <CardHeader textAlign="left" fontSize="3xl" fontWeight="bold">
-          <Text>
-            <Text as="span" fontSize="3xl" color="#E87F06">
-              {member.member_name}
-            </Text>
-            님 정보 입니다.
+        <CardHeader
+          display="flex"
+          alignItems="center"
+          fontWeight="bold"
+          textAlign="left"
+          fontSize="2xl"
+          className="specialHeadings"
+        >
+          <Text as="span" fontSize="3xl" color="orange" mr={1}>
+            {member.member_name}
           </Text>
+          님 정보 입니다.
         </CardHeader>
         <CardBody px={10}>
           {/* 프로필 사진 */}

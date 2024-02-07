@@ -209,13 +209,18 @@ export function MemberAddress() {
   return (
     <>
       <Card mx={{ base: 0, md: "10%", lg: "10%", xl: "15%" }}>
-        <CardHeader mt={4} display="flex" justifyContent="flex-start">
-          <Text mt={4} fontWeight="bold" textAlign="left" fontSize="2xl">
-            <Text as="span" color="orange" fontSize="3xl" mr={1}>
-              {member.member_name}
-            </Text>
-            님의 주소 목록
+        <CardHeader
+          display="flex"
+          alignItems="center"
+          fontWeight="bold"
+          textAlign="left"
+          fontSize="2xl"
+          className="specialHeadings"
+        >
+          <Text as="span" color="orange" fontSize="3xl" mr={1}>
+            {member.member_name}
           </Text>
+          님의 주소 목록
         </CardHeader>
         <CardBody>
           <Table>
@@ -277,9 +282,12 @@ export function MemberAddress() {
               ))}
           </Table>
         </CardBody>
-
         <CardFooter display="flex">
-          <Button w="full" onClick={() => navigate("/memberPage/addressWrite")}>
+          <Button
+            w="full"
+            _hover={{ bgColor: "orange", color: "white" }}
+            onClick={() => navigate("/memberPage/addressWrite")}
+          >
             <FontAwesomeIcon icon={faPlus} />
           </Button>
         </CardFooter>
@@ -296,7 +304,7 @@ export function MemberAddress() {
         >
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader py={5}>
+            <ModalHeader py={5} className="specialHeadings">
               <Text as="span" mr={3}>
                 <FontAwesomeIcon icon={faPenNib} />
               </Text>
@@ -369,7 +377,6 @@ export function MemberAddress() {
                     주소
                   </FormLabel>
                   <Input
-                    w={"500px"}
                     h={"50px"}
                     borderRadius={"0"}
                     readOnly
@@ -452,7 +459,7 @@ export function MemberAddress() {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>삭제 확인</ModalHeader>
+          <ModalHeader className="specialHeadings">삭제 확인</ModalHeader>
           <ModalCloseButton />
           <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
           <ModalFooter>

@@ -106,8 +106,13 @@ export function MemberAddressWrite() {
   }
 
   return (
-    <Card mx={{ base: 0, md: "10%", lg: "15%", xl: "25%" }}>
-      <CardHeader fontSize="2xl" textAlign="left" fontWeight="bold">
+    <Card mx={{ base: "0", md: "10%", lg: "15%", xl: "20%" }}>
+      <CardHeader
+        fontSize="2xl"
+        textAlign="left"
+        fontWeight="bold"
+        className="specialHeadings"
+      >
         <Text as="span" mr={3}>
           <FontAwesomeIcon icon={faAddressBook} />
         </Text>

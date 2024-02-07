@@ -1,17 +1,18 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
-  Center,
   Checkbox,
   Flex,
   Select,
   Table,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -113,16 +114,11 @@ function MemberBoardLikePagination({ pageInfo }) {
 export function MemberBoardLike() {
   // 버튼 css
   const buttonStyle = {
-    background: "black",
-    color: "whitesmoke",
-    shadow: "1px 1px 3px 1px #dadce0",
-    _hover: {
-      backgroundColor: "whitesmoke",
-      color: "black",
-      transition:
-        "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-      shadow: "1px 1px 3px 1px #dadce0 inset",
-    },
+    border: "1px solid black",
+    borderRadius: 0,
+    bgColor: "white",
+    variant: "undefined",
+    _hover: { bgColor: "black", color: "white" },
   };
 
   // 회원이 좋아요 한 게임 게시글 목록
@@ -225,147 +221,119 @@ export function MemberBoardLike() {
   }
 
   return (
-    <Center>
-      <Card shadow={"1px 1px 3px 1px #dadce0"}>
-        <CardHeader
-          mt={4}
-          textAlign={"center"}
-          fontSize={"2rem"}
-          fontWeight={"bold"}
-          alignItems={"center"}
-        >
-          <Flex gap={4}>
-            <Box>
-              <FontAwesomeIcon
-                icon={faThumbsUp}
-                color={"orange"}
-                fontSize={"2.5rem"}
-              />
-            </Box>
-            <Box>좋아요한 게시글 목록</Box>
-          </Flex>
-        </CardHeader>
-
-        <CardHeader>
-          <Center mt={2} mb={4}>
-            <Flex justifyContent="space-between" w="100%">
-              <Flex gap={4}>
-                <Button {...buttonStyle} onClick={handleSelectAll}>
-                  전체 선택
-                </Button>
-                <Button {...buttonStyle} onClick={handleDesSelectAll}>
-                  전체 해제
-                </Button>
-              </Flex>
-
-              <Button
-                {...buttonStyle}
-                background={"orange"}
-                color={"black"}
-                onClick={handleSelectDeleteClick}
-              >
-                선택 삭제
-              </Button>
-            </Flex>
-          </Center>
-        </CardHeader>
-
-        <CardBody>
-          <Box>
-            <Select
-              defaultValue={"전체"}
-              w={"100px"}
-              onChange={handleCategoryChange}
+    <Card mx={{ base: 0, md: "10%", lg: "15%", xl: "25%" }}>
+      <CardHeader
+        display="flex"
+        alignItems="center"
+        fontWeight="bold"
+        textAlign="left"
+        fontSize="2xl"
+        className="specialHeadings"
+      >
+        <Text as="span" mr={3}>
+          <FontAwesomeIcon icon={faThumbsUp} color={"orange"} />
+        </Text>
+        추천 게시글 목록
+      </CardHeader>
+      <CardBody>
+        <Flex justifyContent="space-between" w="100%">
+          <Select
+            defaultValue={"전체"}
+            w={"100px"}
+            onChange={handleCategoryChange}
+          >
+            <option value="전체">전체</option>
+            <option value="잡담">잡담</option>
+            <option value="질문">질문</option>
+            <option value="정보">정보</option>
+            <option value="공지">공지</option>
+            <option>본문</option>
+          </Select>
+          <ButtonGroup>
+            <Button {...buttonStyle} onClick={handleSelectAll}>
+              전체 선택
+            </Button>
+            <Button {...buttonStyle} onClick={handleDesSelectAll}>
+              전체 해제
+            </Button>
+            <Button
+              bgColor="orange"
+              color="white"
+              borderRadius={0}
+              onClick={handleSelectDeleteClick}
             >
-              <option value="전체">전체</option>
-              <option value="잡담">잡담</option>
-              <option value="질문">질문</option>
-              <option value="정보">정보</option>
-              <option value="공지">공지</option>
-              <option>본문</option>
-            </Select>
-          </Box>
-        </CardBody>
+              선택 삭제
+            </Button>
+          </ButtonGroup>
+        </Flex>
+      </CardBody>
 
-        <CardBody>
-          <Table textAlign={"center"}>
-            <Thead>
-              <Tr>
-                <Th fontSize={"1.2rem"} w={"150px"} textAlign={"center"}>
-                  선택
-                </Th>
-                <Th fontSize={"1.2rem"} w={"180px"} textAlign={"center"}>
-                  카테고리
-                </Th>
-                <Th fontSize={"1.2rem"} w={"280px"} textAlign={"center"}>
-                  제목
-                </Th>
-                <Th fontSize={"1.2rem"} w={"350px"} textAlign={"center"}>
-                  내용
-                </Th>
-                <Th fontSize={"1.2rem"} w={"200px"} textAlign={"center"}>
-                  좋아요 삭제
-                </Th>
+      <CardBody>
+        <Table textAlign={"center"}>
+          <Thead>
+            <Tr>
+              <Th textAlign="center">선택</Th>
+              <Th textAlign="center">카테고리</Th>
+              <Th textAlign="center">제목</Th>
+              <Th textAlign="center">내용</Th>
+              <Th textAlign="center">추천 삭제</Th>
+            </Tr>
+          </Thead>
+
+          <Tbody>
+            {gameBoardList.map((gameBoard) => (
+              <Tr key={gameBoard.id}>
+                <Td textAlign={"center"}>
+                  <Checkbox
+                    size={"lg"}
+                    colorScheme={"orange"}
+                    isChecked={checkLikeGameBoard.includes(gameBoard.id)}
+                    onChange={(e) => handleLikeRowChange(e, gameBoard.id)}
+                  ></Checkbox>
+                </Td>
+                <Td
+                  textAlign={"center"}
+                  _hover={{ cursor: "pointer" }}
+                  onClick={() => navigate("/gameboard/id/" + gameBoard.id)}
+                >
+                  {gameBoard.category}
+                </Td>
+                <Td
+                  textAlign={"center"}
+                  _hover={{ cursor: "pointer" }}
+                  onClick={() => navigate("/gameboard/id/" + gameBoard.id)}
+                >
+                  {gameBoard.title.length > 10
+                    ? gameBoard.title.slice(0, 10) + "..."
+                    : gameBoard.title}
+                </Td>
+                <Td
+                  textAlign={"center"}
+                  _hover={{ cursor: "pointer" }}
+                  onClick={() => navigate("/gameboard/id/" + gameBoard.id)}
+                >
+                  {gameBoard.board_content.length > 15
+                    ? gameBoard.board_content.slice(0, 15) + "..."
+                    : gameBoard.board_content}
+                </Td>
+                <Td textAlign={"center"}>
+                  <Button
+                    {...buttonStyle}
+                    bg={"gray"}
+                    onClick={() => handleLikeDeleteClick(gameBoard.id)}
+                  >
+                    <FontAwesomeIcon icon={faBan} fontSize={"2rem"} />
+                  </Button>
+                </Td>
               </Tr>
-            </Thead>
+            ))}
+          </Tbody>
+        </Table>
+      </CardBody>
 
-            <Tbody>
-              {gameBoardList.map((gameBoard) => (
-                <Tr key={gameBoard.id}>
-                  <Td textAlign={"center"}>
-                    <Checkbox
-                      size={"lg"}
-                      colorScheme={"orange"}
-                      isChecked={checkLikeGameBoard.includes(gameBoard.id)}
-                      onChange={(e) => handleLikeRowChange(e, gameBoard.id)}
-                    ></Checkbox>
-                  </Td>
-                  <Td
-                    textAlign={"center"}
-                    _hover={{ cursor: "pointer" }}
-                    onClick={() => navigate("/gameboard/id/" + gameBoard.id)}
-                  >
-                    {gameBoard.category}
-                  </Td>
-                  <Td
-                    textAlign={"center"}
-                    _hover={{ cursor: "pointer" }}
-                    onClick={() => navigate("/gameboard/id/" + gameBoard.id)}
-                  >
-                    {gameBoard.title.length > 10
-                      ? gameBoard.title.slice(0, 10) + "..."
-                      : gameBoard.title}
-                  </Td>
-                  <Td
-                    textAlign={"center"}
-                    _hover={{ cursor: "pointer" }}
-                    onClick={() => navigate("/gameboard/id/" + gameBoard.id)}
-                  >
-                    {gameBoard.board_content.length > 15
-                      ? gameBoard.board_content.slice(0, 15) + "..."
-                      : gameBoard.board_content}
-                  </Td>
-                  <Td textAlign={"center"}>
-                    <Button
-                      {...buttonStyle}
-                      bg={"gray"}
-                      onClick={() => handleLikeDeleteClick(gameBoard.id)}
-                    >
-                      <FontAwesomeIcon icon={faBan} fontSize={"2rem"} />
-                    </Button>
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </CardBody>
-
-        <Center>
-          <CardFooter>
-            <MemberBoardLikePagination pageInfo={pageInfo} />
-          </CardFooter>
-        </Center>
-      </Card>
-    </Center>
+      <CardFooter display="flex" justifyContent="center">
+        <MemberBoardLikePagination pageInfo={pageInfo} />
+      </CardFooter>
+    </Card>
   );
 }
