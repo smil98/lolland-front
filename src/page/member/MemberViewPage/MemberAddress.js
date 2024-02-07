@@ -208,7 +208,7 @@ export function MemberAddress() {
 
   return (
     <>
-      <Card>
+      <Card mx={{ base: 0, md: "10%", lg: "10%", xl: "15%" }}>
         <CardHeader mt={4} display="flex" justifyContent="flex-start">
           <Text mt={4} fontWeight="bold" textAlign="left" fontSize="2xl">
             <Text as="span" color="orange" fontSize="3xl" mr={1}>

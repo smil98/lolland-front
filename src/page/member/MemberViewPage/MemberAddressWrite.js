@@ -11,12 +11,15 @@ import {
   FormLabel,
   Input,
   Switch,
+  Text,
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAddressBook } from "@fortawesome/free-solid-svg-icons";
 
 export function MemberAddressWrite() {
   // 주소 --------------------------------------------------------------------------------------
@@ -103,120 +106,136 @@ export function MemberAddressWrite() {
   }
 
   return (
-    <Center>
-      <Card>
-        <CardHeader fontSize={"1.5rem"} color={"#5F625C"} textAlign={"center"}>
-          배송지 추가
-        </CardHeader>
-        <CardBody>
-          {/* 주소 별명 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                주소 별명
-              </FormLabel>
-              <Input
-                w={"500px"}
-                h={"50px"}
-                borderRadius={"0"}
-                placeholder={"주소 별명을 입력해 주세요."}
-                value={member_address_name}
-                onChange={(e) => setMember_address_name(e.target.value)}
-              />
-            </Flex>
-          </FormControl>
-          {/* 우편번호 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                우편번호
-              </FormLabel>
-              <Input
-                placeholder={"주소 검색을 클릭 해주세요."}
-                w={"350px"}
-                h={"50px"}
-                borderRadius={"0"}
-                readOnly
-                value={member_post_code}
-              />
-              <Button
-                w={"140px"}
-                h={"50px"}
-                ml={"10px"}
-                onClick={handlePostCodeClick}
-              >
-                주소검색
-              </Button>
-            </Flex>
-          </FormControl>
-          {/* 주소 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                주소
-              </FormLabel>
-              <Input
-                w={"500px"}
-                h={"50px"}
-                borderRadius={"0"}
-                value={member_address}
-                readOnly
-              />
-            </Flex>
-          </FormControl>
-          {/* 상세주소 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                상세주소
-              </FormLabel>
-              <Input
-                placeholder={"상세주소를 입력해 주세요"}
-                w={"500px"}
-                h={"50px"}
-                borderRadius={"0"}
-                value={member_detail_address}
-                onChange={(e) => setMember_detail_address(e.target.value)}
-              />
-            </Flex>
-          </FormControl>
-          <FormControl mt={2}>
-            <Flex align="center" justify="center">
-              <FormLabel w={"130px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                기본 주소 설정
-              </FormLabel>
-              <Box
-                w={"470px"}
-                h={"50px"}
-                display={"flex"}
-                alignItems={"center"}
-              >
-                <Switch
-                  size="lg"
-                  colorScheme={"gray"}
-                  onChange={handleMainAddressSwitch}
-                />
-              </Box>
-            </Flex>
-          </FormControl>
-        </CardBody>
-
-        <CardFooter>
-          <Flex gap={4}>
-            <Button onClick={() => navigate("/memberPage/addressInfo")}>
-              취소
-            </Button>
-            <Button
-              bg={"black"}
-              color={"whitesmoke"}
-              _hover={{ background: "whitesmoke", color: "black" }}
-              onClick={handleSubmitClick}
+    <Card mx={{ base: 0, md: "10%", lg: "15%", xl: "25%" }}>
+      <CardHeader fontSize="2xl" textAlign="left" fontWeight="bold">
+        <Text as="span" mr={3}>
+          <FontAwesomeIcon icon={faAddressBook} />
+        </Text>
+        배송지 추가
+      </CardHeader>
+      <CardBody>
+        {/* 주소 별명 */}
+        <FormControl mt={2}>
+          <Flex justifyContent="center">
+            <FormLabel
+              minW="100px"
+              fontSize="md"
+              className="labels"
+              fontWeight="bold"
+              lineHeight="50px"
             >
-              등록
+              주소 별명
+            </FormLabel>
+            <Input
+              h="50px"
+              borderRadius={0}
+              placeholder="주소 별명"
+              value={member_address_name}
+              onChange={(e) => setMember_address_name(e.target.value)}
+            />
+          </Flex>
+        </FormControl>
+        {/* 우편번호 */}
+        <FormControl mt={2}>
+          <Flex justifyContent="center">
+            <FormLabel
+              minW="100px"
+              fontSize="md"
+              className="labels"
+              fontWeight="bold"
+              lineHeight="50px"
+            >
+              우편번호
+            </FormLabel>
+            <Input
+              placeholder="주소 검색 클릭"
+              h="50px"
+              borderRadius={0}
+              readOnly
+              value={member_post_code}
+            />
+            <Button
+              w={"140px"}
+              h={"50px"}
+              ml={"10px"}
+              onClick={handlePostCodeClick}
+            >
+              주소검색
             </Button>
           </Flex>
-        </CardFooter>
-      </Card>
-    </Center>
+        </FormControl>
+        {/* 주소 */}
+        <FormControl mt={2} display="flex">
+          <FormLabel
+            minW="100px"
+            fontSize="md"
+            className="labels"
+            fontWeight="bold"
+            lineHeight="50px"
+          >
+            주소
+          </FormLabel>
+          <Input
+            w={"500px"}
+            h={"50px"}
+            borderRadius={"0"}
+            value={member_address}
+            readOnly
+          />
+        </FormControl>
+        {/* 상세주소 */}
+        <FormControl mt={2} display="flex">
+          <FormLabel
+            minW="100px"
+            fontSize="md"
+            className="labels"
+            fontWeight="bold"
+            lineHeight="50px"
+          >
+            상세주소
+          </FormLabel>
+          <Input
+            placeholder={"상세주소"}
+            w={"500px"}
+            h={"50px"}
+            borderRadius={"0"}
+            value={member_detail_address}
+            onChange={(e) => setMember_detail_address(e.target.value)}
+          />
+        </FormControl>
+        <FormControl mt={2} display="flex" alignItems="center">
+          <FormLabel
+            minW="100px"
+            fontSize="md"
+            className="labels"
+            fontWeight="bold"
+            lineHeight="50px"
+          >
+            기본 주소 설정
+          </FormLabel>
+          <Switch
+            h="50px"
+            lineHeight="55px"
+            size="lg"
+            colorScheme="orange"
+            onChange={handleMainAddressSwitch}
+          />
+        </FormControl>
+      </CardBody>
+
+      <CardFooter display="flex" justifyContent="center" gap={5}>
+        <Button
+          w="40%"
+          bgColor="orange"
+          color="white"
+          onClick={handleSubmitClick}
+        >
+          등록
+        </Button>
+        <Button w="40%" onClick={() => navigate("/memberPage/addressInfo")}>
+          취소
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
