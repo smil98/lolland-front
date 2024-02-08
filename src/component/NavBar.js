@@ -138,40 +138,33 @@ export function NavBar() {
               transition="all 1s ease"
             />
           ) : (
-            <>
-              <Flex>
-                <ButtonGroup
-                  variant="undefined"
-                  size="md"
-                  alignItems={"center"}
-                >
-                  <Button onClick={() => navigate("/")}>HOME</Button>
-                  <Button onClick={() => navigate("/product/list/")}>
-                    신상품
-                  </Button>
-                  <Button onClick={() => navigate("/productEvent")}>
-                    이벤트
-                  </Button>
-                </ButtonGroup>
-              </Flex>
-
-              {/* --------- 로고 --------- */}
-              <Box
-                display="flex"
-                textAlign="center"
-                alignItems="center"
-                justifyContent="center"
-                onClick={() => navigate("/")}
-                _hover={{
-                  cursor: "pointer",
-                }}
-                fontSize="3xl"
-                className="logo"
-              >
-                LOLLAND
-              </Box>
-            </>
+            <Flex>
+              <ButtonGroup variant="undefined" size="md" alignItems={"center"}>
+                <Button onClick={() => navigate("/")}>HOME</Button>
+                <Button onClick={() => navigate("/product/list/")}>
+                  신상품
+                </Button>
+                <Button onClick={() => navigate("/productEvent")}>
+                  이벤트
+                </Button>
+              </ButtonGroup>
+            </Flex>
           )}
+          {/* --------- 로고 --------- */}
+          <Box
+            display="flex"
+            textAlign="center"
+            alignItems="center"
+            justifyContent="center"
+            onClick={() => navigate("/")}
+            _hover={{
+              cursor: "pointer",
+            }}
+            fontSize="3xl"
+            className="logo"
+          >
+            LOLLAND
+          </Box>
           <ButtonGroup
             variant="undefined"
             display="flex"
@@ -179,33 +172,37 @@ export function NavBar() {
             justifyContent="center"
             size="lg"
           >
-            <IconButton
-              icon={<FontAwesomeIcon icon={faBagShopping} />}
-              onClick={() => {
-                if (isAuthenticated()) {
-                  navigate("/cart");
-                } else {
-                  navigate("/login");
-                }
-              }}
-            />
             {isAuthenticated() ? (
               <>
-                <IconButton
-                  icon={<FontAwesomeIcon icon={faUser} />}
-                  onClick={() => navigate("/memberPage")}
-                />
-                {isAdmin() && (
-                  <IconButton
-                    icon={
-                      <FontAwesomeIcon
-                        icon={faUsersGear}
-                        onClick={() => {
-                          navigate("adminPage");
-                        }}
+                {isSmallScreen || (
+                  <>
+                    <IconButton
+                      icon={<FontAwesomeIcon icon={faBagShopping} />}
+                      onClick={() => {
+                        if (isAuthenticated()) {
+                          navigate("/cart");
+                        } else {
+                          navigate("/login");
+                        }
+                      }}
+                    />
+                    <IconButton
+                      icon={<FontAwesomeIcon icon={faUser} />}
+                      onClick={() => navigate("/memberPage")}
+                    />
+                    {isAdmin() && (
+                      <IconButton
+                        icon={
+                          <FontAwesomeIcon
+                            icon={faUsersGear}
+                            onClick={() => {
+                              navigate("adminPage");
+                            }}
+                          />
+                        }
                       />
-                    }
-                  />
+                    )}
+                  </>
                 )}
                 <IconButton
                   icon={<FontAwesomeIcon icon={faArrowRightFromBracket} />}
@@ -214,26 +211,16 @@ export function NavBar() {
               </>
             ) : (
               <>
-                <Tooltip
-                  label="로그인 해주세요!"
-                  hasArrow
-                  fontSize="xs"
-                  bgColor="orange"
-                  color="black"
-                  fontWeight="bold"
-                  borderRadius={10}
-                  gutter={0}
-                  isOpen={true}
-                >
-                  <IconButton
-                    icon={<FontAwesomeIcon icon={faPowerOff} />}
-                    onClick={() => navigate("/login")}
-                  />
-                </Tooltip>
                 <IconButton
-                  icon={<FontAwesomeIcon icon={faUserPlus} />}
-                  onClick={() => navigate("/signup")}
+                  icon={<FontAwesomeIcon icon={faPowerOff} />}
+                  onClick={() => navigate("/login")}
                 />
+                {isSmallScreen || (
+                  <IconButton
+                    icon={<FontAwesomeIcon icon={faUserPlus} />}
+                    onClick={() => navigate("/signup")}
+                  />
+                )}
               </>
             )}
           </ButtonGroup>
@@ -247,14 +234,91 @@ export function NavBar() {
               <Text
                 fontSize="3xl"
                 className="logo"
+                mb={3}
                 onClick={() => navigate("/")}
                 _hover={{ cursor: "pointer" }}
               >
                 LOLLAND
               </Text>
               <DrawerCloseButton mt={1} size="lg" />
+              {isAuthenticated() ? (
+                <ButtonGroup
+                  className="labels"
+                  w="full"
+                  size="md"
+                  display="flex"
+                  justifyContent="center"
+                >
+                  <Button
+                    w="45%"
+                    border="1px solid orange"
+                    bgColor="white"
+                    color="orange"
+                    _hover={{ bgColor: "#FFF5E8" }}
+                    onClick={() => {
+                      handleLogoutClick();
+                      onClose();
+                    }}
+                  >
+                    로그아웃
+                  </Button>
+                  <Button
+                    w="45%"
+                    bgColor="orange"
+                    color="white"
+                    _hover={{ bgColor: "#F4A100" }}
+                    onClick={() => {
+                      navigate("/cart");
+                      onClose();
+                    }}
+                  >
+                    장바구니
+                  </Button>
+                </ButtonGroup>
+              ) : (
+                <ButtonGroup
+                  w="full"
+                  size="md"
+                  className="labels"
+                  display="flex"
+                  justifyContent="center"
+                >
+                  <Button
+                    w="45%"
+                    border="1px solid orange"
+                    bgColor="white"
+                    color="orange"
+                    _hover={{ bgColor: "#FFF5E8" }}
+                    onClick={() => {
+                      navigate("/login");
+                      onClose();
+                    }}
+                  >
+                    로그인
+                  </Button>
+                  <Button
+                    w="45%"
+                    bgColor="orange"
+                    color="white"
+                    _hover={{ bgColor: "#F4A100" }}
+                    onClick={() => {
+                      navigate("/signup");
+                      onClose();
+                    }}
+                  >
+                    회원가입
+                  </Button>
+                </ButtonGroup>
+              )}
             </DrawerHeader>
-            <DrawerBody>
+            <DrawerBody
+              css={{
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+                scrollbarWidth: "none",
+              }}
+            >
               <Accordion
                 id="myAccordian"
                 w={"100%"}
@@ -280,10 +344,20 @@ export function NavBar() {
                   </AccordionButton>
                   <AccordionPanel whiteSpace="pre-wrap" pb={4} px={7}>
                     <List spacing={3} className="labels" fontSize="md">
-                      <ListItem onClick={() => navigate("/gameboard/list")}>
+                      <ListItem
+                        onClick={() => {
+                          navigate("/gameboard/list");
+                          onClose();
+                        }}
+                      >
                         게임 커뮤니티
                       </ListItem>
-                      <ListItem onClick={() => navigate("/gearlistlayout")}>
+                      <ListItem
+                        onClick={() => {
+                          navigate("/gearlistlayout");
+                          onClose();
+                        }}
+                      >
                         게임 장비 커뮤니티
                       </ListItem>
                     </List>
@@ -312,7 +386,10 @@ export function NavBar() {
                       fontSize="md"
                       px="6%"
                       mb={4}
-                      onClick={() => navigate("/product/list/")}
+                      onClick={() => {
+                        navigate("/product/list/");
+                        onClose();
+                      }}
                     >
                       신상품
                     </Text>
@@ -321,7 +398,10 @@ export function NavBar() {
                       fontSize="md"
                       px="6%"
                       mb={2}
-                      onClick={() => navigate("/productEvent")}
+                      onClick={() => {
+                        navigate("/productEvent");
+                        onClose();
+                      }}
                     >
                       이벤트
                     </Text>
@@ -347,11 +427,12 @@ export function NavBar() {
                             <AccordionPanel whiteSpace="pre-wrap" pb={4}>
                               <List spacing={3} className="labels">
                                 <ListItem
-                                  onClick={() =>
+                                  onClick={() => {
                                     navigate(
                                       `/category/${category.category_id}`,
-                                    )
-                                  }
+                                    );
+                                    onClose();
+                                  }}
                                 >
                                   {category.category_name} 전체보기
                                 </ListItem>
@@ -359,11 +440,12 @@ export function NavBar() {
                                   category.subCategory.map((subCategory) => (
                                     <ListItem
                                       key={subCategory.subcategory_id}
-                                      onClick={() =>
+                                      onClick={() => {
                                         navigate(
                                           `/category/${category.category_id}/${subCategory.subcategory_id}`,
-                                        )
-                                      }
+                                        );
+                                        onClose();
+                                      }}
                                     >
                                       {subCategory.subcategory_name}
                                     </ListItem>
@@ -377,7 +459,6 @@ export function NavBar() {
                 </AccordionItem>
               </Accordion>
             </DrawerBody>
-            <DrawerFooter></DrawerFooter>
           </DrawerContent>
         </Drawer>
 
