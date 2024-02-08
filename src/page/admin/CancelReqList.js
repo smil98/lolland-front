@@ -6,6 +6,7 @@ import {
   CardFooter,
   CardHeader,
   Center,
+  Divider,
   Flex,
   HStack,
   Image,
@@ -83,13 +84,13 @@ export function CancelReqList() {
   }, [location, refundStatus]);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const year = date.getFullYear().toString().substr(2); // 2024를 24로 변환
+    const year = date.getFullYear().toString();
     const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 1을 더함
     const day = date.getDate().toString().padStart(2, "0");
     const hours = date.getHours().toString().padStart(2, "0");
     const minutes = date.getMinutes().toString().padStart(2, "0");
 
-    return `${year}년 ${month}월 ${day}일 / ${hours}시${minutes}분`;
+    return `${year}.${month}.${day} ${hours}:${minutes}`;
   };
 
   // 환불 버튼 클릭시 로직
@@ -114,159 +115,139 @@ export function CancelReqList() {
   };
 
   return (
-    <Center>
-      <Card shadow={"1px 1px 3px 1px #dadce0"} w={"1500px"} mt={6} mb={6}>
-        <CardHeader
-          mt={4}
-          textAlign={"center"}
-          fontSize={"2rem"}
-          fontWeight={"bold"}
-          alignItems={"center"}
-        >
-          취소 요청 목록
-        </CardHeader>
+    <Card w="full" mx={{ base: 0, lg: "5%" }}>
+      <CardHeader
+        fontSize="2xl"
+        textAlign="left"
+        fontWeight="bold"
+        className="specialHeadings"
+      >
+        결제 취소 요청 목록
+      </CardHeader>
 
-        <SimpleGrid columns={3} spacing={2}>
-          {cancelReqList.map((cancelList) => (
-            <CardBody key={cancelList.id}>
-              <Box
-                margin="auto"
-                p={5}
-                borderWidth="1px"
-                borderRadius="lg"
-                shadow={"1px 1px 3px 1px #dadce0 inset"}
+      <SimpleGrid
+        columns={{ base: 1, md: 2, xl: 3 }}
+        spacing={{ md: 0, xl: 1 }}
+      >
+        {cancelReqList.map((cancelList) => (
+          <CardBody key={cancelList.id}>
+            <Box
+              margin="auto"
+              p={5}
+              borderWidth="1px"
+              borderRadius="lg"
+              shadow="base"
+            >
+              <Flex
+                borderRadius="5px"
+                px={2}
+                h="40px"
+                lineHeight="40px"
+                fontSize="sm"
+                fontWeight="bold"
+                bg="black"
+                color="white"
+                justifyContent="space-between"
               >
-                <Flex
-                  borderRadius={"5px"}
-                  gap={4}
-                  h={"40px"}
-                  lineHeight={"40px"}
-                  fontSize={"0.9rem"}
-                  fontWeight={"bold"}
-                  bg={"black"}
-                  color={"whitesmoke"}
-                  justifyContent={"space-between"}
-                  // shadow: "1px 1px 3px 1px #dadce0"
-                >
-                  <Text ml={2}>
-                    주문일 : {formatDate(cancelList.order_reg_time)}
-                  </Text>
-                  <Box>|</Box>
-                  <Text mr={2}>주문번호 : {cancelList.id}</Text>
+                <Text>주문번호 : {cancelList.id}</Text>
+                <Text>주문일 : {formatDate(cancelList.order_reg_time)}</Text>
+              </Flex>
+              <Box mt={2}>
+                <Text borderRadius={5} fontSize="sm" bgColor="gray.200">
+                  결제 상품 정보
+                </Text>
+                <Flex gap={4} mt={2}>
+                  <Box alignSelf="flex-start">
+                    <Image src={cancelList.main_img_uri} w="100px" h="100px" />
+                  </Box>
+                  <Box textAlign="left">
+                    <Text fontSize="md">{cancelList.order_name}</Text>
+                    <Text mt={2} gap={1} fontSize="md">
+                      <Text as="span" fontWeight="bold" color="orange" mr={1}>
+                        {cancelList.total_price.toLocaleString()}
+                      </Text>
+                      원
+                    </Text>
+                  </Box>
                 </Flex>
-                <Box mt={2}>
-                  <Text
-                    borderRadius={"5px"}
-                    fontSize={"0.9rem"}
-                    fontWeight={"bold"}
-                    bg={"#dadce0"}
-                  >
-                    결제 상품 정보
-                  </Text>
-                  <Flex gap={4} mt={2}>
-                    <Box alignSelf="flex-start">
-                      <Image
-                        src={cancelList.main_img_uri}
-                        w="100px"
-                        h="100px"
-                      />
-                    </Box>
-                    <Box textAlign={"left"}>
-                      <Text fontSize={"1rem"}>{cancelList.order_name}</Text>
-                      <Flex mt={2} gap={1} fontSize={"1rem"}>
-                        <Text fontWeight={"bold"} color={"orangered"}>
-                          {cancelList.total_price.toLocaleString()}
-                        </Text>
-                        원
-                      </Flex>
-                    </Box>
-                  </Flex>
-                </Box>
-
-                <Box mt={2}>
-                  <Text
-                    borderRadius={"5px"}
-                    fontSize={"0.9rem"}
-                    fontWeight={"bold"}
-                    bg={"#dadce0"}
-                  >
-                    회원 정보
-                  </Text>
-                  <Flex gap={4} mt={2}>
-                    <Box
-                      textAlign={"left"}
-                      ml={2}
-                      fontWeight={"bold"}
-                      w={"50px"}
-                    >
-                      <Text mt={1}>이름</Text>
-                      <Text mt={1}>아이디</Text>
-                      <Text mt={1}>이메일</Text>
-                      <Text mt={1}>전화번호</Text>
-                    </Box>
-                    <Box border={"1px solid #dadce0"}></Box>
-                    <Box textAlign={"left"} ml={2} w={"220px"}>
-                      <Text mt={1}>{cancelList.membersDto.member_name}</Text>
-                      <Text mt={1}>
-                        {cancelList.membersDto.member_login_id}
-                      </Text>
-                      <Text mt={1}>{cancelList.membersDto.member_email}</Text>
-                      <Text mt={1}>
-                        {cancelList.membersDto.member_phone_number}
-                      </Text>
-                    </Box>
-                    <Box border={"1px solid #dadce0"}></Box>
-                    <Box mt={8}>
-                      <Button
-                        w={"50px"}
-                        h={"40px"}
-                        {...buttonStyle}
-                        onClick={() => {
-                          handleRefundClick(cancelList);
-                        }}
-                      >
-                        환불
-                      </Button>
-                    </Box>
-                  </Flex>
-                </Box>
               </Box>
-            </CardBody>
-          ))}
-        </SimpleGrid>
+              <Box mt={2}>
+                <Text borderRadius={5} fontSize="sm" bgColor="gray.200">
+                  환불 요청 회원 정보
+                </Text>
+                <Flex mt={2} justifyContent="space-evenly">
+                  <Box textAlign="left" ml={2} fontWeight="bold">
+                    <Text mt={1}>이름</Text>
+                    <Text mt={1}>아이디</Text>
+                    <Text mt={1}>이메일</Text>
+                    <Text mt={1}>전화번호</Text>
+                  </Box>
+                  <Center>
+                    <Divider orientation="vertical" />
+                  </Center>
+                  <Box textAlign="left">
+                    <Text mt={1}>{cancelList.membersDto.member_name}</Text>
+                    <Text mt={1}>{cancelList.membersDto.member_login_id}</Text>
+                    <Text mt={1}>{cancelList.membersDto.member_email}</Text>
+                    <Text mt={1}>
+                      {cancelList.membersDto.member_phone_number}
+                    </Text>
+                  </Box>
+                  <Center>
+                    <Divider orientation="vertical" />
+                  </Center>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Button
+                      size={{ base: "md", md: "sm", xl: "md" }}
+                      onClick={() => {
+                        handleRefundClick(cancelList);
+                      }}
+                    >
+                      환불
+                    </Button>
+                  </Box>
+                </Flex>
+              </Box>
+            </Box>
+          </CardBody>
+        ))}
+      </SimpleGrid>
 
-        {/* 페이지 버튼  */}
-        <Box mt={10} mb={10}>
-          {pageInfo.prevPageNumber && (
-            <Button
-              bg={"white"}
-              color={"black"}
-              _hover={{ backgroundColor: "black", color: "whitesmoke" }}
-              onClick={() => navigate("?page=" + pageInfo.prevPageNumber)}
-            >
-              <Flex gap={1}>
-                <FontAwesomeIcon icon={faCaretLeft} />
-                이전
-              </Flex>
-            </Button>
-          )}
+      {/* 페이지 버튼  */}
+      <Box mt={10} mb={10}>
+        {pageInfo.prevPageNumber && (
+          <Button
+            bg={"white"}
+            color={"black"}
+            _hover={{ backgroundColor: "black", color: "whitesmoke" }}
+            onClick={() => navigate("?page=" + pageInfo.prevPageNumber)}
+          >
+            <Flex gap={1}>
+              <FontAwesomeIcon icon={faCaretLeft} />
+              이전
+            </Flex>
+          </Button>
+        )}
 
-          {pageInfo.nextPageNumber && (
-            <Button
-              bg={"white"}
-              color={"black"}
-              _hover={{ backgroundColor: "black", color: "whitesmoke" }}
-              ml={2}
-              onClick={() => navigate("?page=" + pageInfo.nextPageNumber)}
-            >
-              <Flex gap={1}>
-                다음
-                <FontAwesomeIcon icon={faCaretRight} />
-              </Flex>
-            </Button>
-          )}
-        </Box>
-      </Card>
-    </Center>
+        {pageInfo.nextPageNumber && (
+          <Button
+            bg={"white"}
+            color={"black"}
+            _hover={{ backgroundColor: "black", color: "whitesmoke" }}
+            ml={2}
+            onClick={() => navigate("?page=" + pageInfo.nextPageNumber)}
+          >
+            <Flex gap={1}>
+              다음
+              <FontAwesomeIcon icon={faCaretRight} />
+            </Flex>
+          </Button>
+        )}
+      </Box>
+    </Card>
   );
 }
