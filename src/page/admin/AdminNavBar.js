@@ -7,6 +7,7 @@ import {
   FormControl,
   FormLabel,
   IconButton,
+  Stack,
   Tooltip,
   VStack,
 } from "@chakra-ui/react";
@@ -22,9 +23,12 @@ import {
   faUsersLine,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { ScreenContext } from "../../component/ScreenContext";
 
 export function AdminNavBar() {
   const navigate = useNavigate();
+  const { isSmallScreen } = useContext(ScreenContext);
 
   // 회원 목록 클릭시
   function handleMemberListClick() {
@@ -38,124 +42,68 @@ export function AdminNavBar() {
   };
 
   return (
-    <>
-      <Flex
-        flexDir="column"
-        ml={5}
-        my={5}
-        px={2}
-        py={5}
-        justifyContent="center"
-        borderRadius={20}
-        textAlign="center"
-        bgColor="#FFF"
-        shadow="md"
+    <Flex
+      flexDir={isSmallScreen ? "row" : "column"}
+      mx={isSmallScreen ? 2 : 5}
+      mt={isSmallScreen ? -5 : 5}
+      mb={5}
+      px={2}
+      py={isSmallScreen ? 2 : 5}
+      justifyContent="center"
+      borderRadius="full"
+      textAlign="center"
+      bgColor="#FFF"
+      border="1px solid #F4F4F4"
+      shadow="md"
+    >
+      <Stack
+        direction={isSmallScreen ? "row" : "column"}
+        spacing={{ base: 8, md: 10 }}
       >
-        <VStack spacing={10}>
-          <Tooltip hasArrow label="상품 등록" placement="right">
-            <IconButton
-              {...buttonStyle}
-              onClick={() => navigate("product/write/")}
-              icon={<FontAwesomeIcon icon={faPlus} />}
-            />
-          </Tooltip>
-          <Tooltip hasArrow label="상품 리스트" placement="right">
-            <IconButton
-              {...buttonStyle}
-              icon={<FontAwesomeIcon icon={faTableList} />}
-              onClick={() => {
-                navigate("/product/list/");
-              }}
-            />
-          </Tooltip>
-          {/*<Tooltip hasArrow label="판매 현황 보기" placement="right">*/}
-          {/*  <IconButton*/}
-          {/*    {...buttonStyle}*/}
-          {/*    icon={<FontAwesomeIcon icon={faChartLine} />}*/}
-          {/*  />*/}
-          {/*</Tooltip>*/}
-          <Tooltip hasArrow label="문의 답변 등록하기" placement="right">
-            <IconButton
-              {...buttonStyle}
-              icon={<FontAwesomeIcon icon={faComment} />}
-              onClick={() => navigate("qna")}
-            />
-          </Tooltip>
-          <Tooltip hasArrow label="회원 목록" placement="right">
-            <IconButton
-              {...buttonStyle}
-              icon={<FontAwesomeIcon icon={faPeopleGroup} />}
-              onClick={() => navigate("/adminPage/memberList")}
-            />
-          </Tooltip>
-          <Tooltip hasArrow label="취소 요청" placement="right">
-            <IconButton
-              {...buttonStyle}
-              icon={<FontAwesomeIcon icon={faCommentsDollar} />}
-              onClick={() => navigate("/adminPage")}
-            />
-          </Tooltip>
-        </VStack>
-      </Flex>
-      {/*<Card>*/}
-      {/*  <CardHeader>관리자 페이지 입니다.</CardHeader>*/}
-
-      {/*  <CardBody border={"1px solid black"} bg={"black"} color={"whitesmoke"}>*/}
-      {/*    <Flex gap={10}>*/}
-      {/*      /!* 상품 등록 *!/*/}
-      {/*      <FormControl>*/}
-      {/*        <Flex justify={"space-between"}>*/}
-      {/*          <FormLabel*/}
-      {/*            _hover={{ cursor: "pointer" }}*/}
-      {/*            fontWeight={"900"}*/}
-      {/*            onClick={() => navigate("/product/write/")}*/}
-      {/*          >*/}
-      {/*            상품 등록 >*/}
-      {/*          </FormLabel>*/}
-      {/*          <Box>*/}
-      {/*            <FontAwesomeIcon icon={faPlus} />*/}
-      {/*          </Box>*/}
-      {/*        </Flex>*/}
-      {/*      </FormControl>*/}
-      {/*      <Box border={"1px solid whitesmoke"}></Box>*/}
-
-      {/*      /!* 상품 목록 *!/*/}
-      {/*      <FormControl>*/}
-      {/*        <Flex justify={"space-between"}>*/}
-      {/*          <FormLabel*/}
-      {/*            _hover={{ cursor: "pointer" }}*/}
-      {/*            fontWeight={"900"}*/}
-      {/*            onClick={() => {*/}
-      {/*              navigate("/product/list/");*/}
-      {/*            }}*/}
-      {/*          >*/}
-      {/*            상품 목록 >*/}
-      {/*          </FormLabel>*/}
-      {/*          <Box>*/}
-      {/*            <FontAwesomeIcon icon={faTableList} />*/}
-      {/*          </Box>*/}
-      {/*        </Flex>*/}
-      {/*      </FormControl>*/}
-      {/*      <Box border={"1px solid whitesmoke"}></Box>*/}
-
-      {/*      /!* 회원 목록 *!/*/}
-      {/*      <FormControl>*/}
-      {/*        <Flex justify={"space-between"}>*/}
-      {/*          <FormLabel*/}
-      {/*            _hover={{ cursor: "pointer" }}*/}
-      {/*            fontWeight={"900"}*/}
-      {/*            onClick={handleMemberListClick}*/}
-      {/*          >*/}
-      {/*            회원 목록 관리 >*/}
-      {/*          </FormLabel>*/}
-      {/*          <Box>*/}
-      {/*            <FontAwesomeIcon icon={faPeopleGroup} />*/}
-      {/*          </Box>*/}
-      {/*        </Flex>*/}
-      {/*      </FormControl>*/}
-      {/*    </Flex>*/}
-      {/*  </CardBody>*/}
-      {/*</Card>*/}
-    </>
+        <Tooltip hasArrow label="상품 등록" placement="right">
+          <IconButton
+            {...buttonStyle}
+            onClick={() => navigate("product/write/")}
+            icon={<FontAwesomeIcon icon={faPlus} />}
+          />
+        </Tooltip>
+        <Tooltip hasArrow label="상품 리스트" placement="right">
+          <IconButton
+            {...buttonStyle}
+            icon={<FontAwesomeIcon icon={faTableList} />}
+            onClick={() => {
+              navigate("/product/list/");
+            }}
+          />
+        </Tooltip>
+        {/*<Tooltip hasArrow label="판매 현황 보기" placement="right">*/}
+        {/*  <IconButton*/}
+        {/*    {...buttonStyle}*/}
+        {/*    icon={<FontAwesomeIcon icon={faChartLine} />}*/}
+        {/*  />*/}
+        {/*</Tooltip>*/}
+        <Tooltip hasArrow label="문의 답변 등록하기" placement="right">
+          <IconButton
+            {...buttonStyle}
+            icon={<FontAwesomeIcon icon={faComment} />}
+            onClick={() => navigate("qna")}
+          />
+        </Tooltip>
+        <Tooltip hasArrow label="회원 목록" placement="right">
+          <IconButton
+            {...buttonStyle}
+            icon={<FontAwesomeIcon icon={faPeopleGroup} />}
+            onClick={() => navigate("/adminPage/memberList")}
+          />
+        </Tooltip>
+        <Tooltip hasArrow label="취소 요청" placement="right">
+          <IconButton
+            {...buttonStyle}
+            icon={<FontAwesomeIcon icon={faCommentsDollar} />}
+            onClick={() => navigate("/adminPage")}
+          />
+        </Tooltip>
+      </Stack>
+    </Flex>
   );
 }

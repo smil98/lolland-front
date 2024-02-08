@@ -10,9 +10,11 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { AdminNavBar } from "./AdminNavBar";
 import { useContext, useEffect } from "react";
 import { LoginContext } from "../../component/LoginProvider";
+import { ScreenContext } from "../../component/ScreenContext";
 
 export function AdminView() {
   const { isAdmin } = useContext(LoginContext);
+  const { isSmallScreen } = useContext(ScreenContext);
 
   const navigate = useNavigate();
 
@@ -27,30 +29,23 @@ export function AdminView() {
   }
 
   return (
-    <>
-      <Flex position="relative" justifyContent="space-between">
-        <AdminNavBar />
-        <Box
-          w="full"
-          mx={5}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          textAlign="center"
-        >
-          <Outlet />
-        </Box>
-      </Flex>
-      {/*<Center>*/}
-      {/*  <Card w={"1500px"}>*/}
-      {/*    <CardHeader>*/}
-      {/*      <AdminNavBar />*/}
-      {/*    </CardHeader>*/}
-      {/*    <CardBody>*/}
-      {/*      <Outlet />*/}
-      {/*    </CardBody>*/}
-      {/*  </Card>*/}
-      {/*</Center>*/}
-    </>
+    <Flex
+      position="relative"
+      flexDir={isSmallScreen ? "column" : "row"}
+      justifyContent="space-between"
+    >
+      <AdminNavBar />
+      <Box
+        w="full"
+        minH={isSmallScreen ? "full" : "560px"}
+        my={isSmallScreen ? 2 : 5}
+        display="flex"
+        justifyContent="center"
+        alignItems="flex-start"
+        textAlign="center"
+      >
+        <Outlet />
+      </Box>
+    </Flex>
   );
 }
