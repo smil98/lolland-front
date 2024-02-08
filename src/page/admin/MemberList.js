@@ -44,6 +44,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCaretLeft,
   faCaretRight,
+  faSearch,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -142,20 +143,6 @@ function SearchMember() {
     placeholder: "검색어 입력",
   };
 
-  // 버튼 css
-  const buttonStyle = {
-    background: "black",
-    color: "whitesmoke",
-    shadow: "1px 1px 3px 1px #dadce0",
-    _hover: {
-      backgroundColor: "whitesmoke",
-      color: "black",
-      transition:
-        "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-      shadow: "1px 1px 3px 1px #dadce0 inset",
-    },
-  };
-
   const [keyword, setKeyword] = useState("");
   const [findType, setFindType] = useState("id");
 
@@ -176,14 +163,19 @@ function SearchMember() {
   };
 
   return (
-    <Flex justifyContent={"center"} mt={10} gap={2}>
+    <Flex
+      justifyContent="center"
+      mx={{ base: "5%", md: "10%", lg: "15%" }}
+      gap={2}
+    >
       <Menu>
         <MenuButton
+          fontWeight="normal"
           {...inputStyle}
           as={Button}
           rightIcon={<ChevronDownIcon />}
           minW="100px"
-          h="50px"
+          h="35px"
           bg="white"
           border="1px solid gray"
         >
@@ -198,7 +190,7 @@ function SearchMember() {
       <Input
         border="1px solid black"
         borderRadius={0}
-        h="50px"
+        h="35px"
         _hover={{ border: "1px solid black" }}
         _focus={{ border: "2px solid orange", shadow: "none" }}
         placeholder="검색어 입력"
@@ -206,19 +198,18 @@ function SearchMember() {
         onChange={(e) => setKeyword(e.target.value)}
         onKeyDown={handleKeyDown}
       />
-      <Button
+      <IconButton
+        icon={<FontAwesomeIcon icon={faSearch} />}
         border="1px solid black"
         borderRadius={0}
         variant="none"
         color="white"
         bgColor="black"
         minW="80px"
-        h="50px"
+        h="35px"
         _hover={{ bgColor: "orange", border: "1px solid orange" }}
         onClick={handleSearch}
-      >
-        검색
-      </Button>
+      />
     </Flex>
   );
 }
@@ -298,14 +289,18 @@ export function MemberList() {
   };
 
   return (
-    <Card w="full" mx={{ base: "0", md: "10%", lg: "15%", xl: "20%" }}>
-      <CardHeader
-        fontSize="2xl"
-        textAlign="left"
-        fontWeight="bold"
-        className="specialHeadings"
-      >
-        회원 목록
+    <Card w="full" mx={{ base: "0", md: "3%", xl: "15%" }}>
+      <CardHeader>
+        <Text
+          fontSize="2xl"
+          textAlign="left"
+          fontWeight="bold"
+          className="specialHeadings"
+          mb={5}
+        >
+          회원 목록
+        </Text>
+        <SearchMember />
       </CardHeader>
       <CardBody p={3}>
         {isSmallScreen ? (
@@ -402,8 +397,6 @@ export function MemberList() {
             </Tbody>
           </Table>
         )}
-
-        <SearchMember />
         <AdminMemberPagination pageInfo={pageInfo} />
       </CardBody>
 

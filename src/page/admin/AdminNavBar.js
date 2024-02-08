@@ -67,15 +67,6 @@ export function AdminNavBar() {
             icon={<FontAwesomeIcon icon={faPlus} />}
           />
         </Tooltip>
-        <Tooltip hasArrow label="상품 리스트" placement="right">
-          <IconButton
-            {...buttonStyle}
-            icon={<FontAwesomeIcon icon={faTableList} />}
-            onClick={() => {
-              navigate("/product/list/");
-            }}
-          />
-        </Tooltip>
         {/*<Tooltip hasArrow label="판매 현황 보기" placement="right">*/}
         {/*  <IconButton*/}
         {/*    {...buttonStyle}*/}
