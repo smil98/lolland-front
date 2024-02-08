@@ -12,13 +12,14 @@ import {
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
   Outlet,
@@ -27,7 +28,12 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faQuestionCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import { ScreenContext } from "../../component/ScreenContext";
 
 function PageButton({ variant, pageNumber, children }) {
   const [params] = useSearchParams();
@@ -95,6 +101,7 @@ export function QnaAnswer() {
   const navigate = useNavigate();
   const [pageInfo, setPageInfo] = useState(null);
   const location = useLocation();
+  const { isSmallScreen } = useContext(ScreenContext);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -140,52 +147,110 @@ export function QnaAnswer() {
   };
 
   return (
-    <VStack spacing={5} w="full" my={10}>
-      <Card w="full" px="3%">
-        <CardHeader>
-          <Heading size="lg">문의 목록</Heading>
+    <VStack spacing={5} w="full">
+      <Card w="full" mx={{ base: "0", md: "10%", lg: "15%", xl: "20%" }}>
+        <CardHeader
+          fontSize="2xl"
+          textAlign="left"
+          fontWeight="bold"
+          className="specialHeadings"
+        >
+          <Text as="span" mr={3} color="orange">
+            <FontAwesomeIcon icon={faQuestionCircle} />
+          </Text>
+          문의 목록
         </CardHeader>
+        <Box mx={5} border="1px solid black" p={2}>
+          최근 수정되었거나 답변이 없는 문의 순으로 불러옵니다.
+        </Box>
         <CardBody>
-          <TableContainer>
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th textAlign="center">상품명</Th>
-                  <Th textAlign="center">문의 제목</Th>
-                  <Th textAlign="center">문의 등록일자</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {questionList && questionList.length > 0 ? (
-                  questionList.map((q) => (
-                    <Tr
-                      key={q.question_id}
-                      onClick={() => {
-                        navigate(`write/${q.question_id}`);
-                        const targetElement =
-                          document.getElementById("answerSection");
-                        if (targetElement) {
-                          targetElement.scrollIntoView({ behavior: "smooth" });
-                        }
-                      }}
-                    >
-                      <Td textAlign="center">{q.product_name}</Td>
-                      <Td textAlign="center">{q.question_title}</Td>
-                      <Td textAlign="center">
-                        {formattedDate(q.question_reg_time)}
+          {isSmallScreen ? (
+            <VStack>
+              {questionList && questionList.length > 0 ? (
+                questionList.map((q) => (
+                  <Card
+                    key={q.question_id}
+                    onClick={() => {
+                      navigate(`write/${q.question_id}`);
+                      const targetElement =
+                        document.getElementById("answerSection");
+                      if (targetElement) {
+                        targetElement.scrollIntoView({
+                          behavior: "smooth",
+                        });
+                      }
+                    }}
+                    w="full"
+                    textAlign="left"
+                    border="1px solid #F1F1F1"
+                  >
+                    <CardBody>
+                      <Text display="flex" justifyContent="space-between">
+                        {q.product_name.length > 40
+                          ? q.product_name.slice(0, 40) + "..."
+                          : q.product_name}
+                        <Text as="span" color="#BBBBBB" ml={1}>
+                          {formattedDate(q.question_reg_time)}
+                        </Text>
+                      </Text>
+                      <Text fontWeight="bold" fontSize="md" className="labels">
+                        {q.question_title}
+                      </Text>
+                    </CardBody>
+                  </Card>
+                ))
+              ) : (
+                <Card p={5}>등록된 문의가 없습니다</Card>
+              )}
+            </VStack>
+          ) : (
+            <TableContainer>
+              <Table>
+                <Thead>
+                  <Tr>
+                    <Th textAlign="center">상품명</Th>
+                    <Th textAlign="center">문의 제목</Th>
+                    <Th textAlign="center">문의 등록일자</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {questionList && questionList.length > 0 ? (
+                    questionList.map((q) => (
+                      <Tr
+                        key={q.question_id}
+                        onClick={() => {
+                          navigate(`write/${q.question_id}`);
+                          const targetElement =
+                            document.getElementById("answerSection");
+                          if (targetElement) {
+                            targetElement.scrollIntoView({
+                              behavior: "smooth",
+                            });
+                          }
+                        }}
+                      >
+                        <Td textAlign="center">
+                          {q.product_name.length > 40
+                            ? q.product_name.slice(0, 40) + "..."
+                            : q.product_name}
+                        </Td>
+                        <Td textAlign="center">{q.question_title}</Td>
+                        <Td textAlign="center">
+                          {formattedDate(q.question_reg_time)}
+                        </Td>
+                      </Tr>
+                    ))
+                  ) : (
+                    <Tr>
+                      <Td colSpan={3} h={5} textAlign="center">
+                        아직 등록된 문의가 없습니다
                       </Td>
                     </Tr>
-                  ))
-                ) : (
-                  <Tr>
-                    <Td colSpan={3} h={5} textAlign="center">
-                      아직 등록된 문의가 없습니다
-                    </Td>
-                  </Tr>
-                )}
-              </Tbody>
-            </Table>
-          </TableContainer>
+                  )}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          )}
         </CardBody>
         <CardFooter display="flex" justifyContent="center">
           <Pagination pageInfo={pageInfo} />

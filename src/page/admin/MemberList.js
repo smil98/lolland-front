@@ -1,4 +1,8 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Button,
   Card,
@@ -6,7 +10,10 @@ import {
   CardHeader,
   Center,
   Flex,
+  IconButton,
   Input,
+  List,
+  ListItem,
   Menu,
   MenuButton,
   MenuItem,
@@ -18,16 +25,20 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Slide,
+  Stack,
   Table,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -38,6 +49,7 @@ import {
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import * as PropTypes from "prop-types";
+import { ScreenContext } from "../../component/ScreenContext";
 
 // 관리자 회원 관리 페이지 버튼
 function AdminMemberPageButton({
@@ -123,8 +135,13 @@ function AdminMemberPagination({ pageInfo }) {
 function SearchMember() {
   // 인풋 css
   const inputStyle = {
-    shadow: "1px 1px 3px 1px #dadce0 inset",
+    border: "1px solid black",
+    borderRadius: 0,
+    _hover: { border: "1px solid black" },
+    _focus: { border: "2px solid orange", shadow: "none" },
+    placeholder: "검색어 입력",
   };
+
   // 버튼 css
   const buttonStyle = {
     background: "black",
@@ -165,10 +182,10 @@ function SearchMember() {
           {...inputStyle}
           as={Button}
           rightIcon={<ChevronDownIcon />}
-          w={"130px"}
-          h={"50px"}
-          bg={"white"}
-          border={"1px solid gray"}
+          minW="100px"
+          h="50px"
+          bg="white"
+          border="1px solid gray"
         >
           {findType === "id" && "아이디"}
           {findType === "name" && "이름"}
@@ -179,15 +196,27 @@ function SearchMember() {
         </MenuList>
       </Menu>
       <Input
-        {...inputStyle}
-        w={"300px"}
-        h={"50px"}
+        border="1px solid black"
+        borderRadius={0}
+        h="50px"
+        _hover={{ border: "1px solid black" }}
+        _focus={{ border: "2px solid orange", shadow: "none" }}
+        placeholder="검색어 입력"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
-        placeholder={"검색어를 입력해 주세요."}
         onKeyDown={handleKeyDown}
       />
-      <Button {...buttonStyle} w={"100px"} h={"50px"} onClick={handleSearch}>
+      <Button
+        border="1px solid black"
+        borderRadius={0}
+        variant="none"
+        color="white"
+        bgColor="black"
+        minW="80px"
+        h="50px"
+        _hover={{ bgColor: "orange", border: "1px solid orange" }}
+        onClick={handleSearch}
+      >
         검색
       </Button>
     </Flex>
@@ -195,22 +224,10 @@ function SearchMember() {
 }
 
 export function MemberList() {
-  // 탈퇴 버튼 css
-  const buttonStyle = {
-    background: "orange",
-    color: "whitesmoke",
-    shadow: "1px 1px 3px 1px #dadce0",
-    _hover: {
-      backgroundColor: "whitesmoke",
-      color: "black",
-      transition:
-        "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-      shadow: "1px 1px 3px 1px #dadce0 inset",
-    },
-  };
   const [memberList, setMemberList] = useState([]);
   const [pageInfo, setPageInfo] = useState("");
   const [selectMember, setSelectMember] = useState("");
+  const { isSmallScreen } = useContext(ScreenContext);
 
   // 회원 탈퇴 처리 인식
   const [checkMember, setCheckMember] = useState(false);
@@ -272,54 +289,98 @@ export function MemberList() {
       .finally(() => onClose());
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  };
+
   return (
-    <Center>
-      <Card shadow={"1px 1px 3px 1px #dadce0"} mt={6} mb={6}>
-        <CardHeader
-          mt={4}
-          textAlign={"center"}
-          fontSize={"2rem"}
-          fontWeight={"bold"}
-          alignItems={"center"}
-        >
-          회원 목록
-        </CardHeader>
-        <CardBody>
-          <Table textAlign={"center"}>
+    <Card w="full" mx={{ base: "0", md: "10%", lg: "15%", xl: "20%" }}>
+      <CardHeader
+        fontSize="2xl"
+        textAlign="left"
+        fontWeight="bold"
+        className="specialHeadings"
+      >
+        회원 목록
+      </CardHeader>
+      <CardBody p={3}>
+        {isSmallScreen ? (
+          <Accordion allowMultiple>
+            {memberList.map((member) => (
+              <AccordionItem key={member.id}>
+                <Text>
+                  <AccordionButton _expanded={{ bgColor: "gray.200" }}>
+                    <Text flex="1" textAlign="left">
+                      {member.member_login_id}
+                    </Text>
+                    <Tooltip hasArrow label="탈퇴 처리" placement="top">
+                      <IconButton
+                        colorScheme="red"
+                        variant="ghost"
+                        icon={<FontAwesomeIcon icon={faTrashCan} />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleMemberDeleteClick(member);
+                        }}
+                      />
+                    </Tooltip>
+                  </AccordionButton>
+                </Text>
+                <AccordionPanel textAlign="left">
+                  <List spacing={1}>
+                    <ListItem display="flex">
+                      <Text as="span" w="80px" mr={3} fontWeight="bold">
+                        아이디
+                      </Text>
+                      {member.member_login_id}
+                    </ListItem>
+                    <ListItem display="flex">
+                      <Text as="span" w="80px" mr={3} fontWeight="bold">
+                        이름
+                      </Text>
+                      {member.member_name}
+                    </ListItem>
+                    <ListItem display="flex">
+                      <Text as="span" w="80px" mr={3} fontWeight="bold">
+                        휴대폰번호
+                      </Text>
+                      {member.member_phone_number}
+                    </ListItem>
+                    <ListItem display="flex">
+                      <Text as="span" w="80px" mr={3} fontWeight="bold">
+                        이메일
+                      </Text>
+                      {member.member_email}
+                    </ListItem>
+                    <ListItem display="flex">
+                      <Text as="span" w="80px" mr={3} fontWeight="bold">
+                        가입일
+                      </Text>
+                      {formatDate(member.reg_time)}
+                    </ListItem>
+                  </List>
+                </AccordionPanel>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        ) : (
+          <Table>
             <Thead>
               <Tr>
-                <Th fontSize={"1.2rem"} w={"180px"} textAlign={"center"}>
-                  아이디
-                </Th>
-                <Th fontSize={"1.2rem"} w={"180px"} textAlign={"center"}>
-                  이름
-                </Th>
-                <Th fontSize={"1.2rem"} w={"200px"} textAlign={"center"}>
-                  핸드폰번호
-                </Th>
-                <Th fontSize={"1.2rem"} w={"250px"} textAlign={"center"}>
-                  이메일
-                </Th>
-                <Th fontSize={"1.2rem"} w={"200px"} textAlign={"center"}>
-                  가입일
-                </Th>
-                <Th fontSize={"1.2rem"} w={"200px"} textAlign={"center"}>
-                  탈퇴 처리
-                </Th>
+                <Th textAlign="center">아이디</Th>
+                <Th textAlign="center">이름</Th>
+                <Th textAlign="center"> 핸드폰번호</Th>
+                <Th textAlign="center"> 이메일</Th>
+                <Th textAlign="center">가입일</Th>
+                <Th textAlign="center">탈퇴</Th>
               </Tr>
             </Thead>
             <Tbody>
               {memberList.map((member) => {
-                const formatDate = (dateString) => {
-                  const date = new Date(dateString);
-                  const year = date.getFullYear();
-                  const month = (date.getMonth() + 1)
-                    .toString()
-                    .padStart(2, "0");
-                  const day = date.getDate().toString().padStart(2, "0");
-                  return `${year}년 ${month}월 ${day}일`;
-                };
-
                 return (
                   <Tr key={member.id}>
                     <Td textAlign={"center"}>{member.member_login_id}</Td>
@@ -328,57 +389,53 @@ export function MemberList() {
                     <Td textAlign={"center"}>{member.member_email}</Td>
                     <Td textAlign={"center"}>{formatDate(member.reg_time)}</Td>
                     <Td textAlign={"center"}>
-                      <Button
+                      <IconButton
+                        colorScheme="red"
+                        variant="ghost"
+                        icon={<FontAwesomeIcon icon={faTrashCan} />}
                         onClick={() => handleMemberDeleteClick(member)}
-                        {...buttonStyle}
-                      >
-                        <FontAwesomeIcon icon={faTrashCan} />
-                      </Button>
+                      />
                     </Td>
                   </Tr>
                 );
               })}
             </Tbody>
           </Table>
+        )}
 
-          <SearchMember />
-          <AdminMemberPagination pageInfo={pageInfo} />
-        </CardBody>
+        <SearchMember />
+        <AdminMemberPagination pageInfo={pageInfo} />
+      </CardBody>
 
-        {/* 탈퇴 모달 */}
-        <>
-          <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent bg={"black"} color={"white"}>
-              <ModalHeader>회원 탈퇴 처리</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Flex mb={2}>
-                  <Box mr={2} fontSize={"1.2rem"} fontWeight={"900"}>
-                    {selectMember.member_login_id}
-                  </Box>
-                  <Box>님을 탈퇴 처리 합니다.</Box>
-                </Flex>
-                <Box>탈퇴 처리후 복구 불가능 합니다.</Box>
-              </ModalBody>
-
-              <ModalFooter>
-                <Button mr={3} onClick={onClose}>
-                  Close
-                </Button>
-                <Button
-                  colorScheme={"red"}
-                  onClick={() => {
-                    handleModalDeleteClick(selectMember);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faTrashCan} />
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </>
-      </Card>
-    </Center>
+      {/* 탈퇴 모달 */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader className="specialHeadings">회원 탈퇴 처리</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text mb={2}>
+              <Text as="span" fontSize="2xl" fontWeight="bold">
+                {selectMember.member_login_id}
+              </Text>
+              님을 탈퇴 처리하시겠습니까?
+            </Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button mr={3} onClick={onClose}>
+              닫기
+            </Button>
+            <Button
+              colorScheme="red"
+              onClick={() => {
+                handleModalDeleteClick(selectMember);
+              }}
+            >
+              탈퇴
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </Card>
   );
 }

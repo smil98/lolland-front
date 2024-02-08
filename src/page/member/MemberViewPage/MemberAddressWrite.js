@@ -106,7 +106,7 @@ export function MemberAddressWrite() {
   }
 
   return (
-    <Card mx={{ base: "0", md: "10%", lg: "15%", xl: "20%" }}>
+    <Card w="full" mx={{ base: "0", md: "10%", lg: "15%", xl: "20%" }}>
       <CardHeader
         fontSize="2xl"
         textAlign="left"
