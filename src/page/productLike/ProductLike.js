@@ -1,12 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
   Box,
   Button,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardHeader,
   Checkbox,
   Flex,
   FormControl,
   FormLabel,
+  IconButton,
   Image,
   SimpleGrid,
   Text,
@@ -16,7 +21,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { ScreenContext } from "../../component/ScreenContext";
 
 export function ProductLike() {
   const [productLike, setProductLike] = useState([]);
@@ -72,8 +78,12 @@ export function ProductLike() {
   };
 
   // 전체선택 버튼을 눌렀을 때 실행되는 로직
-  const handleSelectAll = () => {
-    setProductChecked(new Array(productLike.length).fill(true));
+  const handleSelectAll = (checked) => {
+    if (checked) {
+      setProductChecked(new Array(productLike.length).fill(true));
+    } else {
+      setProductChecked(new Array(productLike.length).fill(false));
+    }
   };
 
   // 선택해제 버튼을 눌렀을 때 실행되는 로직
@@ -142,138 +152,119 @@ export function ProductLike() {
   };
 
   return (
-    <Box mt={5}>
-      <Flex gap={4}>
-        <FontAwesomeIcon
-          icon={faHeart}
-          style={{ color: "#f70202" }}
-          fontSize={"2.5rem"}
-        />
-        <Text mt={-1} fontWeight={"bold"} fontSize={"2rem"}>
-          좋아요한 상품 목록
+    <Card w="full" mx={{ base: 0, md: "5%", lg: "15%", xl: "20%" }}>
+      <CardHeader
+        display="flex"
+        alignItems="center"
+        fontWeight="bold"
+        textAlign="left"
+        fontSize="2xl"
+        className="specialHeadings"
+      >
+        <Text as="span" mr={3}>
+          <FontAwesomeIcon icon={faHeart} style={{ color: "#FFA4C7" }} />
         </Text>
-      </Flex>
-      <SimpleGrid columns={4} gap={5} mt={10}>
-        {productLike.map((bucket, index) => (
-          <Box
-            key={bucket.product_id}
-            p={5}
-            shadow="md"
-            borderWidth="1px"
-            align="center"
-            w={"300px"}
-            h={"320px"}
-            border={"1px solid #eeeeee"}
-            transition="0.3s ease-in-out"
-            position="relative" // 상위 Box를 relative로 설정
-            _hover={{
-              cursor: "pointer",
-              transform: "scale(1.1)",
-            }}
+        좋아요 한 상품 목록
+      </CardHeader>
+      <CardBody>
+        <Flex display="flex" justifyContent="space-between">
+          <Checkbox
+            colorScheme="orange"
+            onChange={(e) => handleSelectAll(e.target.checked)}
           >
-            <VStack boxSize="150px" flexShrink={0}>
-              <Button
-                position="absolute"
-                top="0"
-                right="0"
-                m={1}
-                size="sm"
-                bg={"none"}
-                _hover={{
-                  background: "none",
-                  color: "red",
-                }}
-                onClick={(event) => {
-                  event.stopPropagation(); // 버블링 방지
-                  handleDislike(bucket.like_id); // 좋아요 삭제 핸들러 호출
-                }}
+            전체 선택
+          </Checkbox>
+          <ButtonGroup>
+            <Button
+              borderRadius={0}
+              variant="undefined"
+              bgColor="white"
+              border="1px solid black"
+              _hover={{ bgColor: "black", color: "white" }}
+              onClick={handleDeselectAll}
+            >
+              선택 해제
+            </Button>
+            <Button
+              borderRadius={0}
+              variant="undefined"
+              bgColor="white"
+              border="1px solid black"
+              _hover={{ bgColor: "black", color: "white" }}
+              onClick={handleDeleteSelectedProducts}
+            >
+              선택 삭제
+            </Button>
+          </ButtonGroup>
+        </Flex>
+        <SimpleGrid columns={{ base: 2, md: 3, lg: 4, xl: 5 }} gap={5} mt={5}>
+          {productLike.map((bucket, index) => (
+            <Box
+              key={bucket.product_id}
+              px={5}
+              pb={4}
+              display="flex"
+              flexDir="column"
+              shadow="base"
+              border="1px solid #F4F4F4"
+              justifyContent="flex-start"
+              _hover={{
+                cursor: "pointer",
+                transform: "scale(1.1)",
+              }}
+              transition="0.3s ease-in-out"
+              onClick={() => navigate("/product/" + bucket.product_id)}
+            >
+              <Flex
+                justifyContent="space-between"
+                onClick={(e) => e.stopPropagation()}
               >
-                x
-              </Button>
-              <Checkbox
-                position="absolute"
-                top="2"
-                left="0"
-                m={1}
-                size="md"
-                bg={"none"}
-                _hover={{
-                  background: "none",
-                  color: "red",
-                }}
-                isChecked={productChecked[index]}
-                onChange={() => handleCheckboxClick(index)}
-              />
-              <Box mt={3}>
+                <Checkbox
+                  colorScheme="orange"
+                  isChecked={productChecked[index]}
+                  onChange={() => handleCheckboxClick(index)}
+                />
+                <IconButton
+                  size="md"
+                  mr={-4}
+                  variant="undefined"
+                  _hover={{ color: "red" }}
+                  icon={<FontAwesomeIcon icon={faXmark} />}
+                  onClick={() => handleDislike(bucket.like_id)}
+                />
+              </Flex>
+              <Box display="flex" justifyContent="center">
                 <Image
                   boxSize="150px"
                   objectFit="cover"
                   src={bucket.main_img_uri}
                   alt={bucket.product_name}
-                  onClick={() => navigate("/product/" + bucket.product_id)}
                 />
-                <Text textAlign="left" paddingLeft={2} fontWeight={"bold"}>
-                  [{bucket.company_name}]
-                </Text>
-                <Text
-                  paddingLeft={2}
-                  textAlign="left"
-                  fontSize="md"
-                  fontWeight="bold"
-                  w={"300px"}
-                  color={"gray"}
-                  mt={2}
-                >
-                  {truncateText(bucket.product_name, 58)}
-                </Text>
-                <Text
-                  mt={1}
-                  paddingLeft={2}
-                  textAlign="left"
-                  fontSize="md"
-                  fontWeight={"bold"}
-                >
-                  {formatPrice(bucket.product_price)}원
-                </Text>
               </Box>
-            </VStack>
-          </Box>
-        ))}
-      </SimpleGrid>
-
-      <Box mt={10}>
-        <Flex
-          gap={5}
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <Button
-            borderRadius={"15px"}
-            style={{ background: "black", color: "white" }}
-            onClick={handleSelectAll}
-            shadow="md"
-          >
-            전체선택
-          </Button>
-          <Button
-            borderRadius={"15px"}
-            style={{ background: "black", color: "white" }}
-            onClick={handleDeselectAll}
-            shadow="md"
-          >
-            선택해제
-          </Button>
-          <Button
-            borderRadius={"15px"}
-            colorScheme="red"
-            onClick={handleDeleteSelectedProducts}
-            shadow="md"
-          >
-            선택상품삭제
-          </Button>
-        </Flex>
-      </Box>
-    </Box>
+              <Text
+                textAlign="left"
+                fontWeight="bold"
+                fontSize="xs"
+                opacity={0.5}
+                mt={2}
+              >
+                {bucket.company_name}
+              </Text>
+              <Text textAlign="left" fontSize="sm">
+                {truncateText(bucket.product_name, 40)}
+              </Text>
+              <Text
+                textAlign="left"
+                fontSize="md"
+                fontWeight="bold"
+                color="orange"
+              >
+                {formatPrice(bucket.product_price)}원
+              </Text>
+            </Box>
+          ))}
+        </SimpleGrid>
+      </CardBody>
+    </Card>
   );
 }

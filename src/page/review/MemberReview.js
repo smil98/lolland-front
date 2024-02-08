@@ -17,6 +17,7 @@ import {
   Tbody,
   Td,
   Text,
+  Textarea,
   Th,
   Thead,
   Tr,
@@ -106,6 +107,8 @@ export function MemberReview() {
   const location = useLocation();
   const [selectedReviews, setSelectedReviews] = useState([]);
   const { isSmallScreen } = useContext(ScreenContext);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingReview, setEditingReview] = useState(null);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -260,6 +263,62 @@ export function MemberReview() {
       });
   }
 
+  function deleteReview(review_id) {
+    const params = new URLSearchParams(location.search);
+    axios
+      .delete(`/api/review/delete?review_id=${review_id}`)
+      .then((response) => {
+        navigate("/memberPage/review" + params);
+      })
+      .catch((error) => {
+        if (error.response.status === 500) {
+          toast({
+            title: "리뷰 삭제 중 에러 발생",
+            description: "백엔드 코드를 점검해주세요",
+            status: "error",
+          });
+        } else {
+          toast({
+            title: "리뷰 삭제 중 에러 발생",
+            description: "다시 한번 시도해주시거나, 관리자에게 문의해주세요",
+            status: "error",
+          });
+        }
+      });
+  }
+
+  function updateReview(editingReview) {
+    const params = new URLSearchParams(location.search);
+    axios
+      .put("/api/review/update", {
+        review_id: editingReview.review_id,
+        review_content: editingReview.review_content,
+        rate: editingReview.rate,
+      })
+      .then(() => {
+        toast({
+          description: "리뷰를 성공적으로 수정하였습니다",
+          status: "success",
+        });
+        navigate("/memberPage/review" + params);
+      })
+      .catch((error) => {
+        if (error.response.status === 500) {
+          toast({
+            title: "수정 중 오류 발생",
+            description: "백엔드 코드를 점검해주세요",
+            status: "error",
+          });
+        } else {
+          toast({
+            title: "수정 중 오류 발생",
+            description: "다시 한번 시도해주시거나, 관리자에게 문의해주세요",
+            status: "error",
+          });
+        }
+      });
+  }
+
   return (
     <Card w="full" mx={{ base: 0, md: "5%", lg: "15%", xl: "20%" }}>
       <CardHeader
@@ -344,18 +403,74 @@ export function MemberReview() {
                   </Text>
                 </CardHeader>
                 <CardBody textAlign="left">
-                  <Text>{review.review_content}</Text>
+                  {isEditing && editingReview.review_id === review.review_id ? (
+                    <Textarea
+                      onClick={(e) => e.stopPropagation()}
+                      value={editingReview.review_content}
+                      onChange={(e) => {
+                        setEditingReview((prevReview) => ({
+                          ...prevReview,
+                          review_content: e.target.value,
+                        }));
+                      }}
+                      mb={6}
+                      whiteSpace="pre-wrap"
+                    />
+                  ) : (
+                    <Text>{review.review_content}</Text>
+                  )}
                   <ButtonGroup
                     size="sm"
                     display="flex"
                     justifyContent="flex-end"
                     mt={5}
                   >
-                    <Button border="1px solid #E1E1E1" bgColor="white">
-                      수정 {/* TODO: 수정 로직 추가 */}
-                    </Button>
-                    <Button border="1px solid #E1E1E1" bgColor="white">
-                      삭제 {/* TODO: 삭제 로직 추가 */}
+                    {isEditing &&
+                    editingReview.review_id === review.review_id ? (
+                      <>
+                        <Button
+                          border="1px solid #E1E1E1"
+                          bgColor="white"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateReview(editingReview);
+                            setIsEditing(false);
+                            setEditingReview(null);
+                          }}
+                        >
+                          전송
+                        </Button>
+                        <Button
+                          border="1px solid #E1E1E1"
+                          bgColor="white"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsEditing(false);
+                            setEditingReview(null);
+                          }}
+                        >
+                          취소 {/* TODO: 수정 로직 추가 */}
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        border="1px solid #E1E1E1"
+                        bgColor="white"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsEditing(true);
+                          setEditingReview(review);
+                        }}
+                      >
+                        수정 {/* TODO: 수정 로직 추가 */}
+                      </Button>
+                    )}
+                    <Button
+                      border="1px solid #E1E1E1"
+                      bgColor="white"
+                      onClick={() => deleteReview(review.review_id)}
+                    >
+                      삭제
                     </Button>
                   </ButtonGroup>
                 </CardBody>

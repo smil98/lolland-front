@@ -7,10 +7,14 @@ import {
   CardFooter,
   CardHeader,
   Checkbox,
+  Divider,
   Flex,
+  HStack,
   IconButton,
   Select,
+  StackDivider,
   Table,
+  Tag,
   Tbody,
   Td,
   Text,
@@ -18,8 +22,9 @@ import {
   Thead,
   Tr,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -31,6 +36,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { ScreenContext } from "../../../component/ScreenContext";
 
 // 회원 게임 게시물 좋아요의 페이지 버튼
 function MemberBoardLikePageButton({
@@ -146,6 +152,8 @@ export function MemberBoardLike() {
 
   const location = useLocation();
 
+  const { isSmallScreen } = useContext(ScreenContext);
+
   useEffect(() => {
     axios.get("/api/member/getGameBoardLike?" + params).then((response) => {
       setGameBoardList(response.data.gameBoardLikeList);
@@ -260,7 +268,7 @@ export function MemberBoardLike() {
               전체 선택
             </Button>
             <Button {...buttonStyle} onClick={handleDesSelectAll}>
-              전체 해제
+              선택 해제
             </Button>
             <Button
               bgColor="orange"
@@ -272,64 +280,131 @@ export function MemberBoardLike() {
             </Button>
           </ButtonGroup>
         </Flex>
-        <Table mt={10} textAlign={"center"}>
-          <Thead>
-            <Tr>
-              <Th textAlign="center">선택</Th>
-              <Th textAlign="center">카테고리</Th>
-              <Th textAlign="center">제목</Th>
-              <Th textAlign="center">내용</Th>
-              <Th textAlign="center">추천 삭제</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
+        {isSmallScreen ? (
+          <VStack mt={10} divider={<StackDivider />}>
             {gameBoardList.map((gameBoard) => (
-              <Tr key={gameBoard.id}>
-                <Td textAlign={"center"}>
-                  <Checkbox
-                    size={"lg"}
-                    colorScheme={"orange"}
-                    isChecked={checkLikeGameBoard.includes(gameBoard.id)}
-                    onChange={(e) => handleLikeRowChange(e, gameBoard.id)}
-                  ></Checkbox>
-                </Td>
-                <Td
-                  textAlign={"center"}
-                  _hover={{ cursor: "pointer" }}
-                  onClick={() => navigate("/gameboard/id/" + gameBoard.id)}
-                >
-                  {gameBoard.category}
-                </Td>
-                <Td
-                  textAlign={"center"}
-                  _hover={{ cursor: "pointer" }}
-                  onClick={() => navigate("/gameboard/id/" + gameBoard.id)}
-                >
-                  {gameBoard.title.length > 10
-                    ? gameBoard.title.slice(0, 10) + "..."
-                    : gameBoard.title}
-                </Td>
-                <Td
-                  textAlign={"center"}
-                  _hover={{ cursor: "pointer" }}
-                  onClick={() => navigate("/gameboard/id/" + gameBoard.id)}
-                >
-                  {gameBoard.board_content.length > 15
-                    ? gameBoard.board_content.slice(0, 15) + "..."
+              <Box
+                border="1px solid #E1E1E1"
+                borderRadius={5}
+                w="full"
+                p={5}
+                key={gameBoard.id}
+                _hover={{ cursor: "pointer" }}
+                onClick={() => navigate("/gameboard/id/" + gameBoard.id)}
+              >
+                <Flex justifyContent="space-between" className="labels">
+                  <HStack spacing={3}>
+                    <Tag
+                      variant="outline"
+                      colorScheme="orange"
+                      borderRadius="full"
+                      px={3}
+                      py={1}
+                    >
+                      {gameBoard.category}
+                    </Tag>
+                    <Text fontWeight="bold">
+                      {gameBoard.title.length > 15
+                        ? gameBoard.title.slice(0, 15) + "..."
+                        : gameBoard.title}
+                    </Text>
+                  </HStack>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Checkbox
+                      size="md"
+                      colorScheme="orange"
+                      isChecked={checkLikeGameBoard.includes(gameBoard.id)}
+                      onChange={(e) => handleLikeRowChange(e, gameBoard.id)}
+                    />
+                  </Box>
+                </Flex>
+                <Text mt={5} textAlign="left">
+                  {gameBoard.board_content.length > 30
+                    ? gameBoard.board_content.slice(0, 30) + "..."
                     : gameBoard.board_content}
-                </Td>
-                <Td textAlign="center">
+                </Text>
+                <Box
+                  display="flex"
+                  justifyContent="flex-end"
+                  mt={5}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <IconButton
+                    size="sm"
                     variant="ghost"
                     colorScheme="red"
                     icon={<FontAwesomeIcon icon={faTrash} />}
                     onClick={() => handleLikeDeleteClick(gameBoard.id)}
                   />
-                </Td>
-              </Tr>
+                </Box>
+              </Box>
             ))}
-          </Tbody>
-        </Table>
+          </VStack>
+        ) : (
+          <Table mt={10} textAlign={"center"}>
+            <Thead>
+              <Tr>
+                <Th textAlign="center">선택</Th>
+                <Th textAlign="center">카테고리</Th>
+                <Th textAlign="center">제목</Th>
+                <Th textAlign="center">내용</Th>
+                <Th textAlign="center">삭제</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {gameBoardList.map((gameBoard) => (
+                <Tr key={gameBoard.id}>
+                  <Td textAlign={"center"}>
+                    <Checkbox
+                      size="md"
+                      colorScheme={"orange"}
+                      isChecked={checkLikeGameBoard.includes(gameBoard.id)}
+                      onChange={(e) => handleLikeRowChange(e, gameBoard.id)}
+                    />
+                  </Td>
+                  <Td
+                    textAlign={"center"}
+                    _hover={{ cursor: "pointer" }}
+                    onClick={() => navigate("/gameboard/id/" + gameBoard.id)}
+                  >
+                    {gameBoard.category}
+                  </Td>
+                  <Td
+                    textAlign={"center"}
+                    _hover={{ cursor: "pointer" }}
+                    onClick={() => navigate("/gameboard/id/" + gameBoard.id)}
+                  >
+                    {gameBoard.title.length > 10
+                      ? gameBoard.title.slice(0, 10) + "..."
+                      : gameBoard.title}
+                  </Td>
+                  <Td
+                    textAlign={"center"}
+                    _hover={{ cursor: "pointer" }}
+                    onClick={() => navigate("/gameboard/id/" + gameBoard.id)}
+                  >
+                    {gameBoard.board_content.length > 15
+                      ? gameBoard.board_content.slice(0, 15) + "..."
+                      : gameBoard.board_content}
+                  </Td>
+                  <Td textAlign="center">
+                    <IconButton
+                      variant="ghost"
+                      colorScheme="red"
+                      icon={<FontAwesomeIcon icon={faTrash} />}
+                      onClick={() => handleLikeDeleteClick(gameBoard.id)}
+                    />
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        )}
       </CardBody>
       <CardFooter display="flex" justifyContent="center">
         <MemberBoardLikePagination pageInfo={pageInfo} />
