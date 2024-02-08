@@ -206,6 +206,7 @@ export function CancelReqList() {
                       onClick={() => {
                         handleRefundClick(cancelList);
                       }}
+                      _hover={{ bgColor: "orange", color: "white" }}
                     >
                       환불
                     </Button>
