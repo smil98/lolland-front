@@ -5,8 +5,10 @@ import {
   Checkbox,
   Flex,
   Heading,
+  HStack,
   Image,
   Spinner,
+  Stack,
   Table,
   TableContainer,
   Tbody,
@@ -16,8 +18,9 @@ import {
   Thead,
   Tr,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -27,6 +30,7 @@ import {
   faHeart,
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
+import { ScreenContext } from "../../component/ScreenContext";
 
 export function Cart() {
   const toast = useToast();
@@ -35,6 +39,7 @@ export function Cart() {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [productList, setProductList] = useState([]);
   const [memberLoginId, setMemberLoginId] = useState(null);
+  const { isSmallScreen } = useContext(ScreenContext);
 
   useEffect(() => {
     fetchCart();
@@ -267,112 +272,193 @@ export function Cart() {
   }
 
   return (
-    <Box mx="10%">
-      <Text my={5} mx={10} fontSize="3xl" className="specialHeadings">
+    <Box mx={{ base: 0, md: "10%" }} px={5}>
+      <Text my={5} fontSize="3xl" className="specialHeadings" fontWeight="bold">
         <FontAwesomeIcon icon={faBagShopping} />
         <Text as="span" color="orange" ml={3} className="specialHeadings">
           {memberLoginId}
         </Text>
         님의 장바구니
       </Text>
-      <TableContainer mx={10} mb={10}>
-        <Flex justifyContent="space-between" mx={10} mb={5}>
-          <Checkbox
-            colorScheme="orange"
-            isChecked={
-              productList.length > 0 &&
-              selectedProducts.length === productList.length
-            }
-            onChange={(e) => handleSelectAllProducts(e.target.checked)}
+      <Flex justifyContent="space-between" mb={5}>
+        <Checkbox
+          colorScheme="orange"
+          isChecked={
+            productList.length > 0 &&
+            selectedProducts.length === productList.length
+          }
+          onChange={(e) => handleSelectAllProducts(e.target.checked)}
+        >
+          전체 선택
+        </Checkbox>
+        <ButtonGroup size={isSmallScreen ? "sm" : "md"}>
+          <Button
+            {...buttonStyles}
+            onClick={() => handleDelete(selectedProducts)}
           >
-            전체 선택
-          </Checkbox>
-          <ButtonGroup>
-            <Button
-              {...buttonStyles}
-              onClick={() => handleDelete(selectedProducts)}
-            >
-              선택 삭제
-            </Button>
-            <Button
-              {...buttonStyles}
-              onClick={() => handlePurchase(selectedProducts)}
-            >
-              선택 결제
-            </Button>
-            <Button {...buttonStyles} onClick={() => handleDeleteAll()}>
-              전부 비우기
-            </Button>
-          </ButtonGroup>
-        </Flex>
-        <Table>
-          <Thead>
-            <Tr>
-              <Th textAlign="center">선택</Th>
-              <Th textAlign="center">상품 이미지</Th>
-              <Th textAlign="center">상품명</Th>
-              <Th textAlign="center">정보</Th>
-              <Th textAlign="center">제조사</Th>
-              <Th textAlign="center">가격</Th>
-              <Th textAlign="center">수량</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {productList &&
-              productList.map((product) => {
-                return (
-                  <Tr
-                    key={product.cart_id}
-                    onClick={() => navigate(`/product/${product?.product_id}`)}
-                  >
-                    <Td textAlign="center" onClick={(e) => e.stopPropagation()}>
+            선택 삭제
+          </Button>
+          <Button
+            {...buttonStyles}
+            onClick={() => handlePurchase(selectedProducts)}
+          >
+            선택 결제
+          </Button>
+          <Button {...buttonStyles} onClick={() => handleDeleteAll()}>
+            전부 비우기
+          </Button>
+        </ButtonGroup>
+      </Flex>
+      {isSmallScreen ? (
+        <VStack mt={5} spacing={3}>
+          {productList &&
+            productList.map((product) => {
+              return (
+                <Box
+                  key={product.cart_id}
+                  onClick={() => navigate(`/product/${product?.product_id}`)}
+                  border="1px solid #F1F1F1"
+                  borderRadius={5}
+                  position="relative"
+                  shadow="base"
+                  w="full"
+                  display="flex"
+                  flexDir="column"
+                  justifyContent="flex-start"
+                  p={3}
+                >
+                  <HStack w="full" spacing={3}>
+                    <Box
+                      borderRadius={5}
+                      w="80px"
+                      minW="80px"
+                      h="80px"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Image src={product?.main_img_uri} objectFit="full" />
+                    </Box>
+                    <Flex flexDir="column" gap={1}>
+                      <Text opacity={0.6} fontSize="xs">
+                        {product?.category_name} / {product?.subcategory_name}
+                      </Text>
+                      {product?.option_name ? (
+                        <Text fontSize="md">
+                          {product?.product_name} : {product?.option_name}
+                        </Text>
+                      ) : (
+                        <Text fontSize="md">{product?.product_name}</Text>
+                      )}
+                      <Text color="orange" fontWeight="bold">
+                        {product?.product_price.toLocaleString() + "원"}
+                      </Text>
+                    </Flex>
+                    <Text
+                      position="absolute"
+                      bottom={3}
+                      right={5}
+                      fontSize="lg"
+                      color="orange"
+                      className="specialHeadings"
+                    >
+                      {product?.quantity}개
+                    </Text>
+                    <Box
+                      position="absolute"
+                      top={4}
+                      right={5}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Checkbox
-                        colorScheme="orange"
                         isChecked={selectedProducts.includes(product.cart_id)}
                         onChange={() => {
                           handleCheckBoxChange(product);
                         }}
+                        colorScheme="orange"
                       />
-                    </Td>
-                    <Td
-                      textAlign="center"
-                      justifyContent="center"
-                      display="flex"
+                    </Box>
+                  </HStack>
+                </Box>
+              );
+            })}
+        </VStack>
+      ) : (
+        <TableContainer mb={10}>
+          <Table>
+            <Thead>
+              <Tr>
+                <Th textAlign="center">선택</Th>
+                <Th textAlign="center">상품 이미지</Th>
+                <Th textAlign="center">상품명</Th>
+                <Th textAlign="center">정보</Th>
+                <Th textAlign="center">제조사</Th>
+                <Th textAlign="center">가격</Th>
+                <Th textAlign="center">수량</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {productList &&
+                productList.map((product) => {
+                  return (
+                    <Tr
+                      key={product.cart_id}
+                      onClick={() =>
+                        navigate(`/product/${product?.product_id}`)
+                      }
                     >
-                      <Image src={product?.main_img_uri} w="70px" />
-                    </Td>
-                    <Td textAlign="center">
-                      {product?.option_name ? (
-                        <Text whiteSpace={"nowrap"}>
-                          {product?.product_name} : {product?.option_name}
+                      <Td
+                        textAlign="center"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Checkbox
+                          colorScheme="orange"
+                          isChecked={selectedProducts.includes(product.cart_id)}
+                          onChange={() => {
+                            handleCheckBoxChange(product);
+                          }}
+                        />
+                      </Td>
+                      <Td
+                        textAlign="center"
+                        justifyContent="center"
+                        display="flex"
+                      >
+                        <Image src={product?.main_img_uri} w="70px" />
+                      </Td>
+                      <Td textAlign="center">
+                        {product?.option_name ? (
+                          <Text whiteSpace={"nowrap"}>
+                            {product?.product_name} : {product?.option_name}
+                          </Text>
+                        ) : (
+                          <Text whiteSpace={"nowrap"}>
+                            {product?.product_name}
+                          </Text>
+                        )}
+                      </Td>
+                      <Td textAlign="center" whiteSpace={"nowrap"}>
+                        {product?.category_name} / {product?.subcategory_name}
+                      </Td>
+                      <Td textAlign="center">{product?.company_name}</Td>
+                      <Td textAlign="center">
+                        <Text color="orange" fontWeight="bold">
+                          {(
+                            product?.product_price * product?.quantity
+                          ).toLocaleString() + "원"}
                         </Text>
-                      ) : (
-                        <Text whiteSpace={"nowrap"}>
-                          {product?.product_name}
+                        <Text fontSize="xs">
+                          {product?.product_price.toLocaleString() + "원"}
                         </Text>
-                      )}
-                    </Td>
-                    <Td textAlign="center" whiteSpace={"nowrap"}>
-                      {product?.category_name} / {product?.subcategory_name}
-                    </Td>
-                    <Td textAlign="center">{product?.company_name}</Td>
-                    <Td textAlign="center">
-                      <Text color="orange" fontWeight="bold">
-                        {(
-                          product?.product_price * product?.quantity
-                        ).toLocaleString() + "원"}
-                      </Text>
-                      <Text fontSize="xs">
-                        {product?.product_price.toLocaleString() + "원"}
-                      </Text>
-                    </Td>
-                    <Td textAlign="center">{product?.quantity}</Td>
-                  </Tr>
-                );
-              })}
-          </Tbody>
-        </Table>
-      </TableContainer>
+                      </Td>
+                      <Td textAlign="center">{product?.quantity}</Td>
+                    </Tr>
+                  );
+                })}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      )}
     </Box>
   );
 }
