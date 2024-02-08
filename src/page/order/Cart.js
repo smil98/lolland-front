@@ -341,6 +341,9 @@ export function Cart() {
                     </Box>
                     <Flex flexDir="column" gap={1}>
                       <Text opacity={0.6} fontSize="xs">
+                        <Text as="span" mr={2}>
+                          [ {product?.company_name} ]
+                        </Text>
                         {product?.category_name} / {product?.subcategory_name}
                       </Text>
                       {product?.option_name ? (
