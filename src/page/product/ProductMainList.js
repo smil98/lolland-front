@@ -17,8 +17,12 @@ import {
   Flex,
   Heading,
   HStack,
+  IconButton,
   Image,
   Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
   Link,
   Select,
   SimpleGrid,
@@ -34,6 +38,7 @@ import {
   faAngleRight,
   faChevronRight,
   faHouse,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import SwiperMainList from "./SwiperMainList";
 
@@ -114,42 +119,36 @@ function SearchComponent() {
     }
   }
 
-  const buttonStyle = {
-    background: "black",
-    borderRadius: "0",
-    color: "whitesmoke",
-    shadow: "1px 1px 3px 1px #dadce0",
-    _hover: {
-      backgroundColor: "whitesmoke",
-      color: "black",
-      transition:
-        "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-      shadow: "1px 1px 3px 1px #dadce0 inset",
-    },
-  };
-
   return (
-    <Flex mt={10}>
-      <Select
-        borderRadius={0}
-        defaultValue="all"
-        w={"140px"}
-        onChange={(e) => setCategory(e.target.value)}
-      >
-        <option value="all">전체</option>
-        <option value="product_name">상품명</option>
-        <option value="company_name">회사명</option>
-      </Select>
+    <InputGroup display="flex" w={{ base: "80%", md: "50%" }} mt={10}>
+      <InputLeftElement w="25%">
+        <Select
+          borderRadius={0}
+          defaultValue="all"
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="all">전체</option>
+          <option value="product_name">상품명</option>
+          <option value="company_name">회사명</option>
+        </Select>
+      </InputLeftElement>
       <Input
+        textIndent="25%"
         borderRadius={0}
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
         onKeyPress={handleKeyPress}
       />
-      <Button onClick={handleSearch} {...buttonStyle}>
-        검색
-      </Button>
-    </Flex>
+      <InputRightElement>
+        <IconButton
+          onClick={handleSearch}
+          bgColor="black"
+          color="white"
+          borderRadius={0}
+          icon={<FontAwesomeIcon icon={faSearch} />}
+        />
+      </InputRightElement>
+    </InputGroup>
   );
 }
 
@@ -169,8 +168,7 @@ export function ProductMainList() {
     axios
       .get(`/api/product/category/${category_id}?` + params)
       .then((response) => {
-        //페이징 작업 시 list가 아니라 map으로 리턴되므로 해당 코드 변경하기
-        setProductList(response.data.products); //response.data.products
+        setProductList(response.data.products);
         setPageInfo(response.data.pageInfo);
       })
       .catch((error) => {
@@ -204,45 +202,57 @@ export function ProductMainList() {
   // 전체 너비는 mx 퍼센테이지 증감으로 조절
   return (
     <>
-      <Flex flexDir="column" mx="15%" mt="4%">
+      <Flex flexDir="column" mx={{ base: 5, md: "5%", lg: "15%" }} mt="4%">
         <Breadcrumb
           spacing={3}
           separator={<FontAwesomeIcon icon={faChevronRight} />}
         >
           <BreadcrumbItem>
             <BreadcrumbLink onClick={() => navigate("/")}>
-              <Heading size="lg" mt={-2}>
+              <Text
+                fontSize="2xl"
+                className="specialHeadings"
+                fontWeight="bold"
+              >
                 전체보기
-              </Heading>
+              </Text>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
             <BreadcrumbLink
               onClick={() => navigate(`/category/${category_id}`)}
             >
-              <Heading size="lg" mt={-2}>
+              <Text
+                fontSize="2xl"
+                className="specialHeadings"
+                fontWeight="bold"
+              >
                 {category && category.category_name
                   ? category.category_name
                   : ""}
-              </Heading>
+              </Text>
             </BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
-        <Divider border="1px solid black" my={5} />
-        <HStack w="full">
+        <Divider borderWidth="1px" my={5} />
+        <SimpleGrid
+          columns={{ base: 3, md: 4, lg: 5 }}
+          spacing={{ base: 2, md: 5 }}
+        >
           {categoryList.map((subcategory) => (
             <Tag
-              size="lg"
+              size={{ base: "md", md: "lg" }}
               py={2}
-              px={4}
+              px={{ sm: 2, md: 4 }}
               _hover={{
                 cursor: "pointer",
                 bgColor: "black",
                 color: "white",
                 transition: "0.4s all ease",
               }}
-              borderRadius={20}
+              borderRadius="full"
               bgColor="white"
+              justifyContent="center"
               border="1px solid #E8E8E8"
               key={subcategory.subcategory_id}
               onClick={() => {
@@ -254,10 +264,10 @@ export function ProductMainList() {
               {subcategory.subcategory_name}
             </Tag>
           ))}
-        </HStack>
+        </SimpleGrid>
       </Flex>
       <Flex
-        mx="15%"
+        mx={{ base: 5, md: "5%", lg: "15%" }}
         my="1%"
         flexDir="column"
         display={"flex"}
@@ -265,7 +275,7 @@ export function ProductMainList() {
         alignItems={"center"}
       >
         <Box
-          mb={10}
+          my={5}
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -274,15 +284,14 @@ export function ProductMainList() {
           w="full"
           h="300px"
         >
-          {/*이벤트 배너*/}
-          {/*<Image*/}
-          {/*  objectFit={"cover"}*/}
-          {/*  w={"100%"}*/}
-          {/*  src="https://image5.compuzone.co.kr/img/images/main2014/C/CateRollingBanner_175785.jpg"*/}
-          {/*/>*/}
           <SwiperMainList />
         </Box>
-        <SimpleGrid h={"100%"} w={"100%"} columns={4} spacing={9}>
+        <SimpleGrid
+          h={"100%"}
+          w={"100%"}
+          columns={{ base: 2, md: 4 }}
+          spacing={{ base: 4, md: 9 }}
+        >
           {productList.map((product, index) => (
             <Box
               key={index}
@@ -305,7 +314,7 @@ export function ProductMainList() {
               <Box
                 position="relative" // 상대 위치 설정
                 p={5}
-                height="250px"
+                height="180px"
                 width="100%"
                 bg="white"
                 display={"flex"}
@@ -318,8 +327,8 @@ export function ProductMainList() {
                   position="absolute"
                   src={product.mainImgs[0]?.main_img_uri}
                   alt="Board Image"
-                  width="100%"
-                  height="100%"
+                  width="85%"
+                  height="85%"
                   zIndex={1}
                   transition="opacity 0.5s ease-in-out" // 부드러운 투명도 변화
                   opacity={product.id === hoveredBoardId ? 0 : 1} // 호버 상태에 따른 투명도
@@ -329,8 +338,8 @@ export function ProductMainList() {
                   position="absolute"
                   src={product.mainImgs[1]?.main_img_uri}
                   alt="Hover Image"
-                  width="100%"
-                  height="100%"
+                  width="85%"
+                  height="85%"
                   zIndex={2}
                   transition="opacity 0.5s ease-in-out" // 부드러운 투명도 변화
                   opacity={product.product_id === hoveredBoardId ? 1 : 0} // 호버 상태에 따른 투명도
@@ -351,7 +360,7 @@ export function ProductMainList() {
       </Flex>
 
       <Center>
-        <VStack>
+        <VStack w="full">
           <SearchComponent />
           <CategoryPagination pageInfo={pageInfo} />
         </VStack>

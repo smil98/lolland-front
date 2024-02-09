@@ -22,6 +22,9 @@ import {
   IconButton,
   Image,
   Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
   List,
   ListItem,
   Select,
@@ -41,6 +44,7 @@ import {
   faChevronRight,
   faMinus,
   faPlus,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 
 function PageButton({ variant, pageNumber, children }) {
@@ -120,41 +124,36 @@ function SearchComponent() {
     }
   }
 
-  const buttonStyle = {
-    background: "black",
-    borderRadius: "0",
-    color: "whitesmoke",
-    shadow: "1px 1px 3px 1px #dadce0",
-    _hover: {
-      backgroundColor: "whitesmoke",
-      color: "black",
-      transition:
-        "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-      shadow: "1px 1px 3px 1px #dadce0 inset",
-    },
-  };
-
   return (
-    <Flex>
-      <Select
-        borderRadius={0}
-        defaultValue="all"
-        w={"140px"}
-        onChange={(e) => setCategory(e.target.value)}
-      >
-        <option value="all">전체</option>
-        <option value={"product_name"}>상품명</option>
-      </Select>
+    <InputGroup display="flex" w={{ base: "80%", md: "50%" }} mt={10}>
+      <InputLeftElement w="25%">
+        <Select
+          borderRadius={0}
+          defaultValue="all"
+          w={"140px"}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="all">전체</option>
+          <option value={"product_name"}>상품명</option>
+        </Select>
+      </InputLeftElement>
       <Input
+        textIndent="25%"
         borderRadius={0}
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
         onKeyPress={handleKeyPress}
       />
-      <Button onClick={handleSearch} {...buttonStyle}>
-        검색
-      </Button>
-    </Flex>
+      <InputRightElement>
+        <IconButton
+          onClick={handleSearch}
+          bgColor="black"
+          color="white"
+          borderRadius={0}
+          icon={<FontAwesomeIcon icon={faSearch} />}
+        />
+      </InputRightElement>
+    </InputGroup>
   );
 }
 
@@ -211,7 +210,7 @@ export function ProductSubList() {
   };
 
   return (
-    <Flex my="3%" mx="15%" flexDir="column">
+    <Flex my="3%" mx={{ base: 5, md: "5%", lg: "10%" }} flexDir="column">
       <Breadcrumb
         w="full"
         py={3}
@@ -220,9 +219,9 @@ export function ProductSubList() {
       >
         <BreadcrumbItem>
           <BreadcrumbLink onClick={() => navigate(`/category/${category_id}`)}>
-            <Heading size="lg" mt={-2}>
+            <Text fontSize="2xl" className="specialHeadings" fontWeight="bold">
               {categoryName ? categoryName : ""}
-            </Heading>
+            </Text>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
@@ -231,21 +230,26 @@ export function ProductSubList() {
               navigate(`/category/${category_id}/${subcategory_id}`)
             }
           >
-            <Heading size="lg" mt={-2}>
+            <Text fontSize="2xl" className="specialHeadings" fontWeight="bold">
               {subcategoryName ? subcategoryName : ""}
-            </Heading>
+            </Text>
           </BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
-      <Divider border="1px solid black" my={5} />
-      <Flex justifyContent="space-between">
-        <Accordion id="myAccordian" allowMultiple w="20%" defaultIndex={[0, 1]}>
+      <Divider borderWidth="1px" borderColor="black" mb={5} />
+      <Flex justifyContent="space-between" gap={1}>
+        <Accordion
+          id="myAccordian"
+          allowMultiple
+          w={{ base: "30%", md: "25%", lg: "20%" }}
+          defaultIndex={[0, 1]}
+        >
           <AccordionItem className="accordianItem">
             {({ isExpanded }) => (
               <>
                 <AccordionButton>
                   <Box as="span" flex="1" textAlign="left" fontWeight="bold">
-                    카테고리 전체보기
+                    카테고리
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
@@ -278,7 +282,7 @@ export function ProductSubList() {
               <>
                 <AccordionButton>
                   <Box as="span" flex="1" textAlign="left" fontWeight="bold">
-                    브랜드 전체보기
+                    브랜드
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
@@ -301,7 +305,12 @@ export function ProductSubList() {
             )}
           </AccordionItem>
         </Accordion>
-        <SimpleGrid h={"100%"} w={"75%"} columns={4} spacing={9}>
+        <SimpleGrid
+          h={"100%"}
+          w={{ base: "70%", md: "75%", lg: "80%" }}
+          columns={{ base: 2, md: 3, lg: 4 }}
+          spacing={{ base: 3, md: 4, lg: 5 }}
+        >
           {productList.map((product, index) => (
             <Box
               key={index}
@@ -323,8 +332,7 @@ export function ProductSubList() {
             >
               <Box
                 position="relative" // 상대 위치 설정
-                p={5}
-                height="200px"
+                height={{ base: "150px", md: "180px" }}
                 width="100%"
                 bg="white"
                 display={"flex"}
@@ -337,8 +345,8 @@ export function ProductSubList() {
                   position="absolute"
                   src={product.mainImgs[0]?.main_img_uri}
                   alt="Board Image"
-                  width="100%"
-                  height="100%"
+                  width="85%"
+                  height="85%"
                   zIndex={1}
                   transition="opacity 0.5s ease-in-out" // 부드러운 투명도 변화
                   opacity={product.id === hoveredBoardId ? 0 : 1} // 호버 상태에 따른 투명도
@@ -348,8 +356,8 @@ export function ProductSubList() {
                   position="absolute"
                   src={product.mainImgs[1]?.main_img_uri}
                   alt="Hover Image"
-                  width="100%"
-                  height="100%"
+                  width="85%"
+                  height="85%"
                   zIndex={2}
                   transition="opacity 0.5s ease-in-out" // 부드러운 투명도 변화
                   opacity={product.product_id === hoveredBoardId ? 1 : 0} // 호버 상태에 따른 투명도
@@ -369,8 +377,8 @@ export function ProductSubList() {
         </SimpleGrid>
       </Flex>
 
-      <Center mt={10}>
-        <VStack>
+      <Center>
+        <VStack w="full">
           <SearchComponent />
           <SubCategoryPagination pageInfo={pageInfo} />
         </VStack>
