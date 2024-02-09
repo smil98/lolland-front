@@ -196,7 +196,7 @@ export function NavBar() {
                           <FontAwesomeIcon
                             icon={faUsersGear}
                             onClick={() => {
-                              navigate("adminPage");
+                              navigate("/adminPage");
                             }}
                           />
                         }
@@ -235,7 +235,10 @@ export function NavBar() {
                 fontSize="3xl"
                 className="logo"
                 mb={3}
-                onClick={() => navigate("/")}
+                onClick={() => {
+                  navigate("/");
+                  onClose();
+                }}
                 _hover={{ cursor: "pointer" }}
               >
                 LOLLAND
@@ -323,8 +326,56 @@ export function NavBar() {
                 id="myAccordian"
                 w={"100%"}
                 allowMultiple
-                defaultIndex={[0, 1]}
+                defaultIndex={[2, 3]}
               >
+                {isAdmin() && (
+                  <AccordionItem className="accordianItem">
+                    <AccordionButton
+                      onClick={() => {
+                        navigate("/adminPage");
+                        onClose();
+                      }}
+                    >
+                      <Box
+                        as="span"
+                        flex="1"
+                        textAlign="left"
+                        fontWeight="bold"
+                        fontSize="xl"
+                        className="specialHeadings"
+                      >
+                        <Text as="span" mr={5}>
+                          <FontAwesomeIcon icon={faUsersGear} />
+                        </Text>
+                        관리자 페이지
+                      </Box>
+                    </AccordionButton>
+                  </AccordionItem>
+                )}
+                {isAuthenticated() && (
+                  <AccordionItem className="accordianItem">
+                    <AccordionButton
+                      onClick={() => {
+                        navigate("/memberPage");
+                        onClose();
+                      }}
+                    >
+                      <Box
+                        as="span"
+                        flex="1"
+                        textAlign="left"
+                        fontWeight="bold"
+                        fontSize="xl"
+                        className="specialHeadings"
+                      >
+                        <Text as="span" mr={5}>
+                          <FontAwesomeIcon icon={faUser} />
+                        </Text>
+                        마이 페이지
+                      </Box>
+                    </AccordionButton>
+                  </AccordionItem>
+                )}
                 <AccordionItem className="accordianItem">
                   <AccordionButton>
                     <Box
