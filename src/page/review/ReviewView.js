@@ -303,15 +303,19 @@ export const ReviewView = ({ product_id, productDetailImg }) => {
 
   return (
     <Tabs position="relative" variant="unstyled">
-      <TabList p={5} justifyContent="space-evenly" align="center">
+      <TabList
+        p={{ base: 0, md: 3, lg: 5, xl: 5 }}
+        justifyContent="space-evenly"
+        align="center"
+      >
         <Tab {...tabStyles}>상품 설명</Tab>
         <Tab {...tabStyles}>리뷰 ({totalReviews})</Tab>
         <Tab {...tabStyles}>Q&A</Tab>
       </TabList>
       <TabIndicator mt="-1.5px" height="2px" bg="black" borderRadius="1px" />
       <TabPanels px={10}>
-        {/* -------------------------- 상품 설명 -------------------------- */}
-        <TabPanel mx="20%" alignItems={"center"} justifyContent="center">
+        {/* -------------------------- 상품 설명 --------------------------TODO: 여기서부터 */}
+        <TabPanel mx={"20%"} alignItems={"center"} justifyContent="center">
           <Image src="https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productContent/productDefault.jpeg" />
           {productDetailImg.map((imgUri, index) => (
             <Image

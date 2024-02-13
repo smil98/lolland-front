@@ -4,11 +4,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
   Button,
+  ButtonGroup,
   Card,
   Center,
   Flex,
   FormLabel,
   HStack,
+  IconButton,
   Image,
   Menu,
   MenuButton,
@@ -31,6 +33,7 @@ import {
   PopoverTrigger,
   Select,
   Spinner,
+  Stack,
   Text,
   useDisclosure,
   useToast,
@@ -41,16 +44,20 @@ import { faStar as farStar } from "@fortawesome/free-regular-svg-icons"; // 꽉 
 import {
   faCartShopping,
   faHeart as fasHeart,
+  faHome,
+  faPenNib,
   faSpinner,
   faStar,
   faStarHalfAlt,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons"; // 꽉 찬 아이콘
 import { faHeart as farHeart } from "@fortawesome/free-regular-svg-icons"; // 빈 아이콘
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { ReviewView } from "../review/ReviewView";
 import { selectOptions } from "@testing-library/user-event/dist/select-options"; // 빈 하트
 import { ProductStats } from "../review/ProductStats";
-import { LoginContext } from "../../component/LoginProvider"; // 빈 하트
+import { LoginContext } from "../../component/LoginProvider";
+import { ScreenContext } from "../../component/ScreenContext"; // 빈 하트
 
 export function ProductView() {
   const [product, setProduct] = useState(null);
@@ -69,6 +76,7 @@ export function ProductView() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const { isAuthenticated, isAdmin } = useContext(LoginContext);
+  const { isSmallScreen } = useContext(ScreenContext);
 
   const totalOptionPrice = selectedOptionList.reduce((total, option) => {
     return (
@@ -433,9 +441,13 @@ export function ProductView() {
   }
 
   return (
-    <Box mx={"15%"} p={5}>
+    <Box
+      mx={{ base: "2%", md: "5%", lg: "10%", xl: "15%" }}
+      border="1px dashed green"
+    >
       {/* ---------------------- 카테고리 순서 ---------------------- */}
-      <Box minW={"800px"}>
+      <Box>
+        {/*minW={"800px"}*/}
         <Flex mt={10} display={"flex"} justifyContent={"space-between"}>
           <Box>
             <Text ml={4} fontSize={"0.9rem"}>
@@ -444,18 +456,17 @@ export function ProductView() {
           </Box>
           {/* ------------------------------ 상품 수정, 삭제 ------------------------------ */}
           {isAdmin() && (
-            <Box justifyContent={"end"} display={"flex"}>
-              <Button
-                background={"black"}
-                color={"white"}
+            <ButtonGroup variant="ghost" display="flex" size="xs">
+              <IconButton
                 onClick={() => navigate("/edit/" + product_id)}
-              >
-                수정
-              </Button>
-              <Button colorScheme="red" onClick={onOpen}>
-                삭제
-              </Button>
-            </Box>
+                icon={<FontAwesomeIcon icon={faPenNib} />}
+              />
+              <IconButton
+                icon={<FontAwesomeIcon icon={faTrash} />}
+                colorScheme="red"
+                onClick={onOpen}
+              />
+            </ButtonGroup>
           )}
         </Flex>
         <Box justify="center" align="start" maxW="100%" m="auto">
@@ -470,25 +481,30 @@ export function ProductView() {
           </Text>
         </Box>
 
-        <Flex minW="1000px" maxW="1500px" mt={-5}>
-          {/* 메인 이미지 */}
-          <Box p={2}>
+        {/* ---------------------- 상품 이미지 ---------------------- */}
+        <Flex mt={5} justifyContent="center">
+          {/* 메인 이미지 minW="1000px" maxW="1500px" */}
+          <Box>
             {product &&
               product.productImgs &&
               product.productImgs.length > 0 && (
                 <Box p={2}>
                   <Image
+                    border="1px solid blue"
                     src={product.productImgs[selectedImageIndex].main_img_uri}
                     alt={`Product Image ${selectedImageIndex}`}
-                    boxSize="700px"
+                    boxSize={{
+                      base: "250px",
+                      md: "280px",
+                      lg: "360px",
+                      xl: "400px",
+                    }}
                     objectFit="contain"
                   />
                 </Box>
               )}
-
             {/* 썸네일 이미지 */}
-
-            <HStack justifyContent={"center"} mt={-10}>
+            <HStack justifyContent={"center"} mt={2}>
               {product &&
                 product.productImgs &&
                 product.productImgs.map((img, index) => (
@@ -499,7 +515,12 @@ export function ProductView() {
                   >
                     <Image
                       src={img.main_img_uri}
-                      boxSize="100px"
+                      boxSize={{
+                        base: "40px",
+                        md: "60px",
+                        lg: "80px",
+                        xl: "100px",
+                      }}
                       objectFit="cover"
                     />
                   </Box>
@@ -507,101 +528,132 @@ export function ProductView() {
             </HStack>
           </Box>
 
-          {/* 상품 정보 컨테이너 */}
-          <VStack w="60%" ml={5} mt={24}>
-            <HStack w={"100%"} h={"auto"} borderBottom={"1px solid #eeeeee"}>
-              <Flex mb={3}>
-                <FormLabel w={"100px"} fontWeight="bold">
-                  판매가
-                </FormLabel>
-                <Box
-                  fontWeight={"bold"}
-                  fontSize={"1.5rem"}
-                  mt={-2}
-                  border={"none"}
-                  flex={1}
-                >
-                  {formatPrice(product.product.product_price)}원
-                </Box>
-              </Flex>
-            </HStack>
+          {/* ---------------------- 상품 정보 컨테이너 ---------------------- */}
+          <Stack
+            direction="column"
+            w={{ base: "45%", md: "40%", lg: "50%", xl: "60%" }}
+            ml={5}
+            mt={5}
+            spacing={5}
+          >
+            <Flex
+              alignItems="center"
+              justifyContent="flex-start"
+              borderBottom="1px solid #eeeeee"
+              py={2}
+            >
+              <Text
+                w={{ base: "80px", md: "80px", xl: "100px" }}
+                fontSize="md"
+                fontWeight="bold"
+              >
+                판매가
+              </Text>
+              <Text
+                mt={-1}
+                fontWeight="bold"
+                fontSize={{ base: "lg", md: "lg", lg: "xl", xl: "2xl" }}
+              >
+                {formatPrice(product.product.product_price)}원
+              </Text>
+            </Flex>
 
-            <HStack w={"100%"} h={"auto"} borderBottom={"1px solid #eeeeee"}>
-              <HStack mt={3} mb={3}>
-                <FormLabel
-                  w={"100px"}
-                  fontWeight="bold"
-                  onClick={() => navigate(`/company/${product.company_id}`)}
-                >
-                  제조사
-                </FormLabel>
-                <Text fontWeight={400} mt={-2} border={"none"} flex={1}>
-                  {product.company_name}
-                </Text>
-              </HStack>
-            </HStack>
+            <Flex
+              alignItems="center"
+              justifyContent="flex-start"
+              borderBottom="1px solid #eeeeee"
+              pb={2}
+            >
+              <Text
+                w={{ base: "80px", md: "80px", xl: "100px" }}
+                fontSize="md"
+                fontWeight="bold"
+              >
+                제조사
+              </Text>
+              <Text fontWeight={400} textAlign="left">
+                {product.company_name}
+                <IconButton
+                  ml={3}
+                  px={2}
+                  size="xs"
+                  variant="outline"
+                  onClick={() =>
+                    navigate(`/company/${product.product.company_id}`)
+                  }
+                  icon={<FontAwesomeIcon icon={faHome} />}
+                />
+              </Text>
+            </Flex>
 
-            <HStack w={"100%"} h={"auto"} borderBottom={"1px solid #eeeeee"}>
-              <HStack mt={3} mb={3}>
-                <FormLabel w={"100px"} fontWeight="bold">
-                  평점
-                </FormLabel>
-                <Text fontWeight={400} mt={-2} border={"none"} flex={1}>
-                  {renderStars(product.product.average_rate)}{" "}
-                  {product.product.average_rate !== null
-                    ? product.product.average_rate.toFixed(1)
-                    : "0"}
-                </Text>
-              </HStack>
-            </HStack>
+            <Flex
+              alignItems="center"
+              justifyContent="flex-start"
+              borderBottom="1px solid #eeeeee"
+              pb={2}
+            >
+              <Text
+                w={{ base: "80px", md: "80px", xl: "100px" }}
+                fontSize="md"
+                fontWeight="bold"
+              >
+                평점
+              </Text>
+              <Text textAlign="left">
+                {renderStars(product.product.average_rate)}{" "}
+                {product.product.average_rate !== null
+                  ? product.product.average_rate.toFixed(1)
+                  : "0"}
+              </Text>
+            </Flex>
 
-            <HStack w={"100%"} h={"auto"} borderBottom={"1px solid #eeeeee"}>
-              <Flex alignItems={"center"} mt={3} mb={3}>
-                <FormLabel w={"100px"} fontWeight="bold">
-                  배송비
-                </FormLabel>
-                <Box w={"60px"} mt={-2}>
-                  3,000원
-                </Box>
-              </Flex>
-              <Flex alignItems="center" mt={-2} border={"none"} flex={1}>
-                <Popover>
-                  <PopoverTrigger>
-                    <Button
-                      color={"gray"}
-                      fontSize={"10px"}
-                      bg={"none"}
-                      border={"1px solid #eeeeee"}
-                      h={"25px"}
-                      w={"80px"}
-                      p={0}
-                    >
-                      추가배송정보
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent w={"400px"}>
-                    <PopoverArrow />
-                    <PopoverCloseButton />
-                    <PopoverHeader fontWeight={"bold"}>
-                      배송비 안내
-                    </PopoverHeader>
-                    <PopoverBody color={"gray"}>
-                      도서산간 추가 배송비
-                    </PopoverBody>
-                    <PopoverBody color={"gray"}>
-                      제주지역 5,000원, 도서산간지역 5,000원
-                    </PopoverBody>
-                    <PopoverFooter fontWeight={"bold"}>
-                      도착예정일
-                    </PopoverFooter>
-                    <PopoverBody color={"gray"}>
+            <Flex
+              alignItems="center"
+              justifyContent="flex-start"
+              borderBottom="1px solid #eeeeee"
+              pb={2}
+            >
+              <Text
+                w={{ base: "80px", md: "80px", xl: "100px" }}
+                fontSize="md"
+                fontWeight="bold"
+              >
+                배송비
+              </Text>
+              <Text mr={1}>3,000원</Text>
+              <Popover>
+                <PopoverTrigger>
+                  <Button
+                    color={"gray"}
+                    size="xs"
+                    bg={"none"}
+                    border={"1px solid #eeeeee"}
+                    px={1}
+                  >
+                    배송 정보
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <PopoverArrow />
+                  <PopoverCloseButton />
+                  <PopoverHeader fontWeight="bold">배송비 안내</PopoverHeader>
+                  <PopoverBody color="gray">
+                    <Text fontWeight="bold" color="black">
+                      추가 배송비
+                    </Text>
+                    <Text>제주지역 5,000원</Text>
+                    <Text>도서산간지역 5,000원</Text>
+                  </PopoverBody>
+                  <PopoverFooter fontWeight="bold">
+                    도착예정일
+                    <Text fontWeight="normal" color="gray">
                       판매자가 설정한 발송 예정일과 택배사의 배송 소요일을
                       기반으로 도착 예정일을 제공하고 있습니다.
-                    </PopoverBody>
-                  </PopoverContent>
-                </Popover>
-              </Flex>
-            </HStack>
+                    </Text>
+                  </PopoverFooter>
+                </PopoverContent>
+              </Popover>
+            </Flex>
 
             {/* 상세옵션 로직 */}
             <Box w="100%" mt={5}>
@@ -750,60 +802,117 @@ export function ProductView() {
               </Box>
             </Box>
 
-            <Flex w={"100%"} mt={10}>
-              {/* --------------- 찜하기 --------------- */}
-              <Button
-                h={"50px"}
-                w={"20%"}
-                bg={"none"}
-                borderRadius={0}
-                border={"1px solid #eeeeee"}
-                onClick={handleFavoriteClick}
-              >
-                <FontAwesomeIcon icon={isFavorited ? fasHeart : farHeart} />
-              </Button>
-
-              {/* --------------- 장바구니 --------------- */}
-              <Button
-                h={"50px"}
-                w={"30%"}
-                borderRadius={0}
-                bg={"none"}
-                border={"1px solid #eeeeee"}
-                onClick={handleBucketClick}
-              >
-                <FontAwesomeIcon icon={faCartShopping} />
-              </Button>
-
-              {/* --------------- 구매하기 --------------- */}
-
-              <Button
-                h={"50px"}
-                w={"50%"}
-                borderRadius={0}
-                bg={"black"}
-                color={"white"}
-                border={"1px solid #eeeeee"}
-                _hover={{ color: "black", background: "gray.300" }}
-                onClick={() => {
-                  if (isAuthenticated()) {
-                    handlePaymentClick();
-                  } else {
-                    toast({
-                      title: "로그인 되지 않았습니다",
-                      description: "결제는 로그인 후 가능합니다",
-                      status: "error",
-                    });
-                    navigate("/login");
+            {isSmallScreen || (
+              <ButtonGroup isAttached w="100%" mt={10}>
+                {/* --------------- 찜하기 --------------- */}
+                <IconButton
+                  h="50px"
+                  w="20%"
+                  bg="none"
+                  borderRadius={0}
+                  border="1px solid #eeeeee"
+                  onClick={handleFavoriteClick}
+                  color={isFavorited ? "red" : "black"}
+                  icon={
+                    <FontAwesomeIcon icon={isFavorited ? fasHeart : farHeart} />
                   }
-                }}
-              >
-                구매하기
-              </Button>
-            </Flex>
-          </VStack>
+                />
+
+                {/* --------------- 장바구니 --------------- */}
+                <Button
+                  h={"50px"}
+                  w={"30%"}
+                  borderRadius={0}
+                  bg={"none"}
+                  border={"1px solid #eeeeee"}
+                  onClick={handleBucketClick}
+                >
+                  <FontAwesomeIcon icon={faCartShopping} />
+                </Button>
+
+                {/* --------------- 구매하기 --------------- */}
+
+                <Button
+                  h={"50px"}
+                  w={"50%"}
+                  borderRadius={0}
+                  bg={"black"}
+                  color={"white"}
+                  border={"1px solid #eeeeee"}
+                  _hover={{ color: "black", background: "gray.300" }}
+                  onClick={() => {
+                    if (isAuthenticated()) {
+                      handlePaymentClick();
+                    } else {
+                      toast({
+                        title: "로그인 되지 않았습니다",
+                        description: "결제는 로그인 후 가능합니다",
+                        status: "error",
+                      });
+                      navigate("/login");
+                    }
+                  }}
+                >
+                  구매하기
+                </Button>
+              </ButtonGroup>
+            )}
+          </Stack>
         </Flex>
       </Box>
+      {isSmallScreen && (
+        <ButtonGroup isAttached w="100%" mt={10}>
+          {/* --------------- 찜하기 --------------- */}
+          <IconButton
+            h="50px"
+            w="20%"
+            bg="none"
+            borderRadius={0}
+            border="1px solid #eeeeee"
+            onClick={handleFavoriteClick}
+            color={isFavorited ? "red" : "black"}
+            icon={<FontAwesomeIcon icon={isFavorited ? fasHeart : farHeart} />}
+          />
+
+          {/* --------------- 장바구니 --------------- */}
+          <Button
+            h={"50px"}
+            w={"30%"}
+            borderRadius={0}
+            bg={"none"}
+            border={"1px solid #eeeeee"}
+            onClick={handleBucketClick}
+          >
+            <FontAwesomeIcon icon={faCartShopping} />
+          </Button>
+
+          {/* --------------- 구매하기 --------------- */}
+
+          <Button
+            h={"50px"}
+            w={"50%"}
+            borderRadius={0}
+            bg={"black"}
+            color={"white"}
+            border={"1px solid #eeeeee"}
+            _hover={{ color: "black", background: "gray.300" }}
+            onClick={() => {
+              if (isAuthenticated()) {
+                handlePaymentClick();
+              } else {
+                toast({
+                  title: "로그인 되지 않았습니다",
+                  description: "결제는 로그인 후 가능합니다",
+                  status: "error",
+                });
+                navigate("/login");
+              }
+            }}
+          >
+            구매하기
+          </Button>
+        </ButtonGroup>
+      )}
 
       {/* 삭제 모달 */}
       <Modal isOpen={isOpen} onClose={onClose}>
