@@ -8,7 +8,6 @@ import {
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
-import { Recent } from "../../component/RecentViewed";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
@@ -103,18 +102,6 @@ export function ProductEventList() {
           할인 & 이벤트
         </Text>
       </Box>
-      <Box
-        w={"85%"}
-        ml={"12.5%"}
-        mt={4}
-        borderBottom={"10px solid black"}
-      ></Box>
-      <Box
-        w={"85%"}
-        ml={"12.5%"}
-        mt={0}
-        borderBottom={"4px solid orange"}
-      ></Box>
       <Flex
         mx="10%"
         display={"flex"}

@@ -201,16 +201,14 @@ export function HomeBody() {
   }, []);
   const menuStyle = {
     position: "fixed",
-    top:
-      scrollPosition > fixedTopPosition
-        ? `${stickyTopPosition}px`
-        : `${fixedTopPosition - scrollPosition}px`,
-    right: "2px",
+    bottom: { base: 5, md: 120 },
+    right: { base: "10%", md: 10, lg: 5 },
     zIndex: 10,
     padding: "4px",
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    boxShadow: "lg",
-    maxWidth: "sm",
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    boxShadow: "base",
+    border: "1px solid #E1E1E1",
+    maxW: "sm",
     overflow: "hidden",
     borderRadius: "15px",
     transition: "top 0.3s ease-in-out",

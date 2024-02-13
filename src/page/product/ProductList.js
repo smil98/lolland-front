@@ -102,7 +102,7 @@ function SearchComponent() {
   }
 
   return (
-    <Box mx="35%">
+    <Box mx={{ base: "5%", md: "25%", lg: "30%", xl: "35%" }}>
       <InputGroup>
         <InputLeftElement w="25%">
           <Select
@@ -186,26 +186,34 @@ export function ProductList() {
     <Box mt={10}>
       <SearchComponent />
       <Flex
-        mx="10%"
+        mx={{ base: "1%", md: "5%", xl: "10%" }}
         display={"flex"}
         justifyContent={"center"}
         alignItems={"center"}
       >
         <Box
-          position="fixed" // 절대 위치를 사용해 오버레이 설정
-          top="300" // 배너의 상단에서 시작
-          right="2" // 배너의 우측에서 시작
-          zIndex="10" // 다른 요소보다 위에 오도록 z-index 설정
-          p="4" // 패딩 값
-          bg="rgba(255, 255, 255, 0.1)" // 배경색
-          boxShadow="lg" // 그림자 효과
-          maxW="sm" // 최대 너비 설정
-          overflow="hidden" // 내용이 넘치면 숨김
+          position="fixed"
+          bottom={{ base: 5, md: 120 }}
+          right={{ base: "10%", md: 10, lg: 5 }}
+          zIndex="10"
+          p="4"
+          bg="rgba(255, 255, 255, 0.7)"
+          border="1px solid #E1E1E1"
+          boxShadow="base"
+          maxW="sm"
+          overflow="hidden"
           borderRadius="15px"
         >
           <Recent />
         </Box>
-        <SimpleGrid h={"100%"} w={"100%"} columns={4} spacing={9} m={10}>
+        <SimpleGrid
+          h="100%"
+          w="100%"
+          columns={{ base: 2, md: 2, lg: 3, xl: 4 }}
+          spacing={{ base: 3, xl: 9 }}
+          my={10}
+          mx={{ base: 2, md: 3, lg: 5, xl: 10 }}
+        >
           {productList.map((product, index) => (
             <Box
               key={index}

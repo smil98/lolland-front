@@ -219,7 +219,7 @@ export function CompanyList() {
         <Flex
           flexDir="column"
           w={{ base: "33%", md: "28%", lg: "23%", xl: "18%" }}
-          px={5}
+          px={{ base: 1, md: 5 }}
         >
           <Box p={3}>
             <Heading size="lg">
@@ -304,30 +304,32 @@ export function CompanyList() {
         </Flex>
         <Box
           w={{ base: "65%", md: "70%", lg: "75%", xl: "80%" }}
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"flex-start"}
+          display="flex"
+          justifyContent="center"
+          alignItems="flex-start"
         >
-          <Flex
-            display={"flex"}
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
+          <Flex display="flex" justifyContent="center" alignItems="center">
             <Box
               position="fixed"
-              top="300"
-              right="2"
+              bottom={{ base: 5, md: 120 }}
+              right={{ base: "10%", md: 10, lg: 5 }}
               zIndex="10"
               p="4"
-              bg="rgba(255, 255, 255, 0.1)"
-              boxShadow="lg"
+              bg="rgba(255, 255, 255, 0.7)"
+              border="1px solid #E1E1E1"
+              boxShadow="base"
               maxW="sm"
               overflow="hidden"
               borderRadius="15px"
             >
               <Recent />
             </Box>
-            <SimpleGrid h={"100%"} w={"100%"} columns={4} spacing={10}>
+            <SimpleGrid
+              h="100%"
+              w="90%"
+              columns={{ base: 1, md: 2, lg: 3, xl: 4 }}
+              spacing={10}
+            >
               {productList.map((product, index) => (
                 <Box
                   key={index}
