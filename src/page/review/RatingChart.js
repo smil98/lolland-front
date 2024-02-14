@@ -37,6 +37,9 @@ const RatingChart = ({ ratingDistribution, boxDimensions }) => {
             display: false,
           },
           ticks: {
+            min: 1,
+            max: 5,
+            stepSize: 1,
             minTicksLimit: 5,
             maxTicksLimit: 5,
           },
@@ -50,7 +53,7 @@ const RatingChart = ({ ratingDistribution, boxDimensions }) => {
         title: {
           display: true,
           text: "평점 비율",
-          font: { size: 20 },
+          font: { size: 19 },
           padding: {
             top: 10,
             bottom: 40,

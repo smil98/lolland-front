@@ -42,7 +42,7 @@ function OptionChart({ sellRateData, boxDimensions }) {
         title: {
           display: true,
           text: "옵션 별 선호도",
-          font: { size: 20 },
+          font: { size: 19 },
         },
         padding: {
           top: 10,

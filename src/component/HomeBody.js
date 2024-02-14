@@ -28,7 +28,7 @@ import "./swiper.css";
 import { Autoplay, EffectFade } from "swiper/modules";
 import SwiperImg from "./SwiperImg";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Recent } from "./RecentViewed";
 import "swiper/css";
@@ -36,6 +36,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { ScreenContext } from "./ScreenContext";
 
 function SearchComponent() {
   const [keyword, setKeyword] = useState("");
@@ -98,6 +99,8 @@ export function HomeBody() {
   const [top, setTop] = useState(null); // 게임커뮤니티 베스트게시물 상태
   const [naver, setNaver] = useState(null); // 뉴스기사 상태
   const [categoryProducts, setCategoryProducts] = useState({}); // 카테고리별 상품 상태
+
+  const { isSmallScreen } = useContext(ScreenContext);
 
   // -------------------------------- 리뷰많은 상품 3개 불러오기 --------------------------------
   useEffect(() => {
@@ -199,10 +202,29 @@ export function HomeBody() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // const menuStyle = {
+  //   position: "fixed",
+  //   bottom: { base: 5, md: 120 },
+  //   right: { base: "15%", md: 10, lg: 5, xl: 5 },
+  //   zIndex: 10,
+  //   padding: "4px",
+  //   backgroundColor: "rgba(255, 255, 255, 0.7)",
+  //   boxShadow: "base",
+  //   border: "1px solid #E1E1E1",
+  //   maxW: "sm",
+  //   overflow: "hidden",
+  //   borderRadius: "15px",
+  //   transition: "top 0.3s ease-in-out",
+  // };
+
   const menuStyle = {
     position: "fixed",
-    bottom: { base: 5, md: 120 },
-    right: { base: "10%", md: 10, lg: 5 },
+    bottom: isSmallScreen ? { base: 5, md: "50%" } : { base: 5, md: 120 },
+    right: isSmallScreen
+      ? { base: "50%", md: "auto" }
+      : { base: "15%", md: 10, lg: 5, xl: 5 },
+    transform: isSmallScreen ? { translateX: "-50%" } : undefined,
     zIndex: 10,
     padding: "4px",
     backgroundColor: "rgba(255, 255, 255, 0.7)",
@@ -296,11 +318,10 @@ export function HomeBody() {
         <Box borderRadius={"20px"} background={"white"} w={"90%"} h={"100%"}>
           <SwiperImg />
         </Box>
-
-        {/* ------------------------ 최근본상품 ------------------------ */}
-        <Box style={menuStyle}>
-          <Recent />
-        </Box>
+      </Box>
+      {/* ------------------------ 최근본상품 ------------------------ */}
+      <Box {...menuStyle}>
+        <Recent />
       </Box>
 
       {/* ------------------------ 중간 이미지 및 게시글 ------------------------ */}

@@ -217,7 +217,7 @@ export const ReviewView = ({ product_id, productDetailImg }) => {
       .put("/api/review/update", {
         review_id: editedReview.review_id,
         review_content: editedReview.review_content,
-        rate: editedReview.rate,
+        rate: editableRating,
       })
       .then(() => {
         toast({
@@ -314,8 +314,12 @@ export const ReviewView = ({ product_id, productDetailImg }) => {
       </TabList>
       <TabIndicator mt="-1.5px" height="2px" bg="black" borderRadius="1px" />
       <TabPanels px={10}>
-        {/* -------------------------- 상품 설명 --------------------------TODO: 여기서부터 */}
-        <TabPanel mx={"20%"} alignItems={"center"} justifyContent="center">
+        {/* -------------------------- 상품 설명 -------------------------- */}
+        <TabPanel
+          mx={{ base: "0%", md: "10%", lg: "15%", xl: "20%" }}
+          alignItems={"center"}
+          justifyContent="center"
+        >
           <Image src="https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productContent/productDefault.jpeg" />
           {productDetailImg.map((imgUri, index) => (
             <Image
@@ -330,7 +334,11 @@ export const ReviewView = ({ product_id, productDetailImg }) => {
         <TabPanel>
           {/* -------------------------- 리뷰 입력란 -------------------------- */}
           <StarRating rate={rate} setRate={setRate} />
-          <Flex justifyContent="center" mx="20%" mb={10}>
+          <Flex
+            justifyContent="center"
+            mx={{ base: "0%", md: "10%", lg: "15%", xl: "20%" }}
+            mb={10}
+          >
             <Textarea
               value={review}
               onChange={(e) => setReview(e.target.value)}
@@ -359,8 +367,12 @@ export const ReviewView = ({ product_id, productDetailImg }) => {
           {/* -------------------------- 리뷰 출력란 -------------------------- */}
           {reviewList.length > 0 ? (
             reviewList.map((review, index) => (
-              <Box key={review.review_id} mx="20%" my={5}>
-                <HStack spacing={5} mb={5}>
+              <Box
+                key={review.review_id}
+                mx={{ base: "0%", md: "10%", lg: "15%", xl: "20%" }}
+                my={5}
+              >
+                <HStack spacing={3} mb={5}>
                   <Avatar size="sm" src={review.file_url} />
                   <Text
                     color="white"

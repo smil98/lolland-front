@@ -35,6 +35,7 @@ import {
   Spinner,
   Stack,
   Text,
+  Tooltip,
   useDisclosure,
   useToast,
   VStack,
@@ -573,16 +574,21 @@ export function ProductView() {
               </Text>
               <Text fontWeight={400} textAlign="left">
                 {product.company_name}
-                <IconButton
-                  ml={3}
-                  px={2}
-                  size="xs"
-                  variant="outline"
-                  onClick={() =>
-                    navigate(`/company/${product.product.company_id}`)
-                  }
-                  icon={<FontAwesomeIcon icon={faHome} />}
-                />
+                <Tooltip
+                  placement="top"
+                  label={`${product.company_name} 페이지로 가기`}
+                >
+                  <IconButton
+                    ml={3}
+                    px={2}
+                    size="xs"
+                    variant="outline"
+                    onClick={() =>
+                      navigate(`/company/${product.product.company_id}`)
+                    }
+                    icon={<FontAwesomeIcon icon={faHome} />}
+                  />
+                </Tooltip>
               </Text>
             </Flex>
 

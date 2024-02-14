@@ -57,24 +57,25 @@ export const ProductStats = ({ product_id, average_rate }) => {
   };
 
   return (
-    <Flex justifyContent="space-between" my={10} minW="1200px">
+    <Flex justifyContent="space-between" my={10}>
       <Box
         w="30%"
         h="250px"
         display="flex"
+        flexDir="column"
         alignItems="center"
         justifyContent="center"
         textAlign="center"
       >
-        <Box>
-          <Text>전체 만족도 평점</Text>
-          <Text fontSize={"2rem"} mt={5}>
-            {renderStars(average_rate)}
-          </Text>
-          <Text fontWeight={"bold"} fontSize={"2.7rem"} mt={2}>
-            {average_rate !== null ? average_rate.toFixed(1) : "0"}
-          </Text>
-        </Box>
+        <Text fontSize="lg" fontWeight="bold" color="#69645c">
+          전체 만족도 평점
+        </Text>
+        <Text fontSize="xl" mt={5}>
+          {renderStars(average_rate)}
+        </Text>
+        <Text fontWeight="bold" fontSize="3xl" mt={2}>
+          {average_rate !== null ? average_rate.toFixed(1) : "0"}
+        </Text>
       </Box>
       <Box
         w="30%"
