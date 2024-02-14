@@ -442,10 +442,7 @@ export function ProductView() {
   }
 
   return (
-    <Box
-      mx={{ base: "2%", md: "5%", lg: "10%", xl: "15%" }}
-      border="1px dashed green"
-    >
+    <Box mx={{ base: "2%", md: "5%", lg: "10%", xl: "15%" }}>
       {/* ---------------------- 카테고리 순서 ---------------------- */}
       <Box>
         {/*minW={"800px"}*/}

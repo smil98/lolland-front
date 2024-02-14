@@ -313,7 +313,7 @@ export const ReviewView = ({ product_id, productDetailImg }) => {
         <Tab {...tabStyles}>Q&A</Tab>
       </TabList>
       <TabIndicator mt="-1.5px" height="2px" bg="black" borderRadius="1px" />
-      <TabPanels px={10}>
+      <TabPanels>
         {/* -------------------------- 상품 설명 -------------------------- */}
         <TabPanel
           mx={{ base: "0%", md: "10%", lg: "15%", xl: "20%" }}
@@ -495,7 +495,7 @@ export const ReviewView = ({ product_id, productDetailImg }) => {
           )}
         </TabPanel>
         {/* -------------------------- Q&A -------------------------- */}
-        <TabPanel>
+        <TabPanel mx={{ base: "0%", md: "10%" }} px={0} pb={0}>
           <QnaView
             product_id={product_id}
             formattedLogId={formattedLogId}

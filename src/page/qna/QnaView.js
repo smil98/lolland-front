@@ -1,4 +1,9 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Button,
   ButtonGroup,
@@ -33,10 +38,11 @@ import {
   faTrashCan,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { QnaWriteQuestion } from "./QnaWriteQuestion";
+import { ScreenContext } from "../../component/ScreenContext";
 
 function PageButton({ variant, pageNumber, children, product_id }) {
   const [params] = useSearchParams();
@@ -127,6 +133,8 @@ export function QnaView({
 
   const [keyword, setKeyword] = useState("");
   const [category, setCategory] = useState("all");
+
+  const { isSmallScreen } = useContext(ScreenContext);
 
   function handleSearch() {
     const paramsSearch = new URLSearchParams();
@@ -307,10 +315,15 @@ export function QnaView({
           fetchQna={fetchQna}
         />
       ) : (
-        <>
-          <Flex justifyContent="center" mx="15%" gap={2} my={10}>
+        <Box>
+          <Flex
+            justifyContent="center"
+            gap={2}
+            my={10}
+            mx={{ base: "0%", md: "5%", lg: "10%", xl: "15%" }}
+          >
             <InputGroup>
-              <InputLeftElement w="20%">
+              <InputLeftElement w={{ base: "35%", md: "30%" }}>
                 <Select
                   border="1px solid black"
                   borderRadius={0}
@@ -325,8 +338,8 @@ export function QnaView({
               </InputLeftElement>
               <Input
                 borderRadius={0}
-                textIndent="20%"
-                placeholder="검색어를 입력해주세요"
+                textIndent={{ base: "35%", md: "30%" }}
+                placeholder="검색어 입력"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
               />
@@ -337,8 +350,8 @@ export function QnaView({
             <ButtonGroup size="md">
               {viewMode ? (
                 <Button
-                  borderRadius={0}
                   w="100px"
+                  borderRadius={0}
                   variant="undefined"
                   border="1px solid black"
                   bgColor="white"
@@ -395,185 +408,338 @@ export function QnaView({
               </Button>
             </ButtonGroup>
           </Flex>
-          <TableContainer mx="15%">
-            <Table variant="undefined">
-              <Thead borderTop="2px solid black" borderBottom="1px solid black">
-                <Tr>
-                  <Th textAlign="center" fontSize="sm" w="60%">
-                    제목
-                  </Th>
-                  <Th textAlign="center" fontSize="sm">
-                    아이디
-                  </Th>
-                  <Th textAlign="center" fontSize="sm">
-                    답변상태
-                  </Th>
-                  <Th textAlign="center" fontSize="sm">
-                    작성일
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {qnaList && qnaList.length > 0 ? (
-                  qnaList.map((qna) => (
-                    <>
-                      <Tr
-                        key={qna.question_id}
-                        borderBottom={
-                          openId !== qna.question_id &&
-                          !qna.answer_content &&
-                          "1px solid #F4F4F4"
-                        }
-                      >
-                        <Td
-                          textAlign="left"
-                          fontWeight="bold"
-                          onClick={() => {
-                            handleToggle(qna.question_id);
-                          }}
-                        >
-                          {qna.question_title}
-                        </Td>
-                        <Td textAlign="center">
-                          {formattedLogId(qna.member_login_id)}
-                        </Td>
-                        <Td textAlign="center">
-                          <Tag
-                            size="sm"
-                            variant="outline"
-                            colorScheme={
-                              !qna.answer_content ? "orange" : "blackAlpha"
-                            }
-                            p={2}
-                          >
-                            {!qna.answer_content ? "답변 대기중" : "답변 완료"}
-                          </Tag>
-                        </Td>
-                        <Td textAlign="center">
-                          <Text fontSize="xs" opacity="0.5">
-                            {formattedDate(qna.question_reg_time)}
+          {isSmallScreen ? (
+            <Accordion allowMultiple>
+              {qnaList && qnaList.length > 0 ? (
+                qnaList.map((qna) => (
+                  <AccordionItem key={qna.question_id}>
+                    <Text>
+                      <AccordionButton _expanded={{ bgColor: "gray.200" }}>
+                        <Text flex={1} flexDir="column" textAlign="left">
+                          <Text fontSize="xs" mb={1}>
+                            {formattedLogId(qna.member_login_id)}{" "}
+                            <Text as="span" opacity={0.7} ml={5}>
+                              {formattedDate(qna.question_reg_time)}
+                            </Text>
                           </Text>
-                        </Td>
-                      </Tr>
-                      {openId === qna.question_id && (
-                        <>
-                          <Tr>
-                            <Td colSpan={4} borderBottom="1px solid #F4F4F4">
-                              {(hasAccess(qna.member_login_id) ||
-                                isAdmin()) && (
-                                <ButtonGroup
-                                  size="sm"
-                                  display="flex"
-                                  justifyContent="flex-end"
-                                >
-                                  {isEditing ? (
-                                    <>
-                                      <Input
-                                        border="1px solid black"
-                                        value={editedQuestion.question_title}
-                                        onChange={(e) => {
-                                          setEditedQuestion((prevQ) => {
-                                            return {
-                                              ...prevQ,
-                                              question_title: e.target.value,
-                                            };
-                                          });
-                                        }}
-                                      />
-                                      <IconButton
-                                        icon={
-                                          <FontAwesomeIcon
-                                            icon={faPaperPlane}
-                                          />
-                                        }
-                                        colorScheme="blue"
-                                        variant="ghost"
-                                        onClick={() => handleEditQna()}
-                                      />
-                                      <IconButton
-                                        icon={
-                                          <FontAwesomeIcon icon={faXmark} />
-                                        }
-                                        colorScheme="red"
-                                        variant="ghost"
-                                        onClick={() => {
-                                          setEditedQuestion(qna);
-                                          setIsEditing(false);
-                                        }}
-                                      />
-                                    </>
-                                  ) : (
-                                    <>
-                                      <IconButton
-                                        icon={
-                                          <FontAwesomeIcon
-                                            icon={faPenToSquare}
-                                          />
-                                        }
-                                        variant="ghost"
-                                        colorScheme="blackAlpha"
-                                        onClick={() => {
-                                          setIsEditing(true);
-                                          setEditedQuestion(qna);
-                                        }}
-                                      />
-                                      <IconButton
-                                        icon={
-                                          <FontAwesomeIcon icon={faTrashCan} />
-                                        }
-                                        variant="ghost"
-                                        colorScheme="red"
-                                        onClick={() => handleDeleteQna(qna)}
-                                      />
-                                    </>
-                                  )}
-                                </ButtonGroup>
-                              )}
-                              {isEditing ? (
-                                <Textarea
-                                  mt={5}
-                                  value={editedQuestion.question_content}
-                                  onChange={(e) => {
-                                    setEditedQuestion((prevQ) => {
-                                      return {
-                                        ...prevQ,
-                                        question_content: e.target.value,
-                                      };
-                                    });
+                          <Text fontWeight="bold">
+                            <Tag
+                              w="80px"
+                              borderRadius="full"
+                              fontSize="xs"
+                              justifyContent="center"
+                              mr={3}
+                              variant="outline"
+                              colorScheme={
+                                !qna.answer_content ? "orange" : "blackAlpha"
+                              }
+                              px={2}
+                            >
+                              {!qna.answer_content
+                                ? "답변 대기중"
+                                : "답변 완료"}
+                            </Tag>
+                            {qna.question_title}
+                          </Text>
+                        </Text>
+                        {hasAccess(qna.member_login_id) ? (
+                          <IconButton
+                            icon={<FontAwesomeIcon icon={faTrashCan} />}
+                            variant="ghost"
+                            colorScheme="red"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteQna(qna);
+                            }}
+                          />
+                        ) : (
+                          <AccordionIcon />
+                        )}
+                      </AccordionButton>
+                    </Text>
+                    <AccordionPanel>
+                      <Text
+                        fontWeight="bold"
+                        display="flex"
+                        justifyContent="space-between"
+                        alignItems="center"
+                      >
+                        {isEditing ? (
+                          <Input
+                            border="1px solid black"
+                            value={editedQuestion.question_title}
+                            onChange={(e) => {
+                              setEditedQuestion((prevQ) => {
+                                return {
+                                  ...prevQ,
+                                  question_title: e.target.value,
+                                };
+                              });
+                            }}
+                          />
+                        ) : (
+                          <Text>{qna.question_title}</Text>
+                        )}
+                        {hasAccess(qna.member_login_id) && (
+                          <ButtonGroup size="sm">
+                            {isEditing ? (
+                              <>
+                                <IconButton
+                                  icon={<FontAwesomeIcon icon={faPaperPlane} />}
+                                  colorScheme="blue"
+                                  variant="ghost"
+                                  onClick={() => handleEditQna()}
+                                />
+                                <IconButton
+                                  icon={<FontAwesomeIcon icon={faXmark} />}
+                                  colorScheme="red"
+                                  variant="ghost"
+                                  onClick={() => {
+                                    setEditedQuestion(qna);
+                                    setIsEditing(false);
                                   }}
                                 />
-                              ) : (
-                                <Text whiteSpace="pre-wrap" lineHeight="30px">
-                                  {qna.question_content}
-                                </Text>
-                              )}
-                            </Td>
-                          </Tr>
-                          {qna.answer_content && (
-                            <Tr borderBottom="1px solid #F4F4F4">
-                              <Td colSpan={4} px={10} py={6} bgColor="#F4F4F4">
-                                <Text whiteSpace="pre-wrap" lineHeight="30px">
-                                  {qna.answer_content}
-                                </Text>
+                              </>
+                            ) : (
+                              <IconButton
+                                icon={<FontAwesomeIcon icon={faPenToSquare} />}
+                                variant="ghost"
+                                colorScheme="blackAlpha"
+                                onClick={() => {
+                                  setIsEditing(true);
+                                  setEditedQuestion(qna);
+                                }}
+                              />
+                            )}
+                          </ButtonGroup>
+                        )}
+                      </Text>
+                      {isEditing ? (
+                        <Textarea
+                          mt={5}
+                          value={editedQuestion.question_content}
+                          onChange={(e) => {
+                            setEditedQuestion((prevQ) => {
+                              return {
+                                ...prevQ,
+                                question_content: e.target.value,
+                              };
+                            });
+                          }}
+                        />
+                      ) : (
+                        <Text mt={3} whiteSpace="pre-wrap">
+                          {qna.question_content}
+                        </Text>
+                      )}
+                      {qna.answer_content && (
+                        <Box mt={5} p={3} bgColor="#F4F4F4">
+                          <Text fontWeight="bold" mb={2}>
+                            관리자 답변
+                          </Text>
+                          {qna.answer_content}
+                        </Box>
+                      )}
+                    </AccordionPanel>
+                  </AccordionItem>
+                ))
+              ) : (
+                <Text textAlign="center">등록된 문의가 없습니다</Text>
+              )}
+            </Accordion>
+          ) : (
+            <TableContainer>
+              <Table variant="undefined">
+                <Thead
+                  borderTop="2px solid black"
+                  borderBottom="1px solid black"
+                >
+                  <Tr>
+                    <Th textAlign="center" fontSize="sm" w="60%">
+                      제목
+                    </Th>
+                    <Th textAlign="center" fontSize="sm">
+                      아이디
+                    </Th>
+                    <Th textAlign="center" fontSize="sm">
+                      답변상태
+                    </Th>
+                    <Th textAlign="center" fontSize="sm">
+                      작성일
+                    </Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {qnaList && qnaList.length > 0 ? (
+                    qnaList.map((qna) => (
+                      <>
+                        <Tr
+                          key={qna.question_id}
+                          borderBottom={
+                            openId !== qna.question_id &&
+                            !qna.answer_content &&
+                            "1px solid #F4F4F4"
+                          }
+                        >
+                          <Td
+                            textAlign="left"
+                            fontWeight="bold"
+                            onClick={() => {
+                              handleToggle(qna.question_id);
+                            }}
+                          >
+                            {qna.question_title}
+                          </Td>
+                          <Td textAlign="center">
+                            {formattedLogId(qna.member_login_id)}
+                          </Td>
+                          <Td textAlign="center">
+                            <Tag
+                              size="sm"
+                              variant="outline"
+                              colorScheme={
+                                !qna.answer_content ? "orange" : "blackAlpha"
+                              }
+                              p={2}
+                            >
+                              {!qna.answer_content
+                                ? "답변 대기중"
+                                : "답변 완료"}
+                            </Tag>
+                          </Td>
+                          <Td textAlign="center">
+                            <Text fontSize="xs" opacity="0.5">
+                              {formattedDate(qna.question_reg_time)}
+                            </Text>
+                          </Td>
+                        </Tr>
+                        {openId === qna.question_id && (
+                          <>
+                            <Tr>
+                              <Td colSpan={4} borderBottom="1px solid #F4F4F4">
+                                {(hasAccess(qna.member_login_id) ||
+                                  isAdmin()) && (
+                                  <ButtonGroup
+                                    size="sm"
+                                    display="flex"
+                                    justifyContent="flex-end"
+                                  >
+                                    {isEditing ? (
+                                      <>
+                                        <Input
+                                          border="1px solid black"
+                                          value={editedQuestion.question_title}
+                                          onChange={(e) => {
+                                            setEditedQuestion((prevQ) => {
+                                              return {
+                                                ...prevQ,
+                                                question_title: e.target.value,
+                                              };
+                                            });
+                                          }}
+                                        />
+                                        <IconButton
+                                          icon={
+                                            <FontAwesomeIcon
+                                              icon={faPaperPlane}
+                                            />
+                                          }
+                                          colorScheme="blue"
+                                          variant="ghost"
+                                          onClick={() => handleEditQna()}
+                                        />
+                                        <IconButton
+                                          icon={
+                                            <FontAwesomeIcon icon={faXmark} />
+                                          }
+                                          colorScheme="red"
+                                          variant="ghost"
+                                          onClick={() => {
+                                            setEditedQuestion(qna);
+                                            setIsEditing(false);
+                                          }}
+                                        />
+                                      </>
+                                    ) : (
+                                      <>
+                                        <IconButton
+                                          icon={
+                                            <FontAwesomeIcon
+                                              icon={faPenToSquare}
+                                            />
+                                          }
+                                          variant="ghost"
+                                          colorScheme="blackAlpha"
+                                          onClick={() => {
+                                            setIsEditing(true);
+                                            setEditedQuestion(qna);
+                                          }}
+                                        />
+                                        <IconButton
+                                          icon={
+                                            <FontAwesomeIcon
+                                              icon={faTrashCan}
+                                            />
+                                          }
+                                          variant="ghost"
+                                          colorScheme="red"
+                                          onClick={() => handleDeleteQna(qna)}
+                                        />
+                                      </>
+                                    )}
+                                  </ButtonGroup>
+                                )}
+                                {isEditing ? (
+                                  <Textarea
+                                    mt={5}
+                                    value={editedQuestion.question_content}
+                                    onChange={(e) => {
+                                      setEditedQuestion((prevQ) => {
+                                        return {
+                                          ...prevQ,
+                                          question_content: e.target.value,
+                                        };
+                                      });
+                                    }}
+                                  />
+                                ) : (
+                                  <Text whiteSpace="pre-wrap" lineHeight="30px">
+                                    {qna.question_content}
+                                  </Text>
+                                )}
                               </Td>
                             </Tr>
-                          )}
-                        </>
-                      )}
-                    </>
-                  ))
-                ) : (
-                  <Tr>
-                    <Td colSpan={4} h="xs" textAlign="center">
-                      아직 등록된 Q&A가 없습니다
-                    </Td>
-                  </Tr>
-                )}
-              </Tbody>
-            </Table>
-          </TableContainer>
+                            {qna.answer_content && (
+                              <Tr borderBottom="1px solid #F4F4F4">
+                                <Td
+                                  colSpan={4}
+                                  px={10}
+                                  py={6}
+                                  bgColor="#F4F4F4"
+                                >
+                                  <Text whiteSpace="pre-wrap" lineHeight="30px">
+                                    {qna.answer_content}
+                                  </Text>
+                                </Td>
+                              </Tr>
+                            )}
+                          </>
+                        )}
+                      </>
+                    ))
+                  ) : (
+                    <Tr>
+                      <Td colSpan={4} h="xs" textAlign="center">
+                        아직 등록된 Q&A가 없습니다
+                      </Td>
+                    </Tr>
+                  )}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          )}
           <Pagination product_id={product_id} pageInfo={pageInfo} />
-        </>
+        </Box>
       )}
     </>
   );

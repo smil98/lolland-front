@@ -62,8 +62,10 @@ export function QnaWriteQuestion({ setIsWriting, product_id, fetchQna }) {
   }
 
   return (
-    <Box mx="15%" my={10}>
-      <Heading mb={10}>문의 등록</Heading>
+    <Box mx={{ base: "3%", md: "10%", lg: "15%", xl: "20%" }} mb={10}>
+      <Text fontSize="2xl" className="specialHeadings" mt={5} mb={10}>
+        문의 등록
+      </Text>
       <Form>
         <FormControl mb={5}>
           <FormLabel fontWeight="bold" mb={5}>
