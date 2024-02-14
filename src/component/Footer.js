@@ -176,8 +176,11 @@ export function Footer() {
               alignItems="center"
               justifyContent="center"
               textAlign="center"
+              fontSize="4xl"
+              opacity={0.4}
+              className="logo"
             >
-              <Image src="/logo.png" boxSize="100%" objectFit="fit" />
+              LOLLAND
             </Box>
           </Flex>
         </Box>

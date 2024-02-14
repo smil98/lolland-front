@@ -488,7 +488,6 @@ export function ProductView() {
               product.productImgs.length > 0 && (
                 <Box p={2}>
                   <Image
-                    border="1px solid blue"
                     src={product.productImgs[selectedImageIndex].main_img_uri}
                     alt={`Product Image ${selectedImageIndex}`}
                     boxSize={{
@@ -569,7 +568,12 @@ export function ProductView() {
               >
                 제조사
               </Text>
-              <Text fontWeight={400} textAlign="left">
+              <Text
+                fontWeight={400}
+                textAlign="left"
+                display="flex"
+                alignItems="center"
+              >
                 {product.company_name}
                 <Tooltip
                   placement="top"

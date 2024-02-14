@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   ButtonGroup,
   Card,
@@ -224,12 +225,28 @@ export function QnaWriteAnswer() {
       });
   }
 
+  const boxStyles = {
+    py: 3,
+    xs: {
+      whiteSpace: "pre-wrap",
+      overflowWrap: "break-word",
+    },
+    border: "none",
+    textAlign: "left",
+    fontSize: "md",
+  };
+
   return (
     <Card w="full" px="3%" id="answerSection">
-      <CardHeader>
-        <Heading size="lg">
-          답변 {answer?.answer_id !== null ? "수정" : "등록"}
-        </Heading>
+      <CardHeader
+        display="flex"
+        alignItems="center"
+        fontWeight="bold"
+        textAlign="left"
+        fontSize="2xl"
+        className="specialHeadings"
+      >
+        답변 {answer?.answer_id !== null ? "수정" : "등록"}
       </CardHeader>
       <CardBody>
         {questionInfo !== null && (
@@ -247,12 +264,7 @@ export function QnaWriteAnswer() {
                     상품명
                   </Text>
                 </FormLabel>
-                <Input
-                  p={0}
-                  border="none"
-                  readOnly
-                  value={questionInfo.product_name}
-                />
+                <Box {...boxStyles}>{questionInfo.product_name}</Box>
               </FormControl>
               <FormControl mb={5}>
                 <FormLabel fontWeight="bold" mb={5}>
@@ -266,12 +278,7 @@ export function QnaWriteAnswer() {
                     문의 제목
                   </Text>
                 </FormLabel>
-                <Input
-                  p={0}
-                  border="none"
-                  readOnly
-                  value={questionInfo.question_title}
-                />
+                <Box {...boxStyles}>{questionInfo.question_title}</Box>
               </FormControl>
               <FormControl mb={5}>
                 <FormLabel fontWeight="bold" mb={5}>
@@ -285,12 +292,7 @@ export function QnaWriteAnswer() {
                     문의 내용
                   </Text>
                 </FormLabel>
-                <Input
-                  p={0}
-                  border="none"
-                  readOnly
-                  value={questionInfo.question_content}
-                />
+                <Box {...boxStyles}>{questionInfo.question_content}</Box>
               </FormControl>
             </Form>
           </>
