@@ -174,11 +174,27 @@ export const ReviewView = ({ product_id, productDetailImg }) => {
           fetchReview();
         })
         .catch((error) => {
-          toast({
-            title: "댓글 등록에 실패했습니다",
-            description: error.response.data,
-            status: "error",
-          });
+          if (error.response.status === 403) {
+            //FORBIDDEN
+            toast({
+              title: "구매하지 않은 상품입니다",
+              description: "별점 후기는 구매 후에만 등록 가능합니다",
+              status: "warning",
+            });
+          } else if (error.response.status === 409) {
+            //CONFLICT
+            toast({
+              title: "이미 후기를 남기셨습니다",
+              description: "별점 후기는 한 상품당 하나만 가능합니다",
+              status: "warning",
+            });
+          } else {
+            toast({
+              title: "댓글 등록에 실패했습니다",
+              description: error.response.data,
+              status: "error",
+            });
+          }
         });
     } else {
       toast({
