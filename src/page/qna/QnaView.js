@@ -617,8 +617,7 @@ export function QnaView({
                           <>
                             <Tr>
                               <Td colSpan={4} borderBottom="1px solid #F4F4F4">
-                                {(hasAccess(qna.member_login_id) ||
-                                  isAdmin()) && (
+                                {hasAccess(qna.member_login_id) && (
                                   <ButtonGroup
                                     size="sm"
                                     display="flex"

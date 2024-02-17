@@ -25,7 +25,7 @@ import "swiper/css/pagination";
 import "swiper/css";
 
 import "./swiper.css";
-import { Autoplay, EffectFade } from "swiper/modules";
+import { Autoplay, EffectFade, Thumbs } from "swiper/modules";
 import SwiperImg from "./SwiperImg";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import React, { useContext, useEffect, useState } from "react";
@@ -312,18 +312,94 @@ export function HomeBody() {
   };
 
   return (
-    <Box minW={"1400px"}>
+    <Box
+      display="flex"
+      flexDir="column"
+      justifyContent="center"
+      alignItems="center"
+      gap="80px"
+    >
       {/* ------------------------ 상단 배너 슬라이드 ------------------------ */}
-      <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
-        <Box borderRadius={"20px"} background={"white"} w={"90%"} h={"100%"}>
-          <SwiperImg />
-        </Box>
-      </Box>
-      {/* ------------------------ 최근본상품 ------------------------ */}
-      <Box {...menuStyle}>
-        <Recent />
+      <Box borderRadius="20px" w="90%" h="100%">
+        <SwiperImg />
       </Box>
 
+      {/* ------------------------ 최근본상품 ------------------------ */}
+      {/*<Box {...menuStyle}>*/}
+      {/*  <Recent />*/}
+      {/*</Box>*/}
+
+      <SimpleGrid w="90%" display="flex" column={2} spacing={10}>
+        <Box border="1px solid #E1E1E1" w="50%" p={5}>
+          <Text fontSize="2xl" className="specialHeadings" fontWeight="bold">
+            실시간 뜨고 있는 상품
+          </Text>
+          <Box
+            w="full"
+            h="450px"
+            display="flex"
+            flexDir="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Swiper
+              alignItems="center"
+              modules={[EffectFade, Autoplay]}
+              spaceBetween={50}
+              slidesPerView={1}
+              pagination={{ clickable: true }}
+              autoplay={{ delay: 4000 }}
+              effect="fade"
+            >
+              {mostReviewedProducts.map((product) => (
+                <SwiperSlide
+                  key={product.product_id}
+                  style={{
+                    border: "1px dashed blue",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {product.productImgs && product.productImgs.length > 0 && (
+                    <Image
+                      src={product.productImgs[0].main_img_uri}
+                      alt="Product Image"
+                      mx="auto"
+                      maxW="350px"
+                      maxH="350px"
+                    />
+                  )}
+                  <Text as="span" opacity={0.7}>
+                    [{product.company_name}]
+                  </Text>
+                  <Text fontSize="lg" className="labels">
+                    {product.product_name}
+                  </Text>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </Box>
+        </Box>
+        <Stack
+          w="50%"
+          direction="column"
+          spacing={5}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Stack direction="row" w="full" spacing="5%">
+            <Box p={5} border="1px solid #E1E1E1" w="50%">
+              2
+            </Box>
+            <Box p={5} border="1px solid #E1E1E1" w="50%">
+              3
+            </Box>
+          </Stack>
+          <Box p={5} w="full" border="1px solid #E1E1E1">
+            4
+          </Box>
+        </Stack>
+      </SimpleGrid>
       {/* ------------------------ 중간 이미지 및 게시글 ------------------------ */}
       <Box justifyContent="center" display="flex">
         <Box
