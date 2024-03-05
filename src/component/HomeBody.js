@@ -186,10 +186,6 @@ export function HomeBody() {
     };
   }, []);
 
-  const handleViewAllCategories = () => {
-    setShowAllCategories(!showAllCategories);
-  };
-
   // -------------------------------- 최근본상품 로컬스토리지 & 애니메이션 --------------------------------
   const [scrollPosition, setScrollPosition] = useState(0);
   const fixedTopPosition = 700;
@@ -285,8 +281,20 @@ export function HomeBody() {
     return <Spinner />;
   }
 
-  // -------------------------------- 상품목록 이미지 매핑 --------------------------------
-  // TODO : DB에 작업저장해서 사용해도 상관없음
+  // -------------------------------- 카테고리 아이콘 이미지 --------------------------------
+  const categoryMenuIcon = [
+    "https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productMainImg/154/31347470_3.jpg", // 노트북
+    "https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productMainImg/157/979307_3_600.jpg", // 모니터
+    "https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productMainImg/166/707105_600.jpg", // pc/헤드셋
+    "https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productMainImg/173/980228_2_600.jpg", // 태블릿
+    "https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productMainImg/177/1084277_600.jpg", // Apple
+    "https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productMainImg/183/710668_2_600.jpg", // 키보드
+    "https://image3.compuzone.co.kr/img/product_img/2023/0512/1026628/1026628_600.jpg", // 마우스
+    "https://image3.compuzone.co.kr/img/product_img/2019/0410/562726/562726_600.jpg", // 마우스패드
+    "https://image3.compuzone.co.kr/img/product_img/2018/0207/447472/447472_600.jpg", // 외장하드
+  ];
+
+  // -------------------------------- 카테고리별 상품목록 이미지 --------------------------------
   const categoryImages = {
     1: "https://image5.compuzone.co.kr/img/images/main2014/H/MainCategoryRolling_176425.jpg",
     2: "https://image5.compuzone.co.kr/img/images/main2014/H/MainCategoryRolling_174694.jpg",
@@ -298,7 +306,7 @@ export function HomeBody() {
     8: "https://image5.compuzone.co.kr/img/images/main2014/H/MainCategoryRolling_174682.jpg",
     9: "https://image5.compuzone.co.kr/img/images/main2014/H/MainCategoryRolling_174682.jpg",
   };
-  // -------------------------------- 상품목록 텍스트 매핑 --------------------------------
+  // -------------------------------- 카테고리별 상품목록 문구 --------------------------------
   const categoryDescriptions = {
     1: ["게임은 역시 장비빨", "고성능 노트북으로 승부하라!"],
     2: ["구매왕 챌린지!", "화질의 한계를 넘어서세요."],
@@ -578,118 +586,58 @@ export function HomeBody() {
         </Stack>
       </SimpleGrid>
 
-      {/* ------------------------ 중간2 카테고리 이미지로 표시 ------------------------ */}
+      {/* ------------------------ 카테고리 ------------------------ */}
       <Box
-        borderTop={"1px solid #eeeeee"}
-        mt={10}
-        display="flex"
+        w={{ base: "80%", md: "90%" }}
+        mt={-10}
+        mx="auto"
         justifyContent="center"
         alignItems="center"
-        p={10}
+        textAlign="center"
       >
-        <Box minW={"1400px"}>
-          <Text fontWeight={"bold"} fontSize="2.3rem" textAlign="center" mt={5}>
-            Categories
-          </Text>
-          <Text textAlign="center" color="gray.500" mb={5}>
-            Please select your preferred category.
-          </Text>
-
-          <SimpleGrid columns={"4"} gap={10} p={5} mt={10}>
-            {categories.map((category, index) => {
-              // 9번째 카테고리 숨김 처리
-              // 버튼 누르면 보임
-              if (index === 8 && !showAllCategories) return null;
-              let imageUrl;
-              switch (category.category_id) {
-                case 1:
-                  imageUrl =
-                    "https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productMainImg/154/31347470_3.jpg"; // 노트북
-                  break;
-                case 2:
-                  imageUrl =
-                    "https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productMainImg/157/979307_3_600.jpg"; // 모니터
-                  break;
-                case 3:
-                  imageUrl =
-                    "https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productMainImg/166/707105_600.jpg"; // pc/헤드셋
-                  break;
-                case 4:
-                  imageUrl =
-                    "https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productMainImg/173/980228_2_600.jpg"; // 태블릿
-                  break;
-                case 5:
-                  imageUrl =
-                    "https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productMainImg/177/1084277_600.jpg"; // Apple
-                  break;
-                case 6:
-                  imageUrl =
-                    "https://lollandproject0108.s3.ap-northeast-2.amazonaws.com/lolland/product/productMainImg/183/710668_2_600.jpg"; // 키보드
-                  break;
-                case 7:
-                  imageUrl =
-                    "https://image3.compuzone.co.kr/img/product_img/2023/0512/1026628/1026628_600.jpg"; // 마우스
-                  break;
-                case 8:
-                  imageUrl =
-                    "https://image3.compuzone.co.kr/img/product_img/2019/0410/562726/562726_600.jpg"; // 마우스패드
-                  break;
-                case 9:
-                  imageUrl =
-                    "https://image3.compuzone.co.kr/img/product_img/2018/0207/447472/447472_600.jpg"; // 외장하드
-                  break;
-              }
-              return (
-                <Box
-                  _hover={{
-                    cursor: "pointer",
-                  }}
-                  css={{
-                    transition: "transform 0.3s ease-in-out", // 변환 애니메이션 적용
-                    "&:hover": {
-                      transform: "scale(1.1)", // 확대 효과
-                    },
-                  }}
-                  {...categoryStyle}
-                  key={category.category_id}
-                  onClick={() => navigate(`/category/${category.category_id}`)}
-                >
-                  <Img h={"100%"} src={imageUrl} alt={category.category_name} />
-                  <Text>{category.category_name}</Text>
-                </Box>
-              );
-            })}
-          </SimpleGrid>
-          <Box
-            mb={10}
-            mt={10}
-            display={"flex"}
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            <Button
-              onClick={handleViewAllCategories}
-              borderRadius={"20px"}
-              bg={"none"}
-              border={"1px solid black"}
+        <Text
+          fontWeight="bold"
+          className="specialHeadings"
+          fontSize="4xl"
+          my={5}
+        >
+          상품 카테고리
+        </Text>
+        <SimpleGrid
+          columns={{ base: 3, md: 5 }}
+          spacing={5}
+          w="100%"
+          maxW="100%"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          {categories.map((category, index) => (
+            <Box
               _hover={{
-                bg: "none",
-                color: "gray",
+                cursor: "pointer",
+                transform: "scale(1.1)",
               }}
+              transition="0.3s ease-in-out"
+              alignItems="center"
+              justifyContent="center"
+              textAlign="center"
+              key={category.category_id}
+              onClick={() => navigate(`/category/${category.category_id}`)}
             >
-              {showAllCategories ? "Hide Categories" : "View All Category"}
-            </Button>
-          </Box>
-        </Box>
+              <Img
+                mx="auto"
+                h={{ base: "70%", md: "80%" }}
+                src={categoryMenuIcon[category.category_id - 1]}
+                alt={category.category_name}
+              />
+              <Text className="specialHeadings">{category.category_name}</Text>
+            </Box>
+          ))}
+        </SimpleGrid>
       </Box>
 
       {/* ------------------------- TODO : 임시로 카테고리별 상품목록 및 텍스트/이미지 출력완료 ------------------------- */}
-      <Box
-        borderTop={"1px solid #eeeeee"}
-        display={"flex"}
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
+      <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
         <Box mt={10} mx="10%">
           {categories.map((category) => (
             <Box mt={10} key={category.category_id} mb="40px">
