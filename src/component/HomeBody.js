@@ -93,7 +93,6 @@ export function HomeBody() {
 
   const [productList, setProductList] = useState([]); // 상품 목록 상태
 
-  const [showAllCategories, setShowAllCategories] = useState(false); // 카테고리 상태
   const [mostReviewedProducts, setMostReviewedProducts] = useState([]); // 리뷰많은 3개 상품 상태
   const [boardList, setBoardList] = useState(null); // 게임장비커뮤니티 베스트게시물 상태
   const [top, setTop] = useState(null); // 게임커뮤니티 베스트게시물 상태
@@ -303,7 +302,7 @@ export function HomeBody() {
     5: "https://image5.compuzone.co.kr/img/images/main2014/H/MainCategoryRolling_171282.jpg",
     6: "https://image5.compuzone.co.kr/img/images/main2014/H/MainCategoryRolling_176479.jpg",
     7: "https://image5.compuzone.co.kr/img/images/main2014/H/MainCategoryRolling_176493.jpg",
-    8: "https://image5.compuzone.co.kr/img/images/main2014/H/MainCategoryRolling_174682.jpg",
+    8: "https://image5.compuzone.co.kr/img/images/main2014/H/MainCategoryRolling_178064.jpg",
     9: "https://image5.compuzone.co.kr/img/images/main2014/H/MainCategoryRolling_174682.jpg",
   };
   // -------------------------------- 카테고리별 상품목록 문구 --------------------------------
@@ -598,14 +597,15 @@ export function HomeBody() {
         <Text
           fontWeight="bold"
           className="specialHeadings"
-          fontSize="4xl"
+          fontSize="2xl"
           my={5}
         >
           상품 카테고리
         </Text>
         <SimpleGrid
-          columns={{ base: 3, md: 5 }}
+          columns={{ base: 3, md: 9 }}
           spacing={5}
+          mx="auto"
           w="100%"
           maxW="100%"
           alignItems="center"
@@ -636,145 +636,113 @@ export function HomeBody() {
         </SimpleGrid>
       </Box>
 
-      {/* ------------------------- TODO : 임시로 카테고리별 상품목록 및 텍스트/이미지 출력완료 ------------------------- */}
-      <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
-        <Box mt={10} mx="10%">
-          {categories.map((category) => (
-            <Box mt={10} key={category.category_id} mb="40px">
-              <Flex
-                justifyContent="space-between"
-                alignItems="center"
-                mb="20px"
+      {/* ------------------------- 임시 카테고리별 상품목록 및 텍스트/이미지 ------------------------- */}
+      {categories.map((category) => (
+        <Box key={category.category_id} w="90%" mx="auto">
+          <Text
+            className="specialHeadings"
+            fontSize="2xl"
+            fontWeight="bold"
+            textAlign="left"
+            mb={5}
+          >
+            {category.category_name}
+          </Text>
+          <Flex flexDir={{ base: "column", md: "row" }}>
+            <Box
+              position="relative"
+              w={{ base: "100%", md: "40%" }}
+              display={{ base: "none", md: "block" }}
+              borderRadius={15}
+              mr={5}
+              shadow="md"
+            >
+              <Image
+                src={categoryImages[category.category_id]}
+                objectFit="contain"
+                w="full"
+                display="block"
+                borderRadius={15}
+              />
+              <Box
+                position="absolute"
+                w="full"
+                h="30%"
+                bottom={0}
+                left={0}
+                pt="20%"
+                px={5}
+                className="opacityGradient"
               >
-                <Heading size="xl">{category.category_name}</Heading>
-                <Button
-                  mb={-10}
-                  onClick={() => navigate(`/category/${category.category_id}`)}
-                  bg={"none"}
-                  fontSize={"12px"}
-                  color={"gray"}
-                  _hover={{ background: "none", color: "black" }}
+                <Text
+                  fontSize="2xl"
+                  fontWeight="bold"
+                  color="black"
+                  className="specialHeadings"
                 >
-                  더보기
-                </Button>
-              </Flex>
-              <Flex minW={"1400px"} gap={2}>
-                <VStack spacing={0}>
-                  <Box
-                    borderRadius={"10px"}
-                    w="385px"
-                    h="562px"
-                    m={0}
-                    overflow="hidden"
-                  >
-                    <Image
-                      src={categoryImages[category.category_id]}
-                      objectFit="contain"
-                      display="block"
-                    />
-                  </Box>
-                  <Box
-                    borderBottomRadius={"10px"}
-                    w={"385px"}
-                    h={"200px"}
-                    bg={"gray"}
-                    mt={-2}
-                  >
-                    <Text
-                      lineHeight={"100px"}
-                      textAlign={"center"}
-                      fontSize="1.8rem"
-                      color={"white"}
-                      fontWeight="bold"
-                    >
-                      {categoryDescriptions[category.category_id][0]}
-                    </Text>
-                    <Text color={"white"} textAlign={"center"} fontSize="md">
-                      {categoryDescriptions[category.category_id][1]}
-                    </Text>
-                  </Box>
-                </VStack>
-
-                <SimpleGrid
-                  borderWidth={"1px"}
-                  borderRadius={"lg"}
-                  columns={4}
-                  spacing={9}
-                >
-                  {categoryProducts[category.category_id]
-                    ?.slice(0, 8)
-                    .map((product) => (
-                      <Box
-                        key={product.product_id}
-                        borderRadius="lg"
-                        overflow="hidden"
-                        h={"100%"}
-                        w={"250px"}
-                        display="flex"
-                        flexDirection="column"
-                        _hover={{ cursor: "pointer" }}
-                        onClick={() =>
-                          navigate(`/product/${product.product_id}`)
-                        }
-                        css={{
-                          transition: "transform 0.3s ease-in-out", // 변환 애니메이션 적용
-                          "&:hover": {
-                            transform: "scale(1.1)", // 확대 효과
-                          },
-                        }}
-                      >
-                        <Flex
-                          h={"246px"}
-                          w={"250px"}
-                          align="center"
-                          justify="center"
-                        >
-                          <Image
-                            src={
-                              product.mainImgs[0]?.main_img_uri ||
-                              "default-product-image.jpg"
-                            }
-                            alt={product.product_name}
-                            maxH="200px"
-                            objectFit="contain"
-                          />
-                        </Flex>
-                        <Box p="6">
-                          <Box display="flex" alignItems="baseline">
-                            <Box
-                              color="gray.500"
-                              fontWeight="semibold"
-                              letterSpacing="wide"
-                              fontSize="xs"
-                              textTransform="uppercase"
-                            >
-                              [{product.company_name}]
-                            </Box>
-                          </Box>
-
-                          <Box
-                            mt="1"
-                            fontWeight="semibold"
-                            as="h4"
-                            lineHeight="tight"
-                            isTruncated
-                          >
-                            {product.product_name}
-                          </Box>
-
-                          <Box>
-                            {product.product_price.toLocaleString("ko-KR")}원
-                            <Box as="span" color="gray.600" fontSize="sm"></Box>
-                          </Box>
-                        </Box>
-                      </Box>
-                    ))}
-                </SimpleGrid>
-              </Flex>
+                  {categoryDescriptions[category.category_id][0]}
+                </Text>
+                <Text fontSize="md" color="black" className="labels">
+                  {categoryDescriptions[category.category_id][1]}
+                </Text>
+              </Box>
             </Box>
-          ))}
+            <SimpleGrid
+              columns={{ base: 3, md: 4 }}
+              spacing={5}
+              w={{ base: "100%", md: "80%" }}
+            >
+              {categoryProducts[category.category_id]
+                ?.slice(0, 8)
+                .map((product) => (
+                  <Box
+                    key={product.product_id}
+                    overflow="hidden"
+                    display="flex"
+                    flexDirection="column"
+                    onClick={() => navigate(`/product/${product.product_id}`)}
+                  >
+                    <Flex alignItems="center" justify="center">
+                      <Image
+                        src={
+                          product.mainImgs[0]?.main_img_uri ||
+                          "default-product-image.jpg"
+                        }
+                        alt={product.product_name}
+                        maxH="200px"
+                        objectFit="contain"
+                      />
+                    </Flex>
+                    <Box p="3">
+                      <Box
+                        color="gray.500"
+                        fontWeight="semibold"
+                        letterSpacing="wide"
+                        fontSize="xs"
+                        textTransform="uppercase"
+                      >
+                        [{product.company_name}]
+                      </Box>
+                      <Box
+                        mt="1"
+                        fontWeight="semibold"
+                        as="h4"
+                        lineHeight="tight"
+                        isTruncated
+                      >
+                        {product.product_name}
+                      </Box>
+                      <Box>
+                        {product.product_price.toLocaleString("ko-KR")}원
+                        <Box as="span" color="gray.600" fontSize="sm"></Box>
+                      </Box>
+                    </Box>
+                  </Box>
+                ))}
+            </SimpleGrid>
+          </Flex>
         </Box>
-      </Box>
+      ))}
       <SearchComponent />
     </Box>
   );
