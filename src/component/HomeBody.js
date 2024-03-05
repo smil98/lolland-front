@@ -35,7 +35,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faFire, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { ScreenContext } from "./ScreenContext";
 
 function SearchComponent() {
@@ -329,14 +329,30 @@ export function HomeBody() {
       {/*  <Recent />*/}
       {/*</Box>*/}
 
-      <SimpleGrid w="90%" display="flex" column={2} spacing={10}>
-        <Box border="1px solid #E1E1E1" w="50%" p={5}>
+      {/* 뜨는 상품, 최신 기사, 커뮤니티 베스트 추출*/}
+      <SimpleGrid
+        w="90%"
+        display={{ base: "normal", md: "flex" }}
+        column={{ md: 1, lg: 2, xl: 2 }}
+        spacing={10}
+        mt={-10}
+      >
+        <Box border="1px solid #E1E1E1" w={{ base: "100%", md: "30%" }} p={5}>
+          <Text
+            fontSize="sm"
+            color="orange"
+            className="specialHeadings"
+            fontWeight="bold"
+          >
+            <FontAwesomeIcon icon={faFire} /> 핫한 상품들을 한 번에
+          </Text>
           <Text fontSize="2xl" className="specialHeadings" fontWeight="bold">
             실시간 뜨고 있는 상품
           </Text>
           <Box
             w="full"
-            h="450px"
+            mt={5}
+            h="500px"
             display="flex"
             flexDir="column"
             justifyContent="center"
@@ -355,25 +371,36 @@ export function HomeBody() {
                 <SwiperSlide
                   key={product.product_id}
                   style={{
-                    border: "1px dashed blue",
                     alignItems: "center",
+                    textAlign: "left",
                     justifyContent: "center",
                   }}
+                  onClick={() => navigate("/product/" + product.product_id)}
                 >
                   {product.productImgs && product.productImgs.length > 0 && (
                     <Image
                       src={product.productImgs[0].main_img_uri}
                       alt="Product Image"
                       mx="auto"
-                      maxW="350px"
-                      maxH="350px"
+                      maxW="300px"
+                      maxH="300px"
+                      mb={5}
                     />
                   )}
-                  <Text as="span" opacity={0.7}>
+                  <Text opacity={0.7} fontSize="md">
                     [{product.company_name}]
                   </Text>
                   <Text fontSize="lg" className="labels">
                     {product.product_name}
+                  </Text>
+                  <Text
+                    fontWeight="bold"
+                    color="orange"
+                    className="specialHeadings"
+                    fontSize="2xl"
+                    mt={5}
+                  >
+                    {product.product_price.toLocaleString()}원
                   </Text>
                 </SwiperSlide>
               ))}
@@ -381,261 +408,175 @@ export function HomeBody() {
           </Box>
         </Box>
         <Stack
-          w="50%"
+          w={{ base: "100%", md: "70%" }}
+          mt={{ base: 5, md: 0 }}
           direction="column"
           spacing={5}
           justifyContent="center"
           alignItems="center"
         >
-          <Stack direction="row" w="full" spacing="5%">
-            <Box p={5} border="1px solid #E1E1E1" w="50%">
-              2
-            </Box>
-            <Box p={5} border="1px solid #E1E1E1" w="50%">
-              3
-            </Box>
-          </Stack>
-          <Box p={5} w="full" border="1px solid #E1E1E1">
-            4
-          </Box>
-        </Stack>
-      </SimpleGrid>
-      {/* ------------------------ 중간 이미지 및 게시글 ------------------------ */}
-      <Box justifyContent="center" display="flex">
-        <Box
-          justifyContent="center"
-          display="flex"
-          minW={"1400px"}
-          mt={"40px"}
-          mb={10}
-        >
-          {/* 큰 상품 박스 */}
-          <Swiper
-            modules={[EffectFade, Autoplay]}
-            spaceBetween={50}
-            slidesPerView={1}
-            pagination={{ clickable: true }}
-            autoplay={{ delay: 3000 }}
-            effect="fade"
-            style={{ width: "600px" }}
-          >
-            {mostReviewedProducts.map((product) => (
-              <SwiperSlide key={product.product_id}>
-                {product.productImgs && product.productImgs.length > 0 && (
-                  <Box
-                    mr={2}
-                    mt={"40px"}
-                    border="1px solid #E5E5E5"
-                    w="600px"
-                    h="600px"
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    position={"relative"}
+          <Stack direction={{ base: "column", md: "row" }} w="full" spacing={5}>
+            <Box
+              p={5}
+              border="1px solid #E1E1E1"
+              w={{ base: "100%", md: "50%" }}
+            >
+              <Flex justifyContent="space-between" alignItems="center">
+                <Box>
+                  <Text
+                    fontSize="sm"
+                    color="orange"
+                    className="specialHeadings"
+                    fontWeight="bold"
                   >
-                    <Box
-                      position="absolute"
-                      top="10px"
-                      left="10px"
-                      bg="white"
-                      p={2}
-                      borderRadius="4px"
-                      boxShadow="sm"
-                    >
-                      <Text fontSize={"1.7rem"} fontWeight={"bold"}>
-                        실시간 뜨고있는 상품
-                      </Text>
-                    </Box>
-
-                    <Box
-                      position="absolute"
-                      top="50px"
-                      w="350px"
-                      h="350px"
-                      p={5}
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="center"
-                    >
-                      <Image
-                        position="absolute"
-                        src={product.productImgs[0].main_img_uri}
-                        alt="Product Image"
-                        width="100%"
-                        height="100%"
-                      />
-                    </Box>
-
-                    <Flex
-                      justifyContent={"flex-start"}
-                      alignItems="flex-start"
-                      direction="column"
-                      p={10}
-                      mt="390px"
-                      mb="20px"
-                      w={"100%"}
-                    >
-                      <Text>[{product.company_name}]</Text>
-                      <Text mt={2} fontSize={"1.2rem"}>
-                        {product.product_name}
-                      </Text>
-                      <Text mt={5} style={{ color: "gray" }}>
-                        {truncateText(product.product_content, 40)}
-                      </Text>
-                      <Flex mt={3} w={"100%"} justifyContent={"space-between"}>
-                        <Text mt={3} fontWeight={"bold"} fontSize={"1.4rem"}>
-                          {formatPrice(product.product_price)}원
-                        </Text>
-                        <Flex justifyContent="flex-end" alignItems="flex-end">
-                          <Button
-                            {...buttonStyle}
-                            mt={2}
-                            borderRadius={"20px"}
-                            onClick={() =>
-                              navigate("/product/" + product.product_id)
-                            }
-                          >
-                            상품 보러 가기
-                          </Button>
-                        </Flex>
-                      </Flex>
-                    </Flex>
-                  </Box>
-                )}
-              </SwiperSlide>
-            ))}
-          </Swiper>
-
-          {/*  작은 상품 박스들  */}
-          <Box mt={"40px"} display="flex" flexDirection="column" gap="24px">
-            <Flex gap={4}>
-              {/* ------------------------ 게임장비커뮤니티 베스트게시글 ------------------------ */}
-              <Box p={2} border="1px solid #E5E5E5" w="350px" h="300px">
-                <Text color={"gray"}>게임장비커뮤니티</Text>
-                <Flex w={"100%"} justifyContent={"space-between"}>
-                  <Text fontSize={"1.5rem"} fontWeight={"bold"}>
+                    게임 장비 커뮤니티
+                  </Text>
+                  <Text
+                    fontSize="2xl"
+                    className="specialHeadings"
+                    fontWeight="bold"
+                  >
                     추천 게시물
                   </Text>
-                  <Button
-                    bg={"none"}
-                    fontSize={"12px"}
-                    color={"gray"}
-                    _hover={{ background: "none", color: "black" }}
-                    onClick={() => navigate("/gearlistlayout")}
-                  >
-                    더보기
-                  </Button>
-                </Flex>
-                <Stack divider={<StackDivider />} spacing="3">
-                  {boardList.slice(0, 3).map((item) => (
-                    <Flex
-                      key={item.gear_id}
-                      justify="flex-start"
-                      alignItems="center"
-                    >
-                      <Box mt={3}>
-                        <Heading
-                          _hover={{ cursor: "pointer" }}
-                          onClick={() =>
-                            navigate("/gearlist/gear_id/" + item.gear_id)
-                          }
-                          size="xs"
-                          textTransform="uppercase"
-                        >
-                          {item.gear_title}
-                        </Heading>
-                        <Text pt="2" fontSize="sm">
-                          {truncateText(item.gear_content, 30)}
-                        </Text>
-                      </Box>
-                    </Flex>
-                  ))}
-                </Stack>
-              </Box>
-
-              {/* ------------------------ 게임커뮤니티 베스트게시물 ------------------------ */}
-              <Box p={2} border="1px solid #E5E5E5" w="350px" h="300px">
-                <Text color={"gray"}>게임커뮤니티</Text>
-                <Flex w={"100%"} justifyContent={"space-between"}>
-                  <Text fontSize={"1.5rem"} fontWeight={"bold"}>
-                    Best 게시물
-                  </Text>
-                  <Button
-                    bg={"none"}
-                    fontSize={"12px"}
-                    color={"gray"}
-                    _hover={{ background: "none", color: "black" }}
-                    onClick={() => navigate("/gameboard/list?s=")}
-                  >
-                    더보기
-                  </Button>
-                </Flex>
-                <Stack divider={<StackDivider />} spacing="3">
-                  {top.slice(0, 3).map((item) => (
-                    <Flex
-                      key={item.id}
-                      justify="flex-start"
-                      alignItems="center"
-                    >
-                      <Box mt={3}>
-                        <Heading
-                          _hover={{ cursor: "pointer" }}
-                          onClick={() => navigate("/gameboard/id/" + item.id)}
-                          size="xs"
-                          textTransform="uppercase"
-                        >
-                          {item.title}
-                        </Heading>
-                        <Text pt="2" fontSize="sm">
-                          {truncateText(item.board_content, 30)}
-                        </Text>
-                      </Box>
-                    </Flex>
-                  ))}
-                </Stack>
-              </Box>
-            </Flex>
-
-            {/* ------------------------ 최신뉴스기사 게시글 ------------------------ */}
-            <Box p={2} border="1px solid #E5E5E5" w="716px" h="275px">
-              <Text color={"gray"}>리그오브레전드 관련</Text>
-              <Flex w={"100%"} justifyContent={"space-between"}>
-                <Text fontSize={"1.5rem"} fontWeight={"bold"}>
-                  최신 뉴스 기사
-                </Text>
+                </Box>
                 <Button
-                  bg={"none"}
-                  fontSize={"12px"}
-                  color={"gray"}
-                  _hover={{ background: "none", color: "black" }}
+                  color="gray"
+                  variant="undefined"
+                  size="xs"
+                  onClick={() => navigate("/gearlistlayout")}
+                >
+                  더보기
+                </Button>
+              </Flex>
+              <Stack divider={<StackDivider />} spacing="3">
+                {boardList.slice(0, 3).map((item) => (
+                  <Flex
+                    key={item.gear_id}
+                    justify="flex-start"
+                    alignItems="center"
+                  >
+                    <Box mt={3}>
+                      <Heading
+                        _hover={{ cursor: "pointer" }}
+                        onClick={() =>
+                          navigate("/gearlist/gear_id/" + item.gear_id)
+                        }
+                        size="xs"
+                        textTransform="uppercase"
+                      >
+                        {item.gear_title}
+                      </Heading>
+                      <Text pt="2" fontSize="sm">
+                        {truncateText(item.gear_content, 30)}
+                      </Text>
+                    </Box>
+                  </Flex>
+                ))}
+              </Stack>
+            </Box>
+            <Box
+              p={5}
+              border="1px solid #E1E1E1"
+              w={{ base: "100%", md: "50%" }}
+            >
+              <Flex justifyContent="space-between" alignItems="center">
+                <Box>
+                  <Text
+                    fontSize="sm"
+                    color="orange"
+                    className="specialHeadings"
+                    fontWeight="bold"
+                  >
+                    게임 커뮤니티
+                  </Text>
+                  <Text
+                    fontSize="2xl"
+                    className="specialHeadings"
+                    fontWeight="bold"
+                  >
+                    BEST 게시물
+                  </Text>
+                </Box>
+                <Button
+                  color="gray"
+                  variant="undefined"
+                  size="xs"
                   onClick={() => navigate("/gameboard/list?s=")}
                 >
                   더보기
                 </Button>
               </Flex>
-              <Stack mt={3} divider={<StackDivider />} spacing="4">
-                {naver &&
-                  naver.items !== null &&
-                  naver.items.slice(0, 4).map((news) => (
-                    <Box mt={1} key={news.link}>
+              <Stack divider={<StackDivider />} spacing="3">
+                {top.slice(0, 3).map((item) => (
+                  <Flex key={item.id} justify="flex-start" alignItems="center">
+                    <Box mt={3}>
                       <Heading
+                        _hover={{ cursor: "pointer" }}
+                        onClick={() => navigate("/gameboard/id/" + item.id)}
                         size="xs"
                         textTransform="uppercase"
-                        _hover={{ cursor: "pointer" }}
-                        onClick={() => window.open(news.link, "_blank")}
                       >
-                        {news.title
-                          .replace(/&quot;/g, "") // &quot; 제거
-                          .replace(/<b>/g, "") // <b> 제거
-                          .replace(/<\/b>/g, "")}
+                        {item.title}
                       </Heading>
+                      <Text pt="2" fontSize="sm">
+                        {truncateText(item.board_content, 30)}
+                      </Text>
                     </Box>
-                  ))}
+                  </Flex>
+                ))}
               </Stack>
             </Box>
+          </Stack>
+          <Box p={5} w="full" border="1px solid #E1E1E1">
+            <Flex justifyContent="space-between" alignItems="center">
+              <Box>
+                <Text
+                  fontSize="sm"
+                  color="orange"
+                  className="specialHeadings"
+                  fontWeight="bold"
+                >
+                  리그오브레전드
+                </Text>
+                <Text
+                  fontSize="2xl"
+                  className="specialHeadings"
+                  fontWeight="bold"
+                >
+                  최신 뉴스 기사
+                </Text>
+              </Box>
+              <Button
+                color="gray"
+                variant="undefined"
+                size="xs"
+                onClick={() => navigate("/gameboard/list?s=")}
+              >
+                더보기
+              </Button>
+            </Flex>
+            <Stack mt={3} divider={<StackDivider />} spacing="4">
+              {naver &&
+                naver.items !== null &&
+                naver.items.slice(0, 4).map((news) => (
+                  <Box mt={1} key={news.link}>
+                    <Heading
+                      size="xs"
+                      textTransform="uppercase"
+                      _hover={{ cursor: "pointer" }}
+                      onClick={() => window.open(news.link, "_blank")}
+                    >
+                      {news.title
+                        .replace(/&quot;/g, "") // &quot; 제거
+                        .replace(/<b>/g, "") // <b> 제거
+                        .replace(/<\/b>/g, "")}
+                    </Heading>
+                  </Box>
+                ))}
+            </Stack>
           </Box>
-        </Box>
-      </Box>
+        </Stack>
+      </SimpleGrid>
 
       {/* ------------------------ 중간2 카테고리 이미지로 표시 ------------------------ */}
       <Box
