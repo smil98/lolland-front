@@ -1,4 +1,12 @@
-import { Badge, Box, Image, SimpleGrid, Spacer, Text } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Flex,
+  Image,
+  SimpleGrid,
+  Spacer,
+  Text,
+} from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination as SwiperPagination } from "swiper/modules";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,24 +36,57 @@ export function GameBoardListTop6() {
   };
 
   return (
-    <SimpleGrid columns={3} spacing={4} w={"80%"} h={"800px"} ml={"2.5%"}>
+    <SimpleGrid
+      columns={{ base: 2, md: 3 }}
+      spacing={4}
+      w="90%"
+      mx="auto"
+      mb={5}
+    >
       {top &&
         top.map((topTen) => (
           <Box
-            w="95%"
-            h={"90%"}
+            minH="350px"
+            position="relative"
             borderWidth="1px"
             borderRadius="lg"
             overflow="hidden"
             boxSizing="content-box"
-            shadow={"1px 1px 3px 1px #dadce0"}
+            shadow="base"
+            onClick={() => navigate("/gameboard/id/" + topTen.id)}
           >
             <Box
-              position="relative"
-              w={"100%"}
-              h={"75%"}
+              position="absolute"
+              w="100%"
+              h="60%"
+              top={0}
+              left={0}
               style={{ overflow: "hidden" }}
             >
+              {/* --------- 게시글 정보 (사진 개수, 조회수) 출력 --------- */}
+              <Box
+                w="100%"
+                mx="auto"
+                px={4}
+                display="flex"
+                justifyContent="space-between"
+                position="absolute"
+                top={3}
+                zIndex={2}
+                opacity={0.7}
+              >
+                {topTen.countFile !== 0 && (
+                  <Badge px={2} borderRadius="full" fontSize="sm">
+                    <FontAwesomeIcon icon={faImage} /> {topTen.countFile}
+                  </Badge>
+                )}
+                {topTen.countFile !== 0 && (
+                  <Badge px={2} borderRadius="full" fontSize="sm">
+                    <FontAwesomeIcon icon={faEye} /> {topTen.board_count}
+                  </Badge>
+                )}
+              </Box>
+              {/* --------- 사진 출력란 --------- */}
               <Swiper
                 slidesPerView={1}
                 pagination={{
@@ -67,7 +108,6 @@ export function GameBoardListTop6() {
                           transform: "scale(1.1)", // 확대 효과
                         },
                       }}
-                      onClick={() => navigate("/gameboard/id/" + topTen.id)}
                       _hover={{ cursor: "pointer" }}
                     />
                   </SwiperSlide>
@@ -75,93 +115,82 @@ export function GameBoardListTop6() {
               </Swiper>
             </Box>
 
-            <Box p="3">
-              <Box display="flex" alignItems="baseline">
+            {/* --------- 게시글 정보(카테고리, 추천, 날짜, 댓글, 제목, 작성자 아이디) 출력란 --------- */}
+            <Box
+              w="full"
+              position="absolute"
+              bottom={0}
+              left={0}
+              px={3}
+              py={5}
+              h="40%"
+            >
+              {/* --------- 카테고리 & 작성일 --------- */}
+              <Flex justifyContent="space-between">
                 <Badge
                   borderRadius="full"
-                  style={{ fontSize: "1em" }}
+                  fontSize="sm"
+                  px={2}
                   colorScheme={categoryColors[topTen.category]}
                 >
                   {topTen.category}
                 </Badge>
-                <Badge
-                  colorScheme="green"
-                  variant="outline"
-                  mx={"2px"} // Adjusted spacing around Badge
-                  fontWeight={"bold"}
-                  borderRadius={"full"}
-                  style={{ fontSize: "1em" }}
-                  bgColor={`rgba(0, 128, 0, ${topTen.count_like / 10})`}
-                >
-                  {topTen.count_like}
-                  <FontAwesomeIcon icon={faThumbsUp} />
-                </Badge>
-                <Text color={"grey"} ml={"2%"}>
+                <Text color="grey">
                   {new Date(topTen.reg_time).toLocaleDateString("ko-KR", {
                     year: "2-digit",
                     month: "2-digit",
                     day: "2-digit",
                   })}
                 </Text>
-                <Spacer />
+              </Flex>
+              {/* --------- 게시글 제목 출력 --------- */}
+              <Text
+                my={3}
+                fontWeight="bold"
+                className="labels"
+                fontSize="lg"
+                _hover={{ cursor: "pointer" }}
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  maxWidth: "200px",
+                }}
+              >
+                {topTen.title.length > 20
+                  ? `${topTen.title.slice(0, 20)}...`
+                  : topTen.title}
+              </Text>
+              {/* --------- 작성 멤버 아이디 & 추천 댓글 수 출력 --------- */}
+              <Box display="flex" justifyContent="space-between">
+                <Text className="labels">{topTen.member_id}</Text>
                 <Box display="flex">
+                  <Badge
+                    colorScheme="orange"
+                    variant="outline"
+                    mx="2px"
+                    fontWeight="bold"
+                    borderRadius="full"
+                    px={2}
+                    fontSize="sm"
+                    // bgColor={`rgba(255, 130, 0, ${topTen.count_like / 10})`} 추천수에 따라 배경색 투명도 조절 가능
+                  >
+                    <FontAwesomeIcon icon={faThumbsUp} /> {topTen.count_like}
+                  </Badge>
                   {topTen.count_comment !== 0 && (
                     <Badge
-                      colorScheme={"green"}
+                      colorScheme="orange"
                       variant="outline"
-                      mx={"2%"}
-                      borderRadius={"full"}
-                      style={{ fontSize: "1.1em" }}
-                    >
-                      {topTen.count_comment}
-                      <ChatIcon />
-                    </Badge>
-                  )}
-
-                  {topTen.countFile !== 0 && (
-                    <Badge
-                      mx={"2%"}
+                      mx="2%"
                       borderRadius="full"
-                      style={{ fontSize: "1em" }}
+                      fontSize="sm"
+                      px={2}
                     >
-                      {topTen.countFile}
-                      <FontAwesomeIcon icon={faImage} />
-                    </Badge>
-                  )}
-                  {topTen.countFile !== 0 && (
-                    <Badge
-                      mx={"2%"}
-                      borderRadius="full"
-                      style={{ fontSize: "1em" }}
-                    >
-                      {topTen.board_count}
-                      <FontAwesomeIcon icon={faEye} />
+                      <ChatIcon /> {topTen.count_comment}
                     </Badge>
                   )}
                 </Box>
               </Box>
-
-              <Box
-                mt="3"
-                fontWeight="semibold"
-                as="h4"
-                lineHeight="tight"
-                noOfLines={1}
-                fontSize={"1.3em"}
-                display={"flex"}
-                onClick={() => navigate("/gameboard/id/" + topTen.id)}
-                _hover={{ cursor: "pointer" }}
-              >
-                {topTen.title}
-                <Spacer />
-                <Box fontSize="0.8em" fontWeight="light">
-                  {" "}
-                  {/* 폰트 얇게 설정 */}
-                  {topTen.member_id}
-                </Box>
-              </Box>
-
-              <Box display="flex" mt="2" alignItems="center"></Box>
             </Box>
           </Box>
         ))}
