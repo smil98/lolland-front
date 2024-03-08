@@ -34,6 +34,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
   faArrowTrendUp,
   faCaretDown,
+  faChessRook,
   faEye,
   faImage,
 } from "@fortawesome/free-solid-svg-icons";
@@ -108,6 +109,22 @@ function GameBoardList() {
 
   return (
     <Box mx="auto" w="full">
+      <Divider borderColor="black" w="90%" ml="5%" />
+      <Text
+        className="specialHeadings"
+        fontSize="3xl"
+        color="black"
+        my={5}
+        ml={{ base: 0, md: 5 }}
+        textAlign={{ base: "center", md: "left" }}
+        fontWeight="bold"
+      >
+        <Text as="span" mr={5}>
+          <FontAwesomeIcon icon={faChessRook} />
+        </Text>
+        게임 커뮤니티
+      </Text>
+      <Divider borderColor="black" w="90%" ml="5%" />
       <Flex flexDir={{ base: "column", md: "row" }} w="full">
         {/* ------------ 사이드: 오늘의 BEST 게시물, 실시간 인기 게임 영상, 최신 기사 ------------ */}
         <Box w={{ base: "90%", md: "33%" }} ml={{ base: "5%", md: 5 }}>
