@@ -156,6 +156,9 @@ export function NavBar() {
             textAlign="center"
             alignItems="center"
             justifyContent="center"
+            position="absolute"
+            left="50%"
+            transform="translateX(-50%)"
             onClick={() => navigate("/")}
             _hover={{
               cursor: "pointer",
