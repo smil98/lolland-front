@@ -115,7 +115,7 @@ function GameBoardList() {
         fontSize="3xl"
         color="black"
         my={5}
-        ml={{ base: 0, md: 5 }}
+        ml={{ base: 0, md: "5%" }}
         textAlign={{ base: "center", md: "left" }}
         fontWeight="bold"
       >
