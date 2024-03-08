@@ -303,205 +303,153 @@ export function MemberSignup() {
       });
   }
 
-  return (
-    <Center mt={8} mb={8}>
-      <Card w={"1000px"} shadow={"1px 1px 3px 1px #dadce0"} fontWeight={"bold"}>
-        <CardHeader
-          mt={4}
-          textAlign={"center"}
-          fontSize={"2rem"}
-          fontWeight={"bold"}
-          alignItems={"center"}
-        >
-          회원가입
-        </CardHeader>
-        <CardBody>
-          {/* 이름 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                이 름
-              </FormLabel>
-              <Input
-                shadow={"1px 1px 3px 1px #dadce0 inset"}
-                value={member_name}
-                w={"500px"}
-                h={"50px"}
-                onChange={(e) => {
-                  setMember_name(e.target.value);
-                }}
-              />
-            </Flex>
-          </FormControl>
-          {/* 아이디 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                아이디
-              </FormLabel>
-              <Input
-                shadow={"1px 1px 3px 1px #dadce0 inset"}
-                w={"350px"}
-                h={"50px"}
-                value={member_login_id}
-                onChange={(e) => {
-                  setMember_login_id(e.target.value);
-                  setCheckIdButtonState(true);
-                }}
-              />
+  const formLabelStyle = {
+    w: "100px",
+    lineHeight: "50px",
+    className: "specialHeadings",
+  };
 
+  return (
+    <Card mx="auto" w={{ base: "full", md: "60%" }}>
+      <CardHeader
+        mt={4}
+        textAlign={"center"}
+        fontSize="3xl"
+        fontWeight={"bold"}
+        alignItems={"center"}
+        className="specialHeadings"
+      >
+        회원가입
+      </CardHeader>
+      <CardBody>
+        {/* 이름 */}
+        <FormControl mt={2} isRequired>
+          <Flex justifyContent="center">
+            <FormLabel {...formLabelStyle}>이름</FormLabel>
+            <Input
+              value={member_name}
+              h="50px"
+              onChange={(e) => {
+                setMember_name(e.target.value);
+              }}
+            />
+          </Flex>
+        </FormControl>
+        {/* 아이디 */}
+        <FormControl mt={2} isRequired>
+          <Flex justifyContent={"center"}>
+            <FormLabel {...formLabelStyle}>아이디</FormLabel>
+            <Flex w="full">
+              <Flex flexDir="column" w="full">
+                <Input
+                  h="50px"
+                  value={member_login_id}
+                  onChange={(e) => {
+                    setMember_login_id(e.target.value);
+                    setCheckIdButtonState(true);
+                  }}
+                />
+                <FormHelperText color="gray" fontSize="sm" mb={3}>
+                  5~20자 사이의 영문자와 숫자만 허용
+                </FormHelperText>
+              </Flex>
               <Button
-                w={"140px"}
-                h={"50px"}
-                ml={"10px"}
+                h="50px"
+                ml="10px"
                 onClick={handleIdCheckButton}
                 isDisabled={!checkIdButtonState}
                 bg={"black"}
                 color={"whitesmoke"}
-                shadow={"1px 1px 3px 1px #dadce0"}
                 _hover={{
-                  backgroundColor: "whitesmoke",
-                  color: "black",
-                  transition:
-                    "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-                  shadow: "1px 1px 3px 1px #dadce0 inset",
+                  backgroundColor: "orange",
+                  color: "white",
+                  transition: "0.3s ease-in-out",
                 }}
               >
-                중복확인
+                중복 확인
               </Button>
             </Flex>
-            <Flex justifyContent={"center"}>
-              <FormLabel
-                w={"100px"}
-                fontSize={"1.1rem"}
-                lineHeight={"50px"}
-              ></FormLabel>
-              <FormHelperText
-                w={"63%"}
-                ml={120}
-                color={"gray"}
-                fontSize={"0.9rem"}
-                mb={3}
-              >
-                5자에서 20자 사이의 영문자와 숫자만 허용
-              </FormHelperText>
-            </Flex>
-          </FormControl>
-          {/* 비밀번호 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                비밀번호
-              </FormLabel>
+          </Flex>
+        </FormControl>
+        {/* 비밀번호 */}
+        <FormControl mt={2} isRequired>
+          <Flex justifyContent={"center"}>
+            <FormLabel {...formLabelStyle}>비밀번호</FormLabel>
+            <Input
+              type={"password"}
+              h="50px"
+              value={member_password}
+              onChange={(e) => setMember_password(e.target.value)}
+            />
+          </Flex>
+        </FormControl>
+        {/* 비밀번호 체크 */}
+        <FormControl
+          mt={2}
+          isInvalid={member_password != member_password_checked}
+        >
+          <Flex justifyContent="center">
+            <FormLabel {...formLabelStyle}>비밀번호 확인</FormLabel>
+            <Flex flexDir="column" w="full">
               <Input
-                shadow={"1px 1px 3px 1px #dadce0 inset"}
-                type={"password"}
-                w={"500px"}
-                h={"50px"}
-                value={member_password}
-                onChange={(e) => setMember_password(e.target.value)}
-              />
-            </Flex>
-          </FormControl>
-          {/* 비밀번호 체크 */}
-          <FormControl
-            mt={2}
-            isInvalid={member_password != member_password_checked}
-          >
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                비밀번호 확인
-              </FormLabel>
-              <Input
-                shadow={"1px 1px 3px 1px #dadce0 inset"}
                 value={member_password_checked}
-                type={"password"}
-                w={"500px"}
-                h={"50px"}
+                type="password"
+                h="50px"
                 onChange={(e) => setMember_password_checked(e.target.value)}
               />
-            </Flex>
-            <Flex justifyContent={"center"}>
-              <FormLabel
-                w={"100px"}
-                fontSize={"1.1rem"}
-                lineHeight={"50px"}
-              ></FormLabel>
-              <FormErrorMessage w={"500px"} h={"50px"} fontSize={"1.1rem"}>
+              <FormErrorMessage textAlign="right" fontSize="sm">
                 비밀번호가 다릅니다.
               </FormErrorMessage>
             </Flex>
-          </FormControl>
-          {/* 핸드폰번호 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                휴대폰번호
-              </FormLabel>
+          </Flex>
+        </FormControl>
+        {/* 핸드폰번호 */}
+        <FormControl mt={2} isRequired>
+          <Flex justifyContent="center">
+            <FormLabel {...formLabelStyle}>휴대폰번호</FormLabel>
+            <Flex w="full" gap={3}>
               <Input
-                shadow={"1px 1px 3px 1px #dadce0 inset"}
-                type={"number"}
+                type="number"
                 id="member_phone_number1"
                 value={member_phone_number1}
                 maxLength={3}
-                w={"140px"}
-                h={"50px"}
+                h="50px"
                 onChange={handlePhoneInput1Change}
               />
-              <Box
-                fontSize={"1.1rem"}
-                lineHeight={"50px"}
-                ml={"15px"}
-                mr={"15px"}
-              >
-                -
-              </Box>
+              <Box lineHeight="50px">-</Box>
               <Input
-                shadow={"1px 1px 3px 1px #dadce0 inset"}
-                type={"number"}
+                type="number"
                 id="member_phone_number2"
                 ref={phoneInput2Ref}
                 value={member_phone_number2}
                 maxLength={4}
-                w={"140px"}
-                h={"50px"}
+                h="50px"
                 onChange={handlePhoneInput2Change}
               />
-              <Box
-                fontSize={"1.1rem"}
-                lineHeight={"50px"}
-                ml={"15px"}
-                mr={"15px"}
-              >
-                -
-              </Box>
+              <Box lineHeight="50px">-</Box>
               <Input
-                shadow={"1px 1px 3px 1px #dadce0 inset"}
-                type={"number"}
+                type="number"
                 id="member_phone_number3"
                 ref={phoneInput3Ref}
                 value={member_phone_number3}
                 maxLength={4}
-                w={"140px"}
-                h={"50px"}
+                h="50px"
                 onChange={(e) => {
                   setMember_phone_number3(e.target.value.slice(0, 4));
                 }}
               />
             </Flex>
-          </FormControl>
-          {/* 이메일 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                이메일
-              </FormLabel>
+          </Flex>
+        </FormControl>
+        {/* 이메일 */}
+        <FormControl mt={2} isRequired>
+          <Flex justifyContent="center">
+            <FormLabel {...formLabelStyle}>이메일</FormLabel>
+            <Flex w="full" gap={3}>
               <Input
-                shadow={"1px 1px 3px 1px #dadce0 inset"}
                 id="member_email1"
                 value={member_email1}
-                w={"150px"}
-                h={"50px"}
+                h="50px"
                 onChange={(e) => {
                   setMember_email1(e.target.value);
                   setEmailCodeCheckedState(false);
@@ -510,20 +458,11 @@ export function MemberSignup() {
                   setEmailAbleCheck(true);
                 }}
               />
-              <Box
-                fontSize={"1.1rem"}
-                lineHeight={"50px"}
-                ml={"15px"}
-                mr={"15px"}
-              >
-                @
-              </Box>
+              <Box lineHeight="50px">@</Box>
               <Input
-                shadow={"1px 1px 3px 1px #dadce0 inset"}
                 id="member_email2"
                 value={member_email2}
-                w={"150px"}
-                h={"50px"}
+                h="50px"
                 onChange={(e) => {
                   setMember_email2(e.target.value);
                   setEmailCodeCheckedState(false);
@@ -534,190 +473,31 @@ export function MemberSignup() {
               />
               {/* 이메일 중복 체크 */}
               <Button
-                bg={"black"}
-                color={"whitesmoke"}
+                bg="black"
+                color="whitesmoke"
                 isDisabled={!emailAbleCheck}
-                w={"140px"}
-                h={"50px"}
-                ml={"10px"}
+                minW="80px"
+                h="50px"
                 onClick={handleEmailCheckClick}
-                shadow={"1px 1px 3px 1px #dadce0"}
                 _hover={{
-                  backgroundColor: "whitesmoke",
-                  color: "black",
-                  transition:
-                    "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-                  shadow: "1px 1px 3px 1px #dadce0 inset",
+                  backgroundColor: "orange",
+                  color: "white",
+                  transition: "0.3s ease-in-out",
                 }}
               >
                 중복 확인
               </Button>
             </Flex>
+          </Flex>
 
-            {emailCheck && (
-              <Flex justifyContent={"center"} mt={2} mb={2}>
-                <Button
-                  w={"600px"}
-                  h={"50px"}
-                  onClick={handleEmailCodeClick}
-                  colorScheme={"orange"}
-                  color={"black"}
-                  shadow={"1px 1px 3px 1px #dadce0"}
-                  _hover={{
-                    backgroundColor: "whitesmoke",
-                    color: "black",
-                    transition:
-                      "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-                    shadow: "1px 1px 3px 1px #dadce0 inset",
-                  }}
-                >
-                  인증번호 발송
-                </Button>
-              </Flex>
-            )}
-          </FormControl>
-          {/* 인증번호 입력 */}
-          {sendNumber && (
-            <FormControl mt={2}>
-              <Flex justifyContent={"center"}>
-                <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                  인증번호 입력
-                </FormLabel>
-                <Input
-                  shadow={"1px 1px 3px 1px #dadce0 inset"}
-                  placeholder={"메일로 전송된 인증번호를 입력해 주세요."}
-                  w={"350px"}
-                  h={"50px"}
-                  type={"number"}
-                  value={randomNumberCheck}
-                  onChange={(e) => {
-                    setRandomNumberCheck(e.target.value);
-                  }}
-                />
-                <Button
-                  bg={"black"}
-                  color={"whitesmoke"}
-                  isDisabled={emailCodeCheckedState}
-                  ml={"10px"}
-                  w={"140px"}
-                  h={"50px"}
-                  onClick={handleCodeCheckClick}
-                  shadow={"1px 1px 3px 1px #dadce0"}
-                  _hover={{
-                    backgroundColor: "whitesmoke",
-                    color: "black",
-                    transition:
-                      "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-                    shadow: "1px 1px 3px 1px #dadce0 inset",
-                  }}
-                >
-                  인증번호 확인
-                </Button>
-              </Flex>
-            </FormControl>
-          )}
-
-          {/* 우편번호 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                우편번호
-              </FormLabel>
-              <input
-                style={{ ...readOnlyStyle.style, width: "350px" }}
-                readOnly
-                defaultValue={member_post_code}
-              />
+          {emailCheck && (
+            <Flex justifyContent={"center"} mt={2} mb={2}>
               <Button
-                w={"140px"}
+                w={"600px"}
                 h={"50px"}
-                ml={"10px"}
-                onClick={handlePostCodeClick}
-                bg={"black"}
-                color={"whitesmoke"}
-                _hover={{ backgroundColor: "whitesmoke", color: "black" }}
-              >
-                주소검색
-              </Button>
-            </Flex>
-          </FormControl>
-
-          {/* 주소 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                주소
-              </FormLabel>
-              <input
-                {...readOnlyStyle}
-                readOnly
-                defaultValue={member_address}
-              />
-            </Flex>
-          </FormControl>
-
-          {/* 상세주소 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                상세주소
-              </FormLabel>
-              <Input
-                shadow={"1px 1px 3px 1px #dadce0 inset"}
-                w={"500px"}
-                h={"50px"}
-                value={member_detail_address}
-                onChange={(e) => setMember_detail_address(e.target.value)}
-              />
-            </Flex>
-          </FormControl>
-
-          {/* 자기소개 */}
-          <FormControl mt={2}>
-            <Flex justifyContent={"center"}>
-              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
-                자기소개
-              </FormLabel>
-              <Textarea
-                shadow={"1px 1px 3px 1px #dadce0 inset"}
-                w={"500px"}
-                h={"50px"}
-                value={member_introduce}
-                onChange={(e) => setMember_introduce(e.target.value)}
-              />
-            </Flex>
-          </FormControl>
-        </CardBody>
-
-        <Flex justifyContent={"center"}>
-          <CardFooter gap={"90px"} mb={10}>
-            <FormControl>
-              <Button
-                bg={"whitesmoke"}
+                onClick={handleEmailCodeClick}
+                colorScheme={"orange"}
                 color={"black"}
-                w={"250px"}
-                h={"50px"}
-                onClick={() => navigate(-1)}
-                shadow={"1px 1px 3px 1px #dadce0"}
-                _hover={{
-                  backgroundColor: "black",
-                  color: "whitesmoke",
-                  transition:
-                    "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
-                  shadow: "1px 1px 3px 1px #dadce0 inset",
-                }}
-              >
-                취소하기
-              </Button>
-            </FormControl>
-            <FormControl ml={5}>
-              <Button
-                w={"250px"}
-                h={"50px"}
-                bg={"black"}
-                color={"whitesmoke"}
-                onClick={handleSingUpClick}
-                isDisabled={!signButtonState}
                 shadow={"1px 1px 3px 1px #dadce0"}
                 _hover={{
                   backgroundColor: "whitesmoke",
@@ -727,12 +507,163 @@ export function MemberSignup() {
                   shadow: "1px 1px 3px 1px #dadce0 inset",
                 }}
               >
-                가입하기
+                인증번호 발송
               </Button>
-            </FormControl>
-          </CardFooter>
-        </Flex>
-      </Card>
-    </Center>
+            </Flex>
+          )}
+        </FormControl>
+        {/* 인증번호 입력 */}
+        {sendNumber && (
+          <FormControl mt={2}>
+            <Flex justifyContent={"center"}>
+              <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
+                인증번호 입력
+              </FormLabel>
+              <Input
+                shadow={"1px 1px 3px 1px #dadce0 inset"}
+                placeholder={"메일로 전송된 인증번호를 입력해 주세요."}
+                w={"350px"}
+                h={"50px"}
+                type={"number"}
+                value={randomNumberCheck}
+                onChange={(e) => {
+                  setRandomNumberCheck(e.target.value);
+                }}
+              />
+              <Button
+                bg={"black"}
+                color={"whitesmoke"}
+                isDisabled={emailCodeCheckedState}
+                ml={"10px"}
+                w={"140px"}
+                h={"50px"}
+                onClick={handleCodeCheckClick}
+                shadow={"1px 1px 3px 1px #dadce0"}
+                _hover={{
+                  backgroundColor: "whitesmoke",
+                  color: "black",
+                  transition:
+                    "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
+                  shadow: "1px 1px 3px 1px #dadce0 inset",
+                }}
+              >
+                인증번호 확인
+              </Button>
+            </Flex>
+          </FormControl>
+        )}
+
+        {/* 우편번호 */}
+        <FormControl mt={2}>
+          <Flex justifyContent={"center"}>
+            <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
+              우편번호
+            </FormLabel>
+            <input
+              style={{ ...readOnlyStyle.style, width: "350px" }}
+              readOnly
+              defaultValue={member_post_code}
+            />
+            <Button
+              w={"140px"}
+              h={"50px"}
+              ml={"10px"}
+              onClick={handlePostCodeClick}
+              bg={"black"}
+              color={"whitesmoke"}
+              _hover={{ backgroundColor: "whitesmoke", color: "black" }}
+            >
+              주소검색
+            </Button>
+          </Flex>
+        </FormControl>
+
+        {/* 주소 */}
+        <FormControl mt={2}>
+          <Flex justifyContent={"center"}>
+            <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
+              주소
+            </FormLabel>
+            <input {...readOnlyStyle} readOnly defaultValue={member_address} />
+          </Flex>
+        </FormControl>
+
+        {/* 상세주소 */}
+        <FormControl mt={2}>
+          <Flex justifyContent={"center"}>
+            <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
+              상세주소
+            </FormLabel>
+            <Input
+              shadow={"1px 1px 3px 1px #dadce0 inset"}
+              w={"500px"}
+              h={"50px"}
+              value={member_detail_address}
+              onChange={(e) => setMember_detail_address(e.target.value)}
+            />
+          </Flex>
+        </FormControl>
+
+        {/* 자기소개 */}
+        <FormControl mt={2}>
+          <Flex justifyContent={"center"}>
+            <FormLabel w={"100px"} fontSize={"1.1rem"} lineHeight={"50px"}>
+              자기소개
+            </FormLabel>
+            <Textarea
+              shadow={"1px 1px 3px 1px #dadce0 inset"}
+              w={"500px"}
+              h={"50px"}
+              value={member_introduce}
+              onChange={(e) => setMember_introduce(e.target.value)}
+            />
+          </Flex>
+        </FormControl>
+      </CardBody>
+
+      <Flex justifyContent={"center"}>
+        <CardFooter gap={"90px"} mb={10}>
+          <FormControl>
+            <Button
+              bg={"whitesmoke"}
+              color={"black"}
+              w={"250px"}
+              h={"50px"}
+              onClick={() => navigate(-1)}
+              shadow={"1px 1px 3px 1px #dadce0"}
+              _hover={{
+                backgroundColor: "black",
+                color: "whitesmoke",
+                transition:
+                  "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
+                shadow: "1px 1px 3px 1px #dadce0 inset",
+              }}
+            >
+              취소하기
+            </Button>
+          </FormControl>
+          <FormControl ml={5}>
+            <Button
+              w={"250px"}
+              h={"50px"}
+              bg={"black"}
+              color={"whitesmoke"}
+              onClick={handleSingUpClick}
+              isDisabled={!signButtonState}
+              shadow={"1px 1px 3px 1px #dadce0"}
+              _hover={{
+                backgroundColor: "whitesmoke",
+                color: "black",
+                transition:
+                  "background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out",
+                shadow: "1px 1px 3px 1px #dadce0 inset",
+              }}
+            >
+              가입하기
+            </Button>
+          </FormControl>
+        </CardFooter>
+      </Flex>
+    </Card>
   );
 }
