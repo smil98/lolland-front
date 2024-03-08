@@ -52,37 +52,35 @@ function SearchComponent() {
   }
 
   return (
-    <Box mx="35%">
-      <InputGroup>
-        <InputLeftElement w="25%">
-          <Select
-            border="1px solid black"
-            borderRadius={0}
-            defaultValue="all"
-            _focus={{ border: "1px solid black", shadow: "none" }}
-            _hover={{ border: "1px solid black" }}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="all">전체</option>
-            <option value="product_name">상품명</option>
-            <option value="company_name">회사명</option>
-          </Select>
-        </InputLeftElement>
-        <Input
-          borderRadius={0}
-          textIndent="25%"
-          placeholder="검색어를 입력해주세요"
+    <InputGroup w={{ base: "70%", md: "45%" }} mx="auto" mt={-10} mb={10}>
+      <InputLeftElement w="25%">
+        <Select
           border="1px solid black"
+          borderRadius={0}
+          defaultValue="all"
           _focus={{ border: "1px solid black", shadow: "none" }}
           _hover={{ border: "1px solid black" }}
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-        <InputRightElement bgColor="black" onClick={handleSearch}>
-          <FontAwesomeIcon icon={faMagnifyingGlass} color="white" />
-        </InputRightElement>
-      </InputGroup>
-    </Box>
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="all">전체</option>
+          <option value="product_name">상품명</option>
+          <option value="company_name">회사명</option>
+        </Select>
+      </InputLeftElement>
+      <Input
+        borderRadius={0}
+        textIndent="25%"
+        placeholder="검색어를 입력해주세요"
+        border="1px solid black"
+        _focus={{ border: "1px solid black", shadow: "none" }}
+        _hover={{ border: "1px solid black" }}
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
+      />
+      <InputRightElement bgColor="black" onClick={handleSearch}>
+        <FontAwesomeIcon icon={faMagnifyingGlass} color="white" />
+      </InputRightElement>
+    </InputGroup>
   );
 }
 
@@ -308,14 +306,14 @@ export function HomeBody() {
   // -------------------------------- 카테고리별 상품목록 문구 --------------------------------
   const categoryDescriptions = {
     1: ["게임은 역시 장비빨", "고성능 노트북으로 승부하라!"],
-    2: ["구매왕 챌린지!", "화질의 한계를 넘어서세요."],
-    3: ["최상의 게임 경험을 위한 필수품", "몰입감을 높여줄 최적의 선택."],
-    4: ["휴대성과 성능의 완벽한 조화", "언제 어디서나 당신의 일터."],
+    2: ["구매왕 챌린지!", "화질의 한계를 넘어서세요"],
+    3: ["최상의 게임 경험을 위한 필수품", "몰입감을 높여줄 최적의 선택"],
+    4: ["휴대성과 성능의 완벽한 조화", "언제 어디서나 당신의 일터"],
     5: ["비즈니스를 위한", "막강한 파워"],
-    6: ["타이핑이 즐거워지는 느낌", "손끝에서 시작되는 기적."],
-    7: ["빠르고 정밀한 마우스플레이", "정확한 클릭, 빠른 반응."],
-    8: ["부드러운 슬립감", "안정성과 정확성의 기반."],
-    9: ["레노버 서버 사은품행사", "강력한 성능, 놀라운 혜택."],
+    6: ["타이핑이 즐거워지는 느낌", "손끝에서 시작되는 기적"],
+    7: ["빠르고 정밀한 마우스플레이", "정확한 클릭, 빠른 반응"],
+    8: ["부드러운 슬립감", "안정성과 정확성의 기반"],
+    9: ["레노버 서버 사은품행사", "강력한 성능, 놀라운 혜택"],
   };
 
   return (
@@ -651,7 +649,7 @@ export function HomeBody() {
           <Flex flexDir={{ base: "column", md: "row" }}>
             <Box
               position="relative"
-              w={{ base: "100%", md: "40%" }}
+              w="40%"
               display={{ base: "none", md: "block" }}
               borderRadius={15}
               mr={5}
@@ -659,20 +657,25 @@ export function HomeBody() {
             >
               <Image
                 src={categoryImages[category.category_id]}
-                objectFit="contain"
+                objectFit="cover"
                 w="full"
+                h="99%"
+                position="absolute"
+                top={0}
+                left={0}
                 display="block"
                 borderRadius={15}
               />
               <Box
                 position="absolute"
                 w="full"
-                h="30%"
+                h="60%"
                 bottom={0}
                 left={0}
-                pt="20%"
+                pt="55%"
                 px={5}
-                className="opacityGradient"
+                className="opacity-gradient"
+                borderBottomRadius={15}
               >
                 <Text
                   fontSize="2xl"
