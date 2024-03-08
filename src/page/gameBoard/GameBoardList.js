@@ -99,10 +99,9 @@ function GameBoardList() {
 
   const sectionStyle = {
     borderRadius: 0,
+    fontSize: "sm",
     _hover: {
-      bgColor: "whitesmoke",
-      color: "black",
-      transition: "0.3s ease-in-out",
+      cursor: "pointer",
     },
   };
 
@@ -155,12 +154,13 @@ function GameBoardList() {
           </Text>
 
           <Box w="90%" mx="auto">
-            <SimpleGrid columns={{ base: 4, md: 8 }}>
+            <SimpleGrid columns={{ base: 4, md: 8 }} spacing={3}>
               <Stack spacing={3}>
                 <Select
                   variant="undefined"
                   placeholder="정렬"
                   textAlign="center"
+                  fontSize="sm"
                   fontWeight="bold"
                   onChange={(e) => {
                     const selectedValue = e.target.value;
