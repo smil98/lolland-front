@@ -11,6 +11,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -35,26 +36,29 @@ export function GameBoardListArticle() {
   }, []);
 
   return (
-    <Card shadow={"1px 1px 3px 1px #dadce0"}>
-      <Heading fontSize={"1.5rem"} textAlign={"center"} p={"20px"}>
+    <Card border="1px solid #F1F1F1" shadow="base">
+      <CardHeader
+        className="specialHeadings"
+        fontWeight="bold"
+        color="orange"
+        fontSize="2xl"
+        textAlign="center"
+      >
         게임 관련 기사
-      </Heading>
-      <Tabs isFitted variant={"enclosed"}>
-        <CardHeader>
-          <TabList>
-            <Tab fontSize={"1.1rem"} fontWeight={"bold"}>
+      </CardHeader>
+      <CardBody>
+        <Tabs colorScheme="orange" isFitted variant="enclosed">
+          <TabList mb={5}>
+            <Tab fontSize="md" fontWeight="bold">
               PC 게임
             </Tab>
-            <Tab fontSize={"1.1rem"} fontWeight={"bold"}>
+            <Tab fontSize="md" fontWeight="bold">
               Console 게임
             </Tab>
-            <Tab fontSize={"1.1rem"} fontWeight={"bold"}>
+            <Tab fontSize="md" fontWeight="bold">
               Mobile 게임
             </Tab>
           </TabList>
-        </CardHeader>
-
-        <CardBody>
           <TabPanels>
             <TabPanel>
               <Stack divider={<StackDivider />} spacing="4">
@@ -120,8 +124,8 @@ export function GameBoardListArticle() {
               </Stack>
             </TabPanel>
           </TabPanels>
-        </CardBody>
-      </Tabs>
+        </Tabs>
+      </CardBody>
     </Card>
   );
 }

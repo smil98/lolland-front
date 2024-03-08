@@ -16,7 +16,7 @@ export function GameBoardListYouTube() {
   const [searchedVideos, setSearchedVideos] = useState([]);
 
   const opts = {
-    width: "450px",
+    width: "550px",
     height: "300px",
     playerVars: {
       autoplay: 0,
@@ -51,15 +51,19 @@ export function GameBoardListYouTube() {
   }, []);
 
   return (
-    <Card>
-      <CardHeader size={"md"}>
-        <Heading fontSize={"1.5rem"} textAlign={"center"}>
-          실시간 인기 게임 영상
-        </Heading>
+    <Card mb={5} border="1px solid #F1F1F1" shadow="base">
+      <CardHeader
+        className="specialHeadings"
+        fontWeight="bold"
+        color="orange"
+        fontSize="2xl"
+        textAlign="center"
+      >
+        실시간 인기 게임 영상
       </CardHeader>
-      <Divider color={"whitesmoke"} />
+      <Divider color="whitesmoke" />
       <CardBody>
-        <Box>
+        <Box alignItems="center" textAlign="center">
           <Swiper
             slidesPerView={1}
             pagination={{

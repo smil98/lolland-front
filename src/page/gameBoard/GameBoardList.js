@@ -34,6 +34,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
   faArrowTrendUp,
   faCaretDown,
+  faEye,
   faImage,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -106,9 +107,59 @@ function GameBoardList() {
   };
 
   return (
-    <Box mx="auto">
-      <Flex border="1px dashed purple">
-        <VStack w={"100%"}>
+    <Box mx="auto" w="full">
+      <Flex flexDir={{ base: "column", md: "row" }} w="full">
+        {/* ------------ 사이드: 오늘의 BEST 게시물, 실시간 인기 게임 영상, 최신 기사 ------------ */}
+        <Box w={{ base: "90%", md: "33%" }} ml={{ base: "5%", md: 5 }}>
+          {/* ---------- 오늘의 BEST 게시물 ---------- */}
+          <Card border="1px solid #F1F1F1" shadow="base" my={5}>
+            <CardHeader
+              className="specialHeadings"
+              fontWeight="bold"
+              color="orange"
+              fontSize="2xl"
+              textAlign="center"
+            >
+              오늘의 BEST 게시물
+            </CardHeader>
+            <CardBody>
+              <Stack divider={<StackDivider />} spacing="4">
+                {today &&
+                  today.map((todayPost, index) => (
+                    <Box key={todayPost.id}>
+                      <Flex align={"center"}>
+                        <Badge
+                          variant={"subtle"}
+                          colorScheme={"green"}
+                          mr={"2"}
+                        >
+                          {" "}
+                          {index + 1} 위{" "}
+                        </Badge>
+                        <Heading
+                          size="xs"
+                          textTransform="uppercase"
+                          _hover={{ cursor: "pointer" }}
+                          onClick={() =>
+                            navigate("/gameboard/id/" + todayPost.id)
+                          }
+                        >
+                          {todayPost.title}
+                        </Heading>
+                      </Flex>
+                    </Box>
+                  ))}
+              </Stack>
+            </CardBody>
+          </Card>
+          {/* -------- 실시간 인기 게임 영상  -------- */}
+          <GameBoardListYouTube />
+          {/*TODO : 할당량 초과시 주석 처리*/}
+          {/* -------- 최신 기사 -------- */}
+          <GameBoardListArticle />
+        </Box>
+        {/* ------------ 메인 ------------ */}
+        <Stack dir="column" w={{ base: "100%", md: "65%" }}>
           {/* ------------ 핫한 게시물 ------------ */}
           <Box
             display="flex"
@@ -146,6 +197,7 @@ function GameBoardList() {
           <Text
             as="span"
             fontSize="3xl"
+            textAlign="center"
             className="specialHeadings"
             fontWeight="bold"
             color="orange"
@@ -246,7 +298,65 @@ function GameBoardList() {
             </SimpleGrid>
           </Box>
 
-          <TableContainer w={"90%"} shadow={"1px 1px 3px 1px #dadce0"}>
+          <Box w="90%" mx="auto">
+            <Stack
+              w="full"
+              pl={3}
+              divider={<StackDivider />}
+              display={{ base: "block", md: "none" }}
+            >
+              {gameBoardList &&
+                gameBoardList.map((board) => (
+                  <Box
+                    py={5}
+                    _hover={{ cursor: "pointer" }}
+                    onClick={() => navigate("/gameboard/id/" + board.id)}
+                  >
+                    <Flex mb={2} alignItems="center">
+                      <Badge colorScheme={categoryColors[board.category]}>
+                        {board.category}
+                      </Badge>
+                      <Text color="grey" mx={2}>
+                        {new Date(board.reg_time).toLocaleDateString("ko-KR", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </Text>
+                      <Text color="grey">
+                        <FontAwesomeIcon icon={faEye} />{" "}
+                        {Math.ceil(board.board_count)}
+                      </Text>
+                    </Flex>
+                    <Flex justifyContent="space-between" alignItems="center">
+                      <Text
+                        fontSize="md"
+                        className="labels"
+                        alignItems="center"
+                      >
+                        {board.title}
+                        {board.countFile !== 0 && (
+                          <Text as="span" color="grey" ml={2}>
+                            <FontAwesomeIcon icon={faImage} />
+                          </Text>
+                        )}
+                      </Text>
+                      {board.count_comment !== 0 && (
+                        <Text as="span" color="orange" fontWeight="bold" mr={5}>
+                          <ChatIcon /> {board.count_comment}
+                        </Text>
+                      )}
+                    </Flex>
+                  </Box>
+                ))}
+            </Stack>
+          </Box>
+          <TableContainer
+            w="90%"
+            mx="auto"
+            shadow="1px 1px 3px 1px #dadce0"
+            display={{ base: "none", md: "block" }}
+          >
             <Table size="sm" border={"1px solid whitesmoke"}>
               <Thead>
                 <Tr>
@@ -426,62 +536,11 @@ function GameBoardList() {
             </Table>
           </TableContainer>
 
-          <Center>
-            <VStack>
-              <SearchComponent />
-              <GameBoardPagination pageInfo={pageInfo} />
-            </VStack>
-          </Center>
-        </VStack>
-
-        <Box w={"25%"} margin={"15px auto"} mr={"5%"}>
-          <Card shadow={"1px 1px 3px 1px #dadce0"}>
-            <CardHeader>
-              <Heading fontSize={"1.5rem"} textAlign={"center"}>
-                오늘의 BEST 게시물
-              </Heading>
-            </CardHeader>
-
-            <CardBody>
-              <Stack divider={<StackDivider />} spacing="4">
-                {today &&
-                  today.map((todayPost, index) => (
-                    <Box key={todayPost.id}>
-                      <Flex align={"center"}>
-                        <Badge
-                          variant={"subtle"}
-                          colorScheme={"green"}
-                          mr={"2"}
-                        >
-                          {" "}
-                          {index + 1} 위{" "}
-                        </Badge>
-                        <Heading
-                          size="xs"
-                          textTransform="uppercase"
-                          _hover={{ cursor: "pointer" }}
-                          onClick={() =>
-                            navigate("/gameboard/id/" + todayPost.id)
-                          }
-                        >
-                          {todayPost.title}
-                        </Heading>
-                      </Flex>
-                    </Box>
-                  ))}
-              </Stack>
-            </CardBody>
-          </Card>
-          <br />
-          <br />
-          <GameBoardListYouTube />
-          {/*TODO : 할당량 초과시 주석 처리*/}
-          <br />
-          <Box>
-            <Divider orientation="horizontal" color={"orange"} />
-            <GameBoardListArticle />
-          </Box>
-        </Box>
+          <VStack>
+            <SearchComponent />
+            <GameBoardPagination pageInfo={pageInfo} />
+          </VStack>
+        </Stack>
       </Flex>
     </Box>
   );
