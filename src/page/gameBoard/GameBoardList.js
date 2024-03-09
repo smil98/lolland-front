@@ -109,22 +109,28 @@ function GameBoardList() {
 
   return (
     <Box mx="auto" w="full">
-      <Divider borderColor="black" w="90%" ml="5%" />
-      <Text
-        className="specialHeadings"
-        fontSize="3xl"
-        color="black"
-        my={5}
-        ml={{ base: 0, md: "5%" }}
-        textAlign={{ base: "center", md: "left" }}
-        fontWeight="bold"
+      <Box
+        w={{ base: "90%", md: "95%" }}
+        mt={{ base: 0, md: 5 }}
+        mx="auto"
+        borderTop="1px solid black"
+        borderBottom="1px solid black"
       >
-        <Text as="span" mr={5}>
-          <FontAwesomeIcon icon={faChessRook} />
+        <Text
+          className="specialHeadings"
+          fontSize="3xl"
+          color="black"
+          my={3}
+          pl={{ base: 0, md: 5 }}
+          textAlign={{ base: "center", md: "left" }}
+          fontWeight="bold"
+        >
+          <Text as="span" mr={5}>
+            <FontAwesomeIcon icon={faChessRook} />
+          </Text>
+          게임 커뮤니티
         </Text>
-        게임 커뮤니티
-      </Text>
-      <Divider borderColor="black" w="90%" ml="5%" />
+      </Box>
       <Flex flexDir={{ base: "column", md: "row" }} w="full">
         {/* ------------ 사이드: 오늘의 BEST 게시물, 실시간 인기 게임 영상, 최신 기사 ------------ */}
         <Box w={{ base: "90%", md: "33%" }} ml={{ base: "5%", md: 5 }}>
@@ -387,10 +393,9 @@ function GameBoardList() {
                       );
                     }}
                   >
-                    추천
-                    <FontAwesomeIcon icon={faCaretDown} />
+                    추천 <FontAwesomeIcon icon={faCaretDown} />
                   </Th>
-                  <Th w="5%" pl="0">
+                  <Th w="5%" pl="0" textAlign="center">
                     분류
                   </Th>
                   <Th w="40%" colSpan={2} textAlign={"center"}>
@@ -405,21 +410,19 @@ function GameBoardList() {
                       );
                     }}
                   >
-                    조회수
-                    <FontAwesomeIcon icon={faCaretDown} />
+                    조회수 <FontAwesomeIcon icon={faCaretDown} />
                   </Th>
-                  <Th w="10%">작성자</Th>
                   <Th
                     w="10%"
-                    cursor={"pointer"}
+                    textAlign="center"
+                    cursor="pointer"
                     onClick={() => {
                       setSortBy("");
                       params.set("s", sortBy);
                       navigate("/gameboard/list?" + params);
                     }}
                   >
-                    날짜
-                    <FontAwesomeIcon icon={faCaretDown} />
+                    날짜 <FontAwesomeIcon icon={faCaretDown} />
                   </Th>
                 </Tr>
               </Thead>
@@ -444,7 +447,7 @@ function GameBoardList() {
                           {noticies.count_like}
                         </Badge>
                       </Td>
-                      <Td w="5%" pl={"0"}>
+                      <Td w="5%" textAlign="center">
                         <Badge colorScheme={categoryColors[noticies.category]}>
                           {noticies.category}
                         </Badge>
@@ -476,15 +479,16 @@ function GameBoardList() {
                           </Badge>
                         )}{" "}
                       </Td>
-                      <Td w="10%">{noticies.board_count}</Td>
-                      <Td w="10%">{noticies.member_id}</Td>
+                      <Td w="10%" textAlign="center">
+                        {Math.ceil(noticies.board_count)}
+                      </Td>
                       <Td w="10%">
                         {new Date(noticies.reg_time).toLocaleDateString(
                           "ko-KR",
                           {
                             year: "numeric",
-                            month: "long",
-                            day: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
                           },
                         )}
                       </Td>
@@ -506,7 +510,7 @@ function GameBoardList() {
                         </Badge>
                       </Td>
 
-                      <Td w="5%" pl="0">
+                      <Td w="5%" textAlign="center">
                         <Badge colorScheme={categoryColors[board.category]}>
                           {board.category}
                         </Badge>
@@ -538,13 +542,14 @@ function GameBoardList() {
                           </Badge>
                         )}
                       </Td>
-                      <Td w="10%">{board.board_count}</Td>
-                      <Td w="10%">{board.member_id}</Td>
+                      <Td w="10%" textAlign="center">
+                        {Math.ceil(board.board_count)}
+                      </Td>
                       <Td w="10%">
                         {new Date(board.reg_time).toLocaleDateString("ko-KR", {
                           year: "numeric",
-                          month: "long",
-                          day: "numeric",
+                          month: "2-digit", // Use 2-digit to get leading zeros
+                          day: "2-digit", // Use 2-digit to get leading zeros
                         })}
                       </Td>
                     </Tr>

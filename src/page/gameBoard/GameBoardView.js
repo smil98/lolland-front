@@ -3,16 +3,11 @@ import axios from "axios";
 import {
   Box,
   Button,
-  Center,
-  Divider,
   HStack,
   Spinner,
   Image,
   useToast,
-  VStack,
-  Heading,
   Text,
-  Spacer,
   Flex,
   Badge,
   AccordionPanel,
@@ -25,25 +20,30 @@ import {
   TabList,
   Tab,
   TabPanels,
-  Card,
   Table,
-  Th,
   Tr,
   TableCaption,
   Tbody,
-  Td,
-  TableContainer,
-  Textarea,
+  IconButton,
+  ButtonGroup,
+  Tag,
+  TagLeftIcon,
+  TagLabel,
+  Avatar,
 } from "@chakra-ui/react";
 import GameBoardCommentContainer from "./GameBoardCommentContainer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import {
+  faChevronLeft,
+  faClock,
   faComments,
+  faEnvelope,
   faEye,
-  faHeart as fullHeart,
+  faPenNib,
   faThumbsDown,
   faThumbsUp,
+  faTrashCan,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { LoginContext } from "../../component/LoginProvider";
 import { useNavigate, useParams } from "react-router-dom";
@@ -176,51 +176,80 @@ export function GameBoardView() {
   }
 
   return (
-    <Center>
-      <VStack spacing={6} align="start" w="50%" px={4}>
-        <HStack spacing={2} w="100%" justify="space-between">
-          <Button onClick={() => navigate(-1)}>이전</Button>
-          <Spacer />
-
-          {(hasAccess(board.member_id) || isAdmin()) && (
-            <>
-              <Button
-                colorScheme="purple"
-                onClick={() => navigate(`/gameboard/edit/${id}`)}
-              >
-                수정
-              </Button>
-              <Button onClick={handleDelete} colorScheme="red">
-                삭제
-              </Button>
-            </>
-          )}
-        </HStack>
-        <Flex w="100%" justify="space-between">
-          <Heading size="xl">{board.title}</Heading>
-          <Spacer />
-          <LikeContainer like={like} onClick={handleLike} />
-        </Flex>
-        <Divider />
-        <HStack spacing={2} w="100%" justify="space-between">
-          <Text fontSize="md" fontWeight="bold">
-            작성자: {board.member_id}
-          </Text>
-          <Badge>
-            <FontAwesomeIcon icon={faComments} />
-            {board.count_comment}
-          </Badge>
-          <Badge>
-            <FontAwesomeIcon icon={faEye} />
-            {board.board_count}
-          </Badge>
-          <Spacer />
-          <Text fontSize="md" fontWeight="bold">
-            작성일: {new Date(board.reg_time).toLocaleString()}
-          </Text>
-        </HStack>
-
-        <Divider my={4} />
+    <Box mx="auto" w={{ base: "90%", md: "80%", lg: "70%", xl: "50%" }}>
+      <HStack w="100%" justify="space-between">
+        <IconButton
+          variant="ghost"
+          colorScheme="twitter"
+          onClick={() => navigate(-1)}
+          icon={<FontAwesomeIcon icon={faChevronLeft} />}
+        />
+        {(hasAccess(board.member_id) || isAdmin()) && (
+          <ButtonGroup variant="ghost">
+            <IconButton
+              colorScheme="orange"
+              icon={<FontAwesomeIcon icon={faPenNib} />}
+              onClick={() => navigate(`/gameboard/edit/${id}`)}
+            />
+            <IconButton
+              colorScheme="blackAlpha"
+              icon={<FontAwesomeIcon icon={faTrashCan} />}
+              onClick={handleDelete}
+            />
+          </ButtonGroup>
+        )}
+      </HStack>
+      <Text
+        className="specialHeadings"
+        fontSize="2xl"
+        textAlign="left"
+        w="full"
+        mt={3}
+      >
+        {board.title}
+      </Text>
+      <Tag variant="undefined" size="md" color="gray">
+        <TagLeftIcon as={FontAwesomeIcon} icon={faClock} />
+        <TagLabel>
+          {new Date(board.reg_time).toLocaleDateString("ko-KR", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })}{" "}
+          {new Date(board.reg_time)
+            .toLocaleTimeString("en-US", {
+              hour: "numeric",
+              minute: "2-digit",
+            })
+            .replace(/\s/g, " ")}
+        </TagLabel>
+      </Tag>
+      <Flex
+        w="100%"
+        justify="space-between"
+        borderTop="1px solid #E1E1E1"
+        alignItems="center"
+        borderBottom="1px solid #E1E1E1"
+        py={3}
+        my={3}
+      >
+        <Box spacing={3} alignItems="center">
+          <Tag variant="undefined" size="md">
+            <TagLeftIcon as={FontAwesomeIcon} icon={faUser} />
+            <TagLabel>{board.member_id}</TagLabel>
+          </Tag>
+          <Tag variant="undefined" size="md">
+            <TagLeftIcon as={FontAwesomeIcon} icon={faComments} />
+            <TagLabel>{board.count_comment}</TagLabel>
+          </Tag>
+          <Tag variant="undefined" size="md">
+            <TagLeftIcon as={FontAwesomeIcon} icon={faEye} />
+            <TagLabel>{board.board_count}</TagLabel>
+          </Tag>
+        </Box>
+        <LikeContainer like={like} onClick={handleLike} />
+      </Flex>
+      <Box my={10}>
         <Text fontSize="lg">{board.board_content}</Text>
         {board.files.map((file) => (
           <Image
@@ -232,117 +261,110 @@ export function GameBoardView() {
             my={4}
           />
         ))}
-
-        <Accordion allowMultiple w="100%" as="span" isLazy defaultIndex={[0]}>
-          <AccordionItem>
-            <h2>
-              <AccordionButton _expanded={{ bg: "whitesmoke", color: "black" }}>
-                <Box
-                  as="span"
-                  flex="1"
-                  textAlign="left"
-                  width="100%"
-                  paddingX={2}
-                  paddingY={2}
-                  fontSize={"1.2rem"}
-                  fontWeight={"bold"}
-                >
-                  {board.member_id}의 정보
+      </Box>
+      <Accordion allowMultiple w="100%" as="span" isLazy defaultIndex={[0]}>
+        <AccordionItem>
+          <Flex>
+            <AccordionButton _expanded={{ bg: "whitesmoke", color: "black" }}>
+              <Box
+                as="span"
+                flex="1"
+                textAlign="left"
+                width="100%"
+                paddingX={2}
+                paddingY={2}
+                fontSize="md"
+                fontWeight="bold"
+              >
+                {board.member_id} 의 정보
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+          </Flex>
+          <AccordionPanel py={4}>
+            {writerInfo && (
+              <Flex
+                borderRadius={10}
+                border="1px solid #E1E1E1"
+                p={3}
+                _hover={{ bgColor: "gray.100" }}
+              >
+                <Avatar src={writerInfo.file_url} />
+                <Box ml={3}>
+                  <Text fontWeight="bold">
+                    {writerInfo.member_name}
+                    <Tag ml={3} colorScheme="orange" size="sm">
+                      <TagLeftIcon as={FontAwesomeIcon} icon={faEnvelope} />
+                      <TagLabel>{writerInfo.member_email}</TagLabel>
+                    </Tag>
+                  </Text>
+                  <Text>{writerInfo.member_introduce}</Text>
                 </Box>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
-              {writerInfo && (
-                <Flex
-                  gap="20px"
-                  alignItems="center"
-                  justifyContent="space-evenly"
-                >
-                  <Image
-                    borderRadius="full"
-                    boxSize="200px"
-                    src={writerInfo.file_url}
-                    alt="프로필 이미지"
-                  />
-
-                  <VStack align="start">
-                    <Text fontSize="1.2rem" fontWeight="bold">
-                      {writerInfo.member_name}
-                    </Text>
-                    <Text fontSize="md">
-                      <strong>이메일:</strong> {writerInfo.member_email}
-                    </Text>
-                    <Text fontSize="md">
-                      <strong>연락처:</strong> {writerInfo.member_phone_number}
-                    </Text>
-                    <Box>
-                      <Text fontSize="md">
-                        <strong>자기소개:</strong>
-                      </Text>
-                      <Textarea
-                        value={writerInfo.member_introduce}
-                        isReadOnly
-                        size="sm"
-                        width="300px"
-                        fontSize="1.1rem"
-                        mb="20px"
-                        h={"120px"}
-                      />
-                    </Box>
-                  </VStack>
-                </Flex>
-              )}
-
-              <Tabs isFitted variant="enclosed" mt={"30px"}>
-                <TabList mb="1em">
-                  <Tab fontSize={"1.2rem"}>최근 글</Tab>
-                  <Tab fontSize={"1.2rem"}>최근 댓글</Tab>
-                </TabList>
-                <TabPanels>
-                  <TabPanel>
-                    {written && (
-                      <Table variant="simple">
-                        <TableCaption></TableCaption>
-                        <Tbody>
-                          {written.map((posties) => (
-                            <Tr
-                              fontSize={"1.1rem"}
-                              key={posties.id}
+              </Flex>
+            )}
+            <Tabs isFitted variant="enclosed" mt={"30px"}>
+              <TabList mb="1em">
+                <Tab fontSize="xl">최근 글</Tab>
+                <Tab fontSize="lg">최근 댓글</Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  {written && (
+                    <Table variant="simple">
+                      <Tbody>
+                        {written.map((posties) => (
+                          <Tr
+                            fontSize={"1.1rem"}
+                            key={posties.id}
+                            onClick={() => {
+                              navigate(`/gameboard/id/${posties.id}`);
+                              window.scrollTo(0, 0);
+                            }}
+                            _hover={{ cursor: "pointer" }}
+                          >
+                            <Box
+                              p={4}
+                              borderWidth="1px"
+                              borderRadius="md"
+                              boxShadow="sm"
                               onClick={() => {
                                 navigate(`/gameboard/id/${posties.id}`);
                                 window.scrollTo(0, 0);
                               }}
-                              _hover={{ cursor: "pointer" }}
+                              _hover={{ cursor: "pointer", bg: "gray.100" }}
                             >
-                              <Box
-                                p={4}
-                                borderWidth="1px"
-                                borderRadius="md"
-                                boxShadow="sm"
-                                onClick={() => {
-                                  navigate(`/gameboard/id/${posties.id}`);
-                                  window.scrollTo(0, 0);
-                                }}
-                                _hover={{ cursor: "pointer", bg: "gray.100" }}
-                              >
-                                {posties.title}
-                              </Box>
-                            </Tr>
-                          ))}
-                        </Tbody>
-                      </Table>
-                    )}
-                  </TabPanel>
-                  <TabPanel>
-                    {writtenComment && (
-                      <Table variant="simple">
-                        <TableCaption></TableCaption>
-                        <Tbody>
-                          {writtenComment.map((comment) => (
-                            <Tr
-                              fontSize={"1.1rem"}
-                              key={comment.id}
+                              {posties.title}
+                            </Box>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  )}
+                </TabPanel>
+                <TabPanel>
+                  {writtenComment && (
+                    <Table variant="simple">
+                      <Tbody>
+                        {writtenComment.map((comment) => (
+                          <Tr
+                            fontSize={"1.1rem"}
+                            key={comment.id}
+                            onClick={() => {
+                              navigate(
+                                `/gameboard/id/${comment.game_board_id}`,
+                              );
+                              window.scrollTo({
+                                top: document.body.scrollHeight,
+                                behavior: "smooth",
+                              });
+                            }}
+                            _hover={{ cursor: "pointer" }}
+                          >
+                            <Box
+                              p={4}
+                              borderWidth="1px"
+                              borderRadius="md"
+                              boxShadow="sm"
                               onClick={() => {
                                 navigate(
                                   `/gameboard/id/${comment.game_board_id}`,
@@ -352,40 +374,23 @@ export function GameBoardView() {
                                   behavior: "smooth",
                                 });
                               }}
-                              _hover={{ cursor: "pointer" }}
+                              _hover={{ cursor: "pointer", bg: "gray.100" }}
                             >
-                              <Box
-                                p={4}
-                                borderWidth="1px"
-                                borderRadius="md"
-                                boxShadow="sm"
-                                onClick={() => {
-                                  navigate(
-                                    `/gameboard/id/${comment.game_board_id}`,
-                                  );
-                                  window.scrollTo({
-                                    top: document.body.scrollHeight,
-                                    behavior: "smooth",
-                                  });
-                                }}
-                                _hover={{ cursor: "pointer", bg: "gray.100" }}
-                              >
-                                {comment.comment_content}
-                              </Box>
-                            </Tr>
-                          ))}
-                        </Tbody>
-                      </Table>
-                    )}
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion>
-        <GameBoardCommentContainer />
-      </VStack>
-    </Center>
+                              {comment.comment_content}
+                            </Box>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  )}
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+      <GameBoardCommentContainer />
+    </Box>
   );
 }
 
