@@ -2,9 +2,16 @@ import {
   Badge,
   Box,
   Spinner,
+  Stack,
+  StackDivider,
+  StackItem,
   Table,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
   Tbody,
   Td,
+  Text,
   Thead,
   Tr,
   useToast,
@@ -13,7 +20,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComment, faImage } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faComment, faImage } from "@fortawesome/free-solid-svg-icons";
 import { faImages } from "@fortawesome/free-regular-svg-icons";
 
 export function GearList({ category }) {
@@ -37,52 +44,42 @@ export function GearList({ category }) {
   };
 
   return (
-    <Box>
-      <Table>
-        <Thead>
-          <Tr>
-            <Td>카테고리</Td>
-            <Td>제목</Td>
-            <Td>컨텐츠</Td>
-            <Td>날짜</Td>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {gearboardList == null ? (
-            <Spinner />
-          ) : (
-            gearboardList.map((item) => (
-              <Tr
-                key={item.gear_id}
-                onClick={() => navigate("/gearlist/gear_id/" + item.gear_id)}
-              >
-                <Td>{item.category}</Td>
-                <Td>
-                  {item.gear_title.slice(0, 17)}
-                  {item.countFile > 0 && (
-                    <Badge
-                      style={{ backgroundColor: "white", color: "orange" }}
-                    >
-                      <FontAwesomeIcon icon={faImages} />
-                      {item.countFile}
-                    </Badge>
-                  )}
-                  {item.commnetcount > 0 && (
-                    <Badge
-                      style={{ backgroundColor: "white", color: "orange" }}
-                    >
-                      <FontAwesomeIcon icon={faComment} />
-                      {item.commnetcount}
-                    </Badge>
-                  )}
-                </Td>
-                <Td>{item.gear_content.slice(0, 80)}</Td>
-                <Td>{formatKoreanDate(item.gear_inserted)}</Td>
-              </Tr>
-            ))
-          )}
-        </Tbody>
-      </Table>
-    </Box>
+    <Stack spacing={3}>
+      {gearboardList == null ? (
+        <Spinner />
+      ) : (
+        gearboardList.map((item) => (
+          <StackItem key={item.gear_id}>
+            <Box
+              p={5}
+              border="1px solid #E1E1E1"
+              onClick={() => navigate("/gearlist/gear_id/" + item.gear_id)}
+            >
+              <Badge>{item.category}</Badge>
+              <Text fontSize="md" fontWeight="bold" my={3} alignItems="center">
+                {item.gear_title.slice(0, 40)}
+                {item.countFile > 0 && (
+                  <Tag colorScheme="gray" size="sm" mx={2}>
+                    <TagLeftIcon as={FontAwesomeIcon} icon={faImages} />
+                    <TagLabel>{item.countFile}</TagLabel>
+                  </Tag>
+                )}
+                {item.commnetcount > 0 && (
+                  <Tag colorScheme="orange" size="sm">
+                    <TagLeftIcon as={FontAwesomeIcon} icon={faComment} />
+                    <TagLabel> {item.commnetcount}</TagLabel>
+                  </Tag>
+                )}
+              </Text>
+              <Text>{item.gear_content.slice(0, 150)}</Text>
+              <Tag variant="ghost" colorScheme="gray" mt={3}>
+                <TagLeftIcon as={FontAwesomeIcon} icon={faClock} />
+                <TagLabel>{formatKoreanDate(item.gear_inserted)}</TagLabel>
+              </Tag>
+            </Box>
+          </StackItem>
+        ))
+      )}
+    </Stack>
   );
 }

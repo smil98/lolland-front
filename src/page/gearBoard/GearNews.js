@@ -18,14 +18,16 @@ export function GearNews() {
   }, []);
 
   return (
-    <Card>
-      <CardHeader>
-        <Heading size="md" color="orange">
-          컴퓨터 장비 최신 기사
-        </Heading>
+    <Card mb={5}>
+      <CardHeader
+        className="specialHeadings"
+        fontWeight="bold"
+        color="orange"
+        fontSize="2xl"
+        textAlign="center"
+      >
+        컴퓨터 장비 최신 기사
       </CardHeader>
-      <Divider orientation="horizontal" color={"orange"} />
-
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4">
           {naver &&

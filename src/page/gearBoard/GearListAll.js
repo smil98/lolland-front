@@ -2,9 +2,16 @@ import {
   Badge,
   Box,
   Spinner,
+  Stack,
+  StackItem,
   Table,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
   Tbody,
   Td,
+  Text,
+  Tfoot,
   Thead,
   Tr,
   useToast,
@@ -13,7 +20,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComment } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClock,
+  faComment,
+  faThumbsUp,
+} from "@fortawesome/free-solid-svg-icons";
 import { faImages } from "@fortawesome/free-regular-svg-icons";
 import Pagination from "./Pagination";
 
@@ -34,143 +45,64 @@ export function GearListAll() {
     });
   }, [location]);
 
+  const formatKoreanDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // Adding 1 because months are zero-indexed
+    const day = date.getDate();
+    return `${year}년 ${month}월 ${day}일`;
+  };
+
   return (
-    <Box>
-      <Table>
-        <Thead>
-          <Tr>
-            <Td>추천</Td>
-            {/*<Td>카테고리</Td>*/}
-            <Td>제목</Td>
-            <Td>컨텐츠</Td>
-            {/*<Td>날짜</Td>*/}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {gearboardList == null ? (
-            <Spinner />
-          ) : (
-            gearboardList.map((item) => (
-              <Tr
-                key={item.gear_id}
+    <Box w="100%">
+      <Stack>
+        {gearboardList == null ? (
+          <Spinner />
+        ) : (
+          gearboardList.map((item) => (
+            <StackItem key={item.gear_id}>
+              <Box
+                p={5}
+                border="1px solid #E1E1E1"
                 onClick={() => navigate("/gearlist/gear_id/" + item.gear_id)}
               >
-                <Td>{item.countLike}</Td>
-                {/*<Td>{item.category}</Td>*/}
-                <Td>
+                <Text
+                  fontSize="md"
+                  fontWeight="bold"
+                  my={3}
+                  alignItems="center"
+                >
                   {item.gear_title.slice(0, 30)}
                   {item.countFile > 0 && (
-                    <Badge
-                      style={{ backgroundColor: "white", color: "orange" }}
-                    >
-                      <FontAwesomeIcon icon={faImages} />
-                      {item.countFile}
-                    </Badge>
+                    <Tag colorScheme="gray" size="sm" ml={2}>
+                      <TagLeftIcon as={FontAwesomeIcon} icon={faImages} />
+                      <TagLabel>{item.countFile}</TagLabel>
+                    </Tag>
                   )}
                   {item.commnetcount > 0 && (
-                    <Badge
-                      style={{ backgroundColor: "white", color: "orange" }}
-                    >
-                      <FontAwesomeIcon icon={faComment} />
-                      {item.commnetcount}
-                    </Badge>
+                    <Tag colorScheme="orange" size="sm" ml={2}>
+                      <TagLeftIcon as={FontAwesomeIcon} icon={faComment} />
+                      <TagLabel>{item.commnetcount}</TagLabel>
+                    </Tag>
                   )}
-                </Td>
-                {/*<Td>{item.gear_content}</Td>*/}
-                <Td>{item.gear_content.slice(0, 90)}</Td>
-
-                {/*<Td>{item.gear_inserted}</Td>*/}
-              </Tr>
-            ))
-          )}
-        </Tbody>
-      </Table>
-      <br />
-      <Box textAlign={"center"}>
+                  <Tag colorScheme="orange" variant="outline" size="sm" ml={2}>
+                    <TagLeftIcon as={FontAwesomeIcon} icon={faThumbsUp} />
+                    <TagLabel>{item.countLike}</TagLabel>
+                  </Tag>
+                </Text>
+                <Text>{item.gear_content.slice(0, 150)}</Text>
+                <Tag variant="ghost" colorScheme="gray" mt={3}>
+                  <TagLeftIcon as={FontAwesomeIcon} icon={faClock} />
+                  <TagLabel>{formatKoreanDate(item.gear_inserted)}</TagLabel>
+                </Tag>
+              </Box>
+            </StackItem>
+          ))
+        )}
+      </Stack>
+      <Box mt={5} textAlign="center">
         <Pagination pageInfo={pageInfo} />
       </Box>
-
-      {/*<Box justifyContent="center" textAlign="center" bg="white" p={4} mb={-4}>*/}
-      {/*  <Button*/}
-      {/*    onClick={() => navigate("/gearlistlayout?p=1")}*/}
-      {/*    mr={2}*/}
-      {/*    color="black"*/}
-      {/*    bg="white"*/}
-      {/*  >*/}
-      {/*    1*/}
-      {/*  </Button>*/}
-      {/*  <Button*/}
-      {/*    onClick={() => navigate("/gearlistlayout?p=2")}*/}
-      {/*    mr={2}*/}
-      {/*    color="black"*/}
-      {/*    bg="white"*/}
-      {/*  >*/}
-      {/*    2*/}
-      {/*  </Button>*/}
-      {/*  <Button*/}
-      {/*    onClick={() => navigate("/gearlistlayout?p=3")}*/}
-      {/*    mr={2}*/}
-      {/*    color="black"*/}
-      {/*    bg="white"*/}
-      {/*  >*/}
-      {/*    3*/}
-      {/*  </Button>*/}
-      {/*  <Button*/}
-      {/*    onClick={() => navigate("/gearlistlayout?p=4")}*/}
-      {/*    mr={2}*/}
-      {/*    color="black"*/}
-      {/*    bg="white"*/}
-      {/*  >*/}
-      {/*    4*/}
-      {/*  </Button>*/}
-      {/*  <Button*/}
-      {/*    onClick={() => navigate("/gearlistlayout?p=5")}*/}
-      {/*    mr={2}*/}
-      {/*    color="black"*/}
-      {/*    bg="white"*/}
-      {/*  >*/}
-      {/*    5*/}
-      {/*  </Button>*/}
-      {/*  <Button*/}
-      {/*    onClick={() => navigate("/gearlistlayout?p=6")}*/}
-      {/*    mr={2}*/}
-      {/*    color="black"*/}
-      {/*    bg="white"*/}
-      {/*  >*/}
-      {/*    6*/}
-      {/*  </Button>*/}
-      {/*  <Button*/}
-      {/*    onClick={() => navigate("/gearlistlayout?p=7")}*/}
-      {/*    mr={2}*/}
-      {/*    color="black"*/}
-      {/*    bg="white"*/}
-      {/*  >*/}
-      {/*    7*/}
-      {/*  </Button>*/}
-      {/*  <Button*/}
-      {/*    onClick={() => navigate("/gearlistlayout?p=8")}*/}
-      {/*    mr={2}*/}
-      {/*    color="black"*/}
-      {/*    bg="white"*/}
-      {/*  >*/}
-      {/*    8*/}
-      {/*  </Button>*/}
-      {/*  <Button*/}
-      {/*    onClick={() => navigate("/gearlistlayout?p=9")}*/}
-      {/*    mr={2}*/}
-      {/*    color="black"*/}
-      {/*    bg="white"*/}
-      {/*  >*/}
-      {/*    9*/}
-      {/*  </Button>*/}
-      {/*  <Button*/}
-      {/*    onClick={() => navigate("/gearlistlayout?p=10")}*/}
-      {/*    color="black"*/}
-      {/*    bg="white"*/}
-      {/*  >*/}
-      {/*    10*/}
-      {/*  </Button>*/}
-      {/*</Box>*/}
     </Box>
   );
 }
