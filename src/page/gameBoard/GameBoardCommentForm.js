@@ -20,23 +20,22 @@ export function GameBoardCommentForm({ isSubmitting, onSubmit }) {
       <Textarea
         value={comment}
         onChange={(e) => setComment(e.target.value)}
-        width="100%"
-        padding={2}
+        w="100%"
+        p={3}
         borderRadius="md"
-        boxShadow="md"
-        height="auto" // 자동으로 높이 조절
-        placeholder={"댓글을 입력 해주세요."}
+        h="auto"
+        placeholder="댓글 입력"
       />
       <Tooltip isDisabled={!isAuthenticated()} hasArrow label="로그인 하세요">
         <Button
           isDisabled={isSubmitting}
           onClick={handleSubmit}
-          marginLeft={2}
-          paddingX={4}
-          height="80px"
-          width={"80px"}
+          ml={2}
+          px={4}
+          h="80px"
+          w="80px"
         >
-          쓰기
+          등록
         </Button>
       </Tooltip>
     </Box>

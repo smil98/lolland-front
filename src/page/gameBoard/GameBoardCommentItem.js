@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   Heading,
+  IconButton,
   Image,
   Text,
   Textarea,
@@ -13,6 +14,7 @@ import { LoginContext } from "../../component/LoginProvider";
 import axios from "axios";
 import {
   AddIcon,
+  CloseIcon,
   DeleteIcon,
   EditIcon,
   NotAllowedIcon,
@@ -75,119 +77,128 @@ export function GameBoardCommentItem({
   }
 
   return (
-    <Flex
-      justifyContent={"flex-start"}
-      alignItems={"center"}
-      ml={`${comment.depth * 20}px`}
-    >
-      <Image
-        borderRadius={"full"}
-        boxSize={"70px"}
-        src={comment.file_url}
-        alt="프로필 이미지"
-      ></Image>
-
-      <Box w={"100%"} ml={"10px"}>
-        <Flex justifyContent="space-between">
-          <Heading fontSize="1.2rem">{comment.member_id}</Heading>
-          <Text fontSize="1rem">{comment.ago}</Text>
-        </Flex>
-        <Flex justifyContent="space-between" alignItems="center">
-          <Box flex={1}>
-            <Text sx={{ whiteSpace: "pre-wrap" }} pt="2" fontSize="1rem">
-              {comment.comment_content}
+    <Box>
+      <Flex
+        justifyContent="flex-start"
+        alignItems="center"
+        ml={`${comment.depth * 20}px`}
+      >
+        <Image
+          borderRadius="full"
+          boxSize="50px"
+          src={comment.file_url}
+          alt="프로필 이미지"
+        />
+        <Box w="100%" ml="10px">
+          <Flex justifyContent="space-between">
+            <Text fontSize="md" fontWeight="bold">
+              {comment.member_id}
             </Text>
-            {isEditing && (
-              <Box>
+            <Text fontSize="md">{comment.ago}</Text>
+          </Flex>
+          <Flex justifyContent="space-between" alignItems="center">
+            <Box flex={1}>
+              <Text
+                sx={{ whiteSpace: "pre-wrap" }}
+                pt="2"
+                display={isEditing ? "none" : "block"}
+                fontSize="md"
+              >
+                {comment.comment_content}
+              </Text>
+              {isEditing && (
                 <Textarea
                   value={commentEdited}
                   onChange={(e) => setCommentEdited(e.target.value)}
                 />
-                <Button
-                  colorScheme="blue"
-                  isDisabled={isSubmitting}
-                  onClick={handleEditSubmit}
-                >
-                  수정 - 저장
-                </Button>
-              </Box>
-            )}
-
-            {isWriting && (
-              <Box>
-                <Textarea
-                  value={replyComment}
-                  onChange={(e) => setReplyComment(e.target.value)}
-                  placeholder={"댓글을 입력 해주세요."}
-                />
-                <Button
-                  colorScheme="blue"
-                  isDisabled={isSubmitting}
-                  onClick={handleDuplicateSubmit}
-                  글
-                >
-                  댓글-댓글 저장
-                </Button>
-              </Box>
-            )}
-          </Box>
-
-          <Box>
-            {isAuthenticated() && (
-              <>
-                {isWriting || (
-                  <Button
-                    size="xs"
-                    colorScheme="green"
-                    onClick={() => setIsWriting(true)}
-                  >
-                    <AddIcon />
-                  </Button>
-                )}
-                {isWriting && (
-                  <Button
-                    size="xs"
-                    colorScheme="gray"
-                    onClick={() => setIsWriting(false)}
-                  >
-                    <NotAllowedIcon />
-                  </Button>
-                )}
-              </>
-            )}
-          </Box>
-
-          {(hasAccess(comment.member_id) || isAdmin()) && (
-            <Box>
-              {isEditing || (
-                <Button
-                  size="xs"
-                  colorScheme="purple"
-                  onClick={() => setIsEditing(true)}
-                >
-                  <EditIcon />
-                </Button>
               )}
-              {isEditing && (
-                <Button
-                  size="xs"
-                  colorScheme="gray"
-                  onClick={() => setIsEditing(false)}
-                >
-                  <NotAllowedIcon />
-                </Button>
-              )}
+            </Box>
+            <Box display="flex" flexDir="column" ml={3}>
+              <Box display="flex">
+                {isAuthenticated() && (
+                  <>
+                    {isWriting ? (
+                      <IconButton
+                        size="sm"
+                        variant="ghost"
+                        colorScheme="gray"
+                        icon={<CloseIcon />}
+                        onClick={() => setIsWriting(false)}
+                      />
+                    ) : (
+                      <IconButton
+                        variant="ghost"
+                        size="sm"
+                        colorScheme="orange"
+                        onClick={() => setIsWriting(true)}
+                        icon={<AddIcon />}
+                      />
+                    )}
+                  </>
+                )}
+                {(hasAccess(comment.member_id) || isAdmin()) && (
+                  <>
+                    {isEditing || (
+                      <IconButton
+                        size="sm"
+                        variant="ghost"
+                        colorScheme="purple"
+                        icon={<EditIcon />}
+                        onClick={() => setIsEditing(true)}
+                      />
+                    )}
+                    {isEditing && (
+                      <IconButton
+                        size="sm"
+                        variant="ghost"
+                        colorScheme="gray"
+                        icon={<CloseIcon />}
+                        onClick={() => setIsEditing(false)}
+                      />
+                    )}
+                    <IconButton
+                      onClick={() => onDelete(comment.id)}
+                      size="sm"
+                      variant="ghost"
+                      icon={<DeleteIcon />}
+                      colorScheme="red"
+                    />
+                  </>
+                )}
+              </Box>
               <Button
-                onClick={() => onDelete(comment.id)}
-                size="xs"
-                colorScheme="red"
+                display={isEditing ? "block" : "none"}
+                colorScheme="purple"
+                variant="outline"
+                size="sm"
+                isDisabled={isSubmitting}
+                onClick={handleEditSubmit}
               >
-                <DeleteIcon />
+                수정 등록
               </Button>
             </Box>
-          )}
-        </Flex>
-      </Box>
-    </Flex>
+          </Flex>
+        </Box>
+      </Flex>
+      {isWriting && (
+        <Box display="flex" mt={5} ml="70px" gap={2}>
+          <Textarea
+            value={replyComment}
+            onChange={(e) => setReplyComment(e.target.value)}
+            placeholder="답글 입력"
+          />
+          <Button
+            w="70px"
+            h="80px"
+            colorScheme="orange"
+            isDisabled={isSubmitting}
+            onClick={handleDuplicateSubmit}
+            글
+          >
+            등록
+          </Button>
+        </Box>
+      )}
+    </Box>
   );
 }

@@ -395,7 +395,7 @@ function GameBoardList() {
                   >
                     추천 <FontAwesomeIcon icon={faCaretDown} />
                   </Th>
-                  <Th w="5%" pl="0" textAlign="center">
+                  <Th w="5%" textAlign="center">
                     분류
                   </Th>
                   <Th w="40%" colSpan={2} textAlign={"center"}>
@@ -403,7 +403,8 @@ function GameBoardList() {
                   </Th>
                   <Th
                     w="10%"
-                    cursor={"pointer"}
+                    cursor="pointer"
+                    textAlign="center"
                     onClick={() => {
                       setSortBy((prevSortBy) =>
                         prevSortBy === "board_count" ? "" : "board_count",
@@ -459,22 +460,19 @@ function GameBoardList() {
                         onClick={() => navigate("/gameboard/id/" + noticies.id)}
                         _hover={{ cursor: "pointer" }}
                       >
-                        <span style={{ marginLeft: "+10%" }}>
-                          {noticies.title}
-                        </span>
+                        {noticies.title}
                         {noticies.count_comment !== 0 && (
                           <Badge
-                            colorScheme={"green"}
+                            colorScheme="orange"
                             variant="outline"
                             mx={"1%"}
                           >
-                            <ChatIcon />
-                            {noticies.count_comment}
+                            <ChatIcon /> {noticies.count_comment}
                           </Badge>
                         )}
                         {noticies.countFile !== 0 && (
                           <Badge mx={"1%"}>
-                            {noticies.countFile}
+                            {noticies.countFile}{" "}
                             <FontAwesomeIcon icon={faImage} />
                           </Badge>
                         )}{" "}
@@ -498,12 +496,12 @@ function GameBoardList() {
                 {gameBoardList &&
                   gameBoardList.map((board) => (
                     <Tr key={board.id} borderRadius="10px">
-                      <Td w="10%" textAlign={"center"}>
+                      <Td w="10%" textAlign="center" alignItems="center">
                         <Badge
                           colorScheme="green"
                           variant="outline"
-                          mx={"2px"} // Adjusted spacing around Badge
-                          fontWeight={"bold"}
+                          mx="2px"
+                          fontWeight="bold"
                           bgColor={`rgba(0, 128, 0, ${board.count_like / 10})`}
                         >
                           {board.count_like}
@@ -518,27 +516,20 @@ function GameBoardList() {
                       <Td
                         w="40%"
                         colSpan={2}
-                        textAlign={"center"}
+                        textAlign="center"
+                        alignItems="center"
                         _hover={{ cursor: "pointer" }}
                         onClick={() => navigate("/gameboard/id/" + board.id)}
                       >
-                        <span style={{ marginLeft: "+10%" }}>
-                          {board.title}
-                        </span>
+                        {board.title}
                         {board.count_comment !== 0 && (
-                          <Badge
-                            colorScheme={"green"}
-                            variant="outline"
-                            mx={"1%"}
-                          >
-                            <ChatIcon />
-                            {board.count_comment}
+                          <Badge colorScheme="orange" variant="outline" ml={1}>
+                            <ChatIcon /> {board.count_comment}
                           </Badge>
                         )}{" "}
                         {board.countFile !== 0 && (
-                          <Badge mx={"1%"}>
-                            <FontAwesomeIcon icon={faImage} />
-                            {board.countFile}
+                          <Badge>
+                            <FontAwesomeIcon icon={faImage} /> {board.countFile}
                           </Badge>
                         )}
                       </Td>

@@ -50,13 +50,13 @@ export function GameBoardListArticle() {
         <Tabs colorScheme="orange" isFitted variant="enclosed">
           <TabList mb={5}>
             <Tab fontSize="md" fontWeight="bold">
-              PC 게임
+              PC
             </Tab>
             <Tab fontSize="md" fontWeight="bold">
-              Console 게임
+              Console
             </Tab>
             <Tab fontSize="md" fontWeight="bold">
-              Mobile 게임
+              Mobile
             </Tab>
           </TabList>
           <TabPanels>

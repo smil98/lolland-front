@@ -94,20 +94,20 @@ function LikeContainer({ like, onClick }) {
   return (
     <HStack spacing={2} align="center">
       <Button
-        variant="outline"
-        colorScheme="blue"
-        size="md"
+        variant={like.like ? "outline" : "solid"}
+        colorScheme={like.like ? "blackAlpha" : "orange"}
+        size="sm"
         onClick={onClick}
         isDisabled={!isAuthenticated()}
+        leftIcon={
+          like.like ? (
+            <FontAwesomeIcon icon={faThumbsDown} />
+          ) : (
+            <FontAwesomeIcon icon={faThumbsUp} />
+          )
+        }
       >
-        {like.like ? (
-          <FontAwesomeIcon icon={faThumbsUp} />
-        ) : (
-          <FontAwesomeIcon icon={faThumbsDown} />
-        )}
-        {"  "}
-        추천 {"  "}
-        {like.countLike}
+        {like.like ? "비추천" : "추천"} {like.countLike}
       </Button>
     </HStack>
   );
@@ -181,6 +181,7 @@ export function GameBoardView() {
         <IconButton
           variant="ghost"
           colorScheme="twitter"
+          size="lg"
           onClick={() => navigate(-1)}
           icon={<FontAwesomeIcon icon={faChevronLeft} />}
         />
@@ -188,11 +189,13 @@ export function GameBoardView() {
           <ButtonGroup variant="ghost">
             <IconButton
               colorScheme="orange"
+              size="lg"
               icon={<FontAwesomeIcon icon={faPenNib} />}
               onClick={() => navigate(`/gameboard/edit/${id}`)}
             />
             <IconButton
               colorScheme="blackAlpha"
+              size="lg"
               icon={<FontAwesomeIcon icon={faTrashCan} />}
               onClick={handleDelete}
             />
@@ -228,8 +231,8 @@ export function GameBoardView() {
         w="100%"
         justify="space-between"
         borderTop="1px solid #E1E1E1"
-        alignItems="center"
         borderBottom="1px solid #E1E1E1"
+        alignItems="center"
         py={3}
         my={3}
       >

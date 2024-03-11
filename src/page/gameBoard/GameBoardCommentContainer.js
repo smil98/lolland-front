@@ -66,7 +66,7 @@ export function GameBoardCommentContainer() {
   }
 
   return (
-    <Box w={"100%"} my={"50px"}>
+    <Box w="100%" my="50px">
       <GameBoardCommentForm
         isSubmitting={isSubmitting}
         onSubmit={handleSubmit}
