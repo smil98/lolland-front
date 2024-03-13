@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Center,
   Flex,
   Heading,
   IconButton,
@@ -39,17 +40,21 @@ function LikeContainer({ like, onClick }) {
     return <Spinner />;
   }
   return (
-    <IconButton
-      colorScheme={like.gearLike ? "gray" : "blue"}
+    <Button
+      mt={5}
+      variant={like.gearLike ? "outline" : "solid"}
+      colorScheme={like.gearLike ? "gray" : "orange"}
       onClick={onClick}
-      icon={
+      leftIcon={
         like.gearLike ? (
           <FontAwesomeIcon icon={faThumbsDown} />
         ) : (
           <FontAwesomeIcon icon={faThumbsUp} />
         )
       }
-    />
+    >
+      {like.gearLike ? "비추천" : "추천"}
+    </Button>
   );
 }
 
@@ -124,21 +129,21 @@ export function GearView() {
           </Box>
         )}
       </Box>
-      <Box w={{ base: "95%", md: "70%" }} mx="auto" mt={5}>
+      <Box w={{ base: "90%", md: "70%" }} mx="auto" mt={5}>
         <Heading size="lg" mt={10}>
           {gearboard.gear_title}
         </Heading>
-        <Flex w="100%" justify="space-between" alignItems="center" my={3}>
+        <Tag variant="undefined" size="md" my={3}>
+          <Avatar
+            src={gearboard.file_url}
+            size="xs"
+            mr={2}
+            name={gearboard.file_name}
+          />
+          <TagLabel>{gearboard.member_name}</TagLabel>
+        </Tag>
+        <Flex w="100%" justify="space-between" alignItems="center" mb={3}>
           <Box>
-            <Tag variant="undefined" size="md">
-              <Avatar
-                src={gearboard.file_url}
-                size="xs"
-                mr={2}
-                name={gearboard.file_name}
-              />
-              <TagLabel>{gearboard.member_name}</TagLabel>
-            </Tag>
             <Tag variant="undefined" size="md" color="gray">
               <TagLeftIcon as={FontAwesomeIcon} icon={faClock} />
               <TagLabel>
@@ -170,23 +175,20 @@ export function GearView() {
               </TagLabel>
             </Tag>
           </Box>
-          <ButtonGroup variant="ghost" size="md">
-            <LikeContainer like={like} onClick={handleLike} />
-            {(hasAccess(gearboard.member_id) || isAdmin()) && (
-              <>
-                <IconButton
-                  colorScheme="orange"
-                  icon={<FontAwesomeIcon icon={faPenNib} />}
-                  onClick={() => navigate("/gearlist/edit/" + gear_id)}
-                />
-                <IconButton
-                  colorScheme="gray"
-                  icon={<FontAwesomeIcon icon={faTrashCan} />}
-                  onClick={handleRemove}
-                />
-              </>
-            )}
-          </ButtonGroup>
+          {(hasAccess(gearboard.member_id) || isAdmin()) && (
+            <ButtonGroup variant="ghost" size="md">
+              <IconButton
+                colorScheme="orange"
+                icon={<FontAwesomeIcon icon={faPenNib} />}
+                onClick={() => navigate("/gearlist/edit/" + gear_id)}
+              />
+              <IconButton
+                colorScheme="gray"
+                icon={<FontAwesomeIcon icon={faTrashCan} />}
+                onClick={handleRemove}
+              />
+            </ButtonGroup>
+          )}
         </Flex>
         <Text whiteSpace="pre-wrap" fontSize="md" lineHeight="30px" my={10}>
           {gearboard.gear_content}
@@ -197,7 +199,9 @@ export function GearView() {
             <Image width="100%" src={file.url} alt={file.name} />
           </Box>
         ))}
-
+        <Center>
+          <LikeContainer like={like} onClick={handleLike} />
+        </Center>
         {/*  게시물 작성자  */}
         <Flex
           my={10}
