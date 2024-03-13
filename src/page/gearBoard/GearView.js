@@ -82,8 +82,8 @@ export function GearView() {
 
   function handleRemove() {
     axios.delete("/api/gearboard/remove/" + gear_id).then(() => {
-      toast({ description: "삭제되었습니다.", status: "error" });
-      navigate("/gearlist");
+      toast({ description: "삭제되었습니다.", status: "success" });
+      navigate("/gearlistlayout");
     });
   }
 

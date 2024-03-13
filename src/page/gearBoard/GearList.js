@@ -65,10 +65,10 @@ export function GearList({ category }) {
                     <TagLabel>{item.countFile}</TagLabel>
                   </Tag>
                 )}
-                {item.commnetcount > 0 && (
+                {item.commentcount > 0 && (
                   <Tag colorScheme="orange" size="sm">
                     <TagLeftIcon as={FontAwesomeIcon} icon={faComment} />
-                    <TagLabel> {item.commnetcount}</TagLabel>
+                    <TagLabel> {item.commentcount}</TagLabel>
                   </Tag>
                 )}
               </Text>
