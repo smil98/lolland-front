@@ -66,6 +66,7 @@ export function GearListAll() {
                 border="1px solid #E1E1E1"
                 onClick={() => navigate("/gearlist/gear_id/" + item.gear_id)}
               >
+                <Badge>{item.category}</Badge>
                 <Text
                   fontSize="md"
                   fontWeight="bold"

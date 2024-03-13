@@ -183,7 +183,10 @@ export function GearListlayout() {
               </Tab>
               <Tab
                 fontSize={{ base: "xs", md: "xs", lg: "md" }}
-                onClick={() => navigate("/gearboard")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate("/gearboard");
+                }}
               >
                 글쓰기
               </Tab>

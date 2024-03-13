@@ -52,6 +52,7 @@ export function GearList({ category }) {
           <StackItem key={item.gear_id}>
             <Box
               p={5}
+              _hover={{ bgColor: "#E1E1E1" }}
               border="1px solid #E1E1E1"
               onClick={() => navigate("/gearlist/gear_id/" + item.gear_id)}
             >

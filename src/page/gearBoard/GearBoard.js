@@ -6,13 +6,13 @@ import {
   FormLabel,
   Input,
   Select,
+  Text,
   Textarea,
   useToast,
-  VStack,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider";
 
 export function GearBoard() {
@@ -54,40 +54,39 @@ export function GearBoard() {
   }
 
   return (
-    <Box w={"80%"} textAlign={"center"} m={"0 auto"}>
-      <br />
-      <h1>게임 장비 게시판</h1>
-      <VStack spacing={2} align="start">
-        <FormControl>
-          <FormLabel>카테고리</FormLabel>
-          <Select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-      </VStack>
-      <FormControl>
+    <Box w={{ base: "95%", md: "80%" }} textAlign="center" mx="auto" mt={10}>
+      <Text className="specialHeadings" fontWeight="bold" fontSize="2xl" mb={5}>
+        게임 장비 게시글 작성
+      </Text>
+      <FormControl mb={5}>
+        <FormLabel>카테고리</FormLabel>
+        <Select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl mb={5}>
         <FormLabel>제목</FormLabel>
         <Input
           value={gear_title}
           onChange={(e) => setGear_title(e.target.value)}
         />
       </FormControl>
-      <FormControl>
-        <FormLabel>컨텐츠</FormLabel>
+      <FormControl mb={5}>
+        <FormLabel>내용</FormLabel>
         <Textarea
           style={{ height: "200px" }}
           value={gear_content}
           onChange={(e) => setGear_content(e.target.value)}
         />
       </FormControl>
-      <FormControl>
+      <FormControl mb={5}>
         <FormLabel>이미지</FormLabel>
         <Input
           type="file"
@@ -95,16 +94,16 @@ export function GearBoard() {
           accept="image/*"
           onChange={(e) => setUploadFiles(e.target.files)}
         />
-        <br />
         <FormHelperText>
-          한 개 파일은 1MB 이내, 총 용량으 10MB 이내로 첨부 하세요.
+          파일 당 1MB 이내, 총 용량은 10MB 이내로 첨부 하세요.
         </FormHelperText>
       </FormControl>
-      <br />
       <Button
+        mt={5}
         isDisabled={isSubmitting}
         onClick={handleSave}
-        colorScheme={"orange"}
+        colorScheme="orange"
+        w="full"
       >
         글쓰기
       </Button>
