@@ -29,7 +29,7 @@ import { GearListlayout } from "./page/gearBoard/GearListlayout";
 import { MemberAddressWrite } from "./page/member/MemberViewPage/MemberAddressWrite";
 import { MemberEdit } from "./page/member/MemberViewPage/MemberEdit";
 import LoginProvider from "./component/LoginProvider";
-import { ProductLike } from "./page/productLike/ProductLike";
+import { ProductLike } from "./page/product/ProductLike";
 import { MemberFindId } from "./page/member/MemberFindId";
 import { MemberFindPassword } from "./page/member/MemberFindPassword";
 import { PasswordEdit } from "./page/member/MemberViewPage/PasswordEdit";

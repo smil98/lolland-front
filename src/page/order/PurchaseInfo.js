@@ -12,6 +12,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
@@ -20,9 +21,13 @@ import {
   List,
   ListItem,
   SimpleGrid,
+  Stack,
+  StackDivider,
   Tag,
+  TagLabel,
   Text,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -155,37 +160,34 @@ export function PurchaseInfo() {
     <Card mx={{ base: "0", md: "15%" }}>
       {orderInfo && (
         <>
-          <CardHeader p={10}>
+          <CardHeader>
             <Text
               textAlign="left"
-              mb={5}
               fontSize="2xl"
               fontWeight="bold"
               className="specialHeadings"
             >
               결제 내역 상세정보
             </Text>
-            <HStack>
+            <Text fontSize="lg" textAlign="left" alignItems="center" mt={3}>
               <Tag
                 colorScheme={getStatusStyle(orderInfo.order_status).colorScheme}
                 variant="outline"
                 borderRadius="full"
-                px={3}
                 mr={3}
-                minW="80px"
               >
-                {getStatusStyle(orderInfo.order_status).content}
+                <TagLabel>
+                  {getStatusStyle(orderInfo.order_status).content}
+                </TagLabel>
               </Tag>
-              <Text as="span" fontSize="lg" textAlign="left">
-                {orderInfo.order_name}
-              </Text>
-            </HStack>
+              {orderInfo.order_name}
+            </Text>
           </CardHeader>
           <CardBody>
             <SimpleGrid
               columns={2}
-              spacing={10}
-              px={10}
+              spacing={5}
+              px={3}
               gridTemplateColumns="100px 1fr"
             >
               <Box {...labelStyles}>주문명</Box>

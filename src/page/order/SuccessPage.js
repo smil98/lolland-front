@@ -3,8 +3,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import {
   Box,
+  Button,
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   Heading,
   Text,
@@ -55,12 +57,18 @@ function SuccessPage() {
   }, []);
 
   return (
-    <Card mx="35%" my="5%" shadow="md">
+    <Card
+      mx="auto"
+      w={{ base: "90%", md: "50%", lg: "40%", xl: "30%" }}
+      my="5%"
+      maxW="450px"
+      shadow="md"
+    >
       <CardHeader textAlign="center">
-        <Text color="#6FA7DD" fontSize="6xl">
+        <Text color="#6FA7DD" as="span" fontSize="6xl">
           <FontAwesomeIcon icon={faCircleCheck} />
         </Text>
-        <Heading>결제 되었습니다</Heading>
+        <Heading>결제 완료</Heading>
       </CardHeader>
       <CardBody my={5}>
         <Box bgColor="#E6F0FC" color="#086DDD" p={3} borderRadius={10}>
@@ -71,24 +79,16 @@ function SuccessPage() {
             {searchParams.get("orderId")}
           </Text>
           <Text fontSize="sm">
-            <Text as="span" fontWeight="bold">
-              결제 금액
-            </Text>{" "}
-            {Number(searchParams.get("amount").toLocaleString())}원
+            <Text as="span" fontWeight="bold" mr={2}>
+              결제 금액:
+            </Text>
+            {Number(searchParams.get("amount")).toLocaleString()}원
           </Text>
         </Box>
       </CardBody>
-
-      {/*<div className="result wrapper">*/}
-      {/*  <div className="box_section">*/}
-      {/*    <h2>결제 성공</h2>*/}
-      {/*    <p>{`주문번호: ${searchParams.get("orderId")}`}</p>*/}
-      {/*    <p>{`결제 금액: ${Number(*/}
-      {/*      searchParams.get("amount"),*/}
-      {/*    ).toLocaleString()}원`}</p>*/}
-      {/*    <p>{`paymentKey: ${searchParams.get("paymentKey")}`}</p>*/}
-      {/*  </div>*/}
-      {/*</div>*/}
+      <CardFooter display="flex" justifyContent="center">
+        <Button onClick={() => navigate("/")}>홈으로 돌아가기</Button>
+      </CardFooter>
     </Card>
   );
 }

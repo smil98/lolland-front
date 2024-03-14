@@ -375,38 +375,46 @@ export function HomeBody() {
               {mostReviewedProducts.map((product) => (
                 <SwiperSlide
                   key={product.product_id}
-                  style={{
-                    alignItems: "center",
-                    textAlign: "left",
-                    justifyContent: "center",
-                  }}
+                  // style={{
+                  //   alignItems: "center",
+                  //   textAlign: "left",
+                  //   justifyContent: "center",
+                  // }}
                   onClick={() => navigate("/product/" + product.product_id)}
                 >
-                  {product.productImgs && product.productImgs.length > 0 && (
-                    <Image
-                      src={product.productImgs[0].main_img_uri}
-                      alt="Product Image"
-                      mx="auto"
-                      maxW="300px"
-                      maxH="300px"
-                      mb={5}
-                    />
-                  )}
-                  <Text opacity={0.7} fontSize="md">
-                    [{product.company_name}]
-                  </Text>
-                  <Text fontSize="lg" className="labels">
-                    {product.product_name}
-                  </Text>
-                  <Text
-                    fontWeight="bold"
-                    color="orange"
-                    className="specialHeadings"
-                    fontSize="2xl"
-                    mt={5}
+                  <Box
+                    textAlign="center"
+                    flexDirection="column"
+                    alignItems="center"
                   >
-                    {product.product_price.toLocaleString()}원
-                  </Text>
+                    {product.productImgs && product.productImgs.length > 0 && (
+                      <Image
+                        src={product.productImgs[0].main_img_uri}
+                        alt="Product Image"
+                        mx="auto"
+                        maxW="300px"
+                        maxH="300px"
+                        mb={5}
+                      />
+                    )}
+                    <Box textAlign="left">
+                      <Text opacity={0.7} fontSize="md">
+                        [{product.company_name}]
+                      </Text>
+                      <Text fontSize="lg" className="labels">
+                        {product.product_name}
+                      </Text>
+                      <Text
+                        fontWeight="bold"
+                        color="orange"
+                        className="specialHeadings"
+                        fontSize="2xl"
+                        mt={5}
+                      >
+                        {product.product_price.toLocaleString()}원
+                      </Text>
+                    </Box>
+                  </Box>
                 </SwiperSlide>
               ))}
             </Swiper>

@@ -18,14 +18,32 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function FailPage(props) {
   const [searchParams] = useSearchParams();
-  const errorCode = searchParams.get("code");
   const errorMessage = searchParams.get("message");
   const navigate = useNavigate();
 
-  ///fail?code={ERROR_CODE}&message={ERROR_MESSAGE}
-  // &orderId={ORDER_ID}
+  let code = "";
+  let message = "";
+
+  try {
+    const startIndex = errorMessage.indexOf("{");
+    const endIndex = errorMessage.lastIndexOf("}");
+    const jsonString = errorMessage.substring(startIndex, endIndex + 1);
+    const errorData = JSON.parse(jsonString);
+    code = errorData.code || "";
+    message = errorData.message || "";
+  } catch (error) {
+    console.error("Error parsing error message:", error);
+    message = errorMessage;
+  }
+
   return (
-    <Card mx="35%" my="5%" shadow="md">
+    <Card
+      mx="auto"
+      w={{ base: "90%", md: "50%", lg: "40%", xl: "30%" }}
+      my="5%"
+      maxW="450px"
+      shadow="md"
+    >
       <CardHeader textAlign="center">
         <Text color="#EC7500" fontSize="6xl">
           <FontAwesomeIcon icon={faTriangleExclamation} />
@@ -34,16 +52,23 @@ function FailPage(props) {
       </CardHeader>
       <CardBody my={5}>
         <Box bgColor="#FDF1E5" color="#EC7500" p={3} borderRadius={10}>
-          <Text fontSize="sm" fontWeight="bold">
-            <Text as="span">ERROR CODE</Text> {errorCode}
+          <Text fontSize="sm">
+            ERROR CODE:
+            <Text as="span" fontWeight="bold" ml={2}>
+              {code}
+            </Text>
           </Text>
           <Text fontSize="sm">
-            <Text as="span">실패 사유:</Text> {errorMessage}
+            실패 사유:{" "}
+            <Text as="span" fontWeight="bold">
+              {message}
+            </Text>
           </Text>
         </Box>
       </CardBody>
-      <CardFooter display="flex" justifyContent="center">
+      <CardFooter display="flex" justifyContent="center" gap={3}>
         <Button onClick={() => navigate("/")}>홈으로 돌아가기</Button>
+        <Button onClick={() => navigate("/pay")}>결제창으로 돌아가기</Button>
       </CardFooter>
     </Card>
   );

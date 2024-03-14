@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Card,
+  CardBody,
   Divider,
   Flex,
   FormControl,
@@ -18,7 +19,11 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
+  StackDivider,
+  StackItem,
   Table,
+  TableContainer,
   Tbody,
   Td,
   Text,
@@ -351,101 +356,202 @@ export function ProductPay() {
     }
   }
 
+  const orderInfoStyle = {
+    fontSize: "md",
+    w: "full",
+    display: "flex",
+    justifyContent: "space-between",
+  };
+
   return (
-    <Box my={10} mx="10%" justifyContent={"center"} alignItems={"center"}>
-      <Box>
-        <Heading size="lg" fontWeight="bold" pl={5} py={5}>
-          <Text as="span" fontSize="3xl" mr={5}>
+    <Box my={10} mx="auto" justifyContent="center" alignItems="center">
+      <Box w="full">
+        <Text
+          fontSize="2xl"
+          fontWeight="bold"
+          p={5}
+          w={{ base: "full", md: "95%" }}
+          mx="auto"
+        >
+          <Text as="span" fontSize="2xl" mr={5}>
             <FontAwesomeIcon icon={faCreditCard} />
           </Text>
           {purchaseInfo.length > 0 ? orderName : ""}
-        </Heading>
-        <Table>
-          <Thead>
-            <Tr>
-              <Th textAlign={"center"}>상품 이미지</Th>
-              <Th textAlign={"center"}>상품명</Th>
-              <Th textAlign={"center"}>옵션명</Th>
-              <Th textAlign={"center"}>총 가격</Th>
-              <Th textAlign={"center"}>수량</Th>
-              <Th textAlign="center">취소</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {purchaseInfo.length > 0 ? (
-              purchaseInfo.map((group, index) => (
-                <Tr key={index}>
-                  <Td
-                    display="flex"
-                    justifyContent="center"
-                    onClick={() => navigate(`/product/${group.productId}`)}
-                  >
-                    {group.mainImgUrl && (
-                      <Image
-                        src={group.mainImgUrl}
-                        alt="상품 이미지"
-                        boxSize="70px"
-                      />
-                    )}
-                  </Td>
-                  <Td textAlign="center" whiteSpace="pre-wrap">
-                    {group.productName}
-                  </Td>
-                  <Td textAlign="center">
-                    {group.options.map((option, optionIndex) => (
-                      <div key={optionIndex}>
-                        {option.optionName} ({option.quantity}개)
-                      </div>
-                    ))}
-                  </Td>
-                  <Td textAlign="center">
-                    {group.options
-                      .reduce(
-                        (total, option) =>
-                          total + option.price * option.quantity,
-                        0,
-                      )
-                      .toLocaleString("ko-KR")}{" "}
-                    원
-                  </Td>
-                  <Td textAlign="center">
-                    {group.options.reduce(
-                      (total, option) => total + option.quantity,
-                      0,
-                    )}
-                  </Td>
-                  <Td textAlign="center" onClick={(e) => e.stopPropagation()}>
-                    <IconButton
-                      aria-label="delete"
-                      icon={<FontAwesomeIcon icon={faXmark} />}
-                      colorScheme="red"
-                      variant="ghost"
-                      onClick={() => handleDelete(index)}
+        </Text>
+        {/* ----------- 작은 화면용 상품 목록 -----------*/}
+        <Stack
+          display={{ base: "block", md: "none", lg: "none" }}
+          w="95%"
+          spacing={5}
+          divider={<StackDivider />}
+          mx="auto"
+          alignItems="center"
+        >
+          {purchaseInfo.length > 0 ? (
+            purchaseInfo.map((group, index) => (
+              <Box
+                key={index}
+                w="full"
+                alignItems="center"
+                py={3}
+                px={5}
+                display="flex"
+                justifyContent="space-between"
+                gap={3}
+              >
+                <Flex gap={3} alignItems="center">
+                  {group.mainImgUrl && (
+                    <Image
+                      src={group.mainImgUrl}
+                      alt="상품 이미지"
+                      boxSize="70px"
                     />
+                  )}
+                  <Flex flexDir="column" p={2}>
+                    <Text>
+                      {group.productName}{" "}
+                      <Text as="span">
+                        {group.options.reduce(
+                          (total, option) => total + option.quantity,
+                          0,
+                        )}
+                        개
+                      </Text>
+                    </Text>
+                    {group.options.map((option, optionIndex) => (
+                      <Text key={optionIndex} color="gray" fontSize="xs">
+                        - {option.optionName} ({option.quantity}개)
+                      </Text>
+                    ))}
+                    <Text color="orange" fontWeight="bold">
+                      {group.options
+                        .reduce(
+                          (total, option) =>
+                            total + option.price * option.quantity,
+                          0,
+                        )
+                        .toLocaleString("ko-KR")}{" "}
+                      원
+                    </Text>
+                  </Flex>
+                </Flex>
+                <IconButton
+                  aria-label="delete"
+                  icon={<FontAwesomeIcon icon={faXmark} />}
+                  colorScheme="red"
+                  variant="ghost"
+                  onClick={() => handleDelete(index)}
+                />
+              </Box>
+            ))
+          ) : (
+            <Box p={5} textAlign="center" alignItems="center">
+              선택한 상품이 없습니다
+            </Box>
+          )}
+        </Stack>
+        {/* ----------- 큰 화면용 상품 목록 -----------*/}
+        <TableContainer
+          display={{ base: "none", md: "block", lg: "block" }}
+          w="90%"
+          mx="auto"
+        >
+          <Table>
+            <Thead>
+              <Tr>
+                <Th textAlign="center">상품 이미지</Th>
+                <Th textAlign="center">상품명</Th>
+                <Th textAlign="center">옵션명</Th>
+                <Th textAlign="center">총 가격</Th>
+                <Th textAlign="center">수량</Th>
+                <Th textAlign="center">취소</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {purchaseInfo.length > 0 ? (
+                purchaseInfo.map((group, index) => (
+                  <Tr key={index}>
+                    <Td
+                      display="flex"
+                      justifyContent="center"
+                      onClick={() => navigate(`/product/${group.productId}`)}
+                    >
+                      {group.mainImgUrl && (
+                        <Image
+                          src={group.mainImgUrl}
+                          alt="상품 이미지"
+                          boxSize="70px"
+                        />
+                      )}
+                    </Td>
+                    <Td textAlign="center" whiteSpace="pre-wrap">
+                      {group.productName}
+                    </Td>
+                    <Td textAlign="center">
+                      {group.options.map((option, optionIndex) => (
+                        <div key={optionIndex}>
+                          {option.optionName} ({option.quantity}개)
+                        </div>
+                      ))}
+                    </Td>
+                    <Td textAlign="center">
+                      {group.options
+                        .reduce(
+                          (total, option) =>
+                            total + option.price * option.quantity,
+                          0,
+                        )
+                        .toLocaleString("ko-KR")}{" "}
+                      원
+                    </Td>
+                    <Td textAlign="center">
+                      {group.options.reduce(
+                        (total, option) => total + option.quantity,
+                        0,
+                      )}
+                    </Td>
+                    <Td textAlign="center" onClick={(e) => e.stopPropagation()}>
+                      <IconButton
+                        aria-label="delete"
+                        icon={<FontAwesomeIcon icon={faXmark} />}
+                        colorScheme="red"
+                        variant="ghost"
+                        onClick={() => handleDelete(index)}
+                      />
+                    </Td>
+                  </Tr>
+                ))
+              ) : (
+                <Tr h="xs">
+                  <Td
+                    colSpan={6}
+                    textAlign="center"
+                    fontSize="md"
+                    opacity={0.4}
+                  >
+                    주문한 상품이 없습니다
                   </Td>
                 </Tr>
-              ))
-            ) : (
-              <Tr h="xs">
-                <Td colSpan={6} textAlign="center" fontSize="md" opacity={0.4}>
-                  주문한 상품이 없습니다
-                </Td>
-              </Tr>
-            )}
-          </Tbody>
-        </Table>
+              )}
+            </Tbody>
+          </Table>
+        </TableContainer>
       </Box>
       {/* ------------------------------------- 배송 및 주문자 정보 ------------------------------------- */}
       <Box
         mt={10}
-        justifyContent={"space-evenly"}
-        display={"flex"}
-        alignItems={"top"}
+        display="flex"
+        flexDir={{ base: "column", md: "row" }}
+        justifyContent="space-evenly"
+        alignItems="top"
       >
         {/* ------------------------------------- 배송정보 ------------------------------------- */}
         {purchaseInfo.length > 0 && (
           <>
-            <Card w={"50%"} shadow="md">
+            <Card
+              w={{ base: "100%", md: "50%" }}
+              shadow={{ base: "none", md: "md" }}
+            >
               <VStack p={5} spacing={5} align="stretch">
                 <Box>
                   <Heading size="lg" textAlign="center">
@@ -617,76 +723,76 @@ export function ProductPay() {
             </Card>
 
             {/* ------------------------------------- 주문자 정보 ------------------------------------- */}
-            <Card h={"100%"} w={"30%"}>
-              <VStack shadow="md" p={5} spacing={5} align="stretch">
+            <Card
+              h={"100%"}
+              w={{ base: "100%", md: "40%" }}
+              shadow={{ base: "none", md: "md" }}
+            >
+              <CardBody p={5}>
                 <Heading size="lg" textAlign="center">
                   주문자 정보
                 </Heading>
-
-                <VStack spacing={2} my={3}>
-                  <Flex w="full" justifyContent="space-between">
-                    <Text as="span" fontSize="md">
-                      주문자명
-                    </Text>
-                    <Text as="span" fontSize="md" textAlign={"flex-start"}>
-                      {userInfo.orderMember}
-                    </Text>
-                  </Flex>
-
-                  <Flex w="full" justifyContent="space-between">
-                    <Text as="span" fontSize="md">
-                      연락처
-                    </Text>
-                    <Text as="span" fontSize="md" textAlign={"flex-start"}>
-                      {contactFirst} - {contactMiddle} - {contactLast}
-                    </Text>
-                  </Flex>
-
-                  <Flex w="full" justifyContent="space-between">
-                    <Text as="span" fontSize="md">
-                      이메일
-                    </Text>
-                    <Text as="span" fontSize="md" textAlign={"flex-start"}>
-                      {userInfo.email || "이메일 주소를 입력해주세요."}
-                    </Text>
-                  </Flex>
-                </VStack>
-
-                <Divider variant="dashed" color="#EEEEEE" borderWidth="1px" />
-
+                <Text {...orderInfoStyle} mt={5}>
+                  주문자명
+                  <Text as="span">{userInfo.orderMember}</Text>
+                </Text>
+                <Text {...orderInfoStyle} my={3}>
+                  연락처
+                  <Text as="span">
+                    {contactFirst} - {contactMiddle} - {contactLast}
+                  </Text>
+                </Text>
+                <Text {...orderInfoStyle}>
+                  이메일
+                  <Text as="span">
+                    {userInfo.email || "이메일 주소를 입력해주세요."}
+                  </Text>
+                </Text>
+                <Divider
+                  variant="dashed"
+                  color="#EEEEEE"
+                  borderWidth="1px"
+                  my={5}
+                />
                 <Heading size="lg" textAlign="center">
                   결제 정보
                 </Heading>
-                <VStack spacing={2}>
-                  <Flex w="full" justifyContent="space-between">
-                    <Text fontSize="md">총 상품금액</Text>
-                    <Text fontSize="md">
-                      {purchaseInfo ? totalPrice.toLocaleString("ko-KR") : "0"}
-                      원
-                    </Text>
-                  </Flex>
-                  <Flex w="full" justifyContent="space-between">
-                    <Text fontSize="md">총 배송비</Text>
-                    <Text fontSize="md">
-                      {shippingFee.toLocaleString("kr-KR")}원
-                    </Text>
-                  </Flex>
-                </VStack>
-
-                <Divider variant="dashed" color="#EEEEEE" borderWidth="1px" />
-                <Flex justifyContent="space-between" my={2}>
-                  <Heading size="md">결제 금액</Heading>
-                  <Heading size="md" color="orange">
+                <Text {...orderInfoStyle} mt={5} mb={2}>
+                  총 상품금액
+                  <Text as="span">
+                    {purchaseInfo ? totalPrice.toLocaleString("ko-KR") : "0"}원
+                  </Text>
+                </Text>{" "}
+                <Text {...orderInfoStyle}>
+                  총 배송비
+                  <Text as="span">{shippingFee.toLocaleString("kr-KR")}원</Text>
+                </Text>
+                <Divider
+                  variant="dashed"
+                  color="#EEEEEE"
+                  borderWidth="1px"
+                  my={5}
+                />
+                <Heading
+                  size="md"
+                  display="flex"
+                  justifyContent="space-between"
+                  mt={3}
+                  mb={5}
+                >
+                  결제 금액
+                  <Heading size="md" as="span" color="orange">
                     {purchaseInfo
                       ? (totalPrice + shippingFee).toLocaleString("ko-Kr")
                       : 0}
                     원
                   </Heading>
-                </Flex>
+                </Heading>
                 <Button
                   background={"black"}
                   color={"white"}
                   size="lg"
+                  w="full"
                   _hover={{ color: "black", bg: "#eeeeee" }}
                   onClick={() => {
                     if (isAuthenticated()) {
@@ -706,7 +812,7 @@ export function ProductPay() {
                 >
                   결제하기
                 </Button>
-              </VStack>
+              </CardBody>
             </Card>
           </>
         )}
