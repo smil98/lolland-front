@@ -502,6 +502,7 @@ export function QnaView({
                               </>
                             ) : (
                               <IconButton
+                                display={qna.answer_content ? "none" : "block"}
                                 icon={<FontAwesomeIcon icon={faPenToSquare} />}
                                 variant="ghost"
                                 colorScheme="blackAlpha"
@@ -666,6 +667,11 @@ export function QnaView({
                                             <FontAwesomeIcon
                                               icon={faPenToSquare}
                                             />
+                                          }
+                                          display={
+                                            qna.answer_content
+                                              ? "none"
+                                              : "block"
                                           }
                                           variant="ghost"
                                           colorScheme="blackAlpha"

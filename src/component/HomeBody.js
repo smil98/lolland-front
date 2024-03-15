@@ -196,21 +196,6 @@ export function HomeBody() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // const menuStyle = {
-  //   position: "fixed",
-  //   bottom: { base: 5, md: 120 },
-  //   right: { base: "15%", md: 10, lg: 5, xl: 5 },
-  //   zIndex: 10,
-  //   padding: "4px",
-  //   backgroundColor: "rgba(255, 255, 255, 0.7)",
-  //   boxShadow: "base",
-  //   border: "1px solid #E1E1E1",
-  //   maxW: "sm",
-  //   overflow: "hidden",
-  //   borderRadius: "15px",
-  //   transition: "top 0.3s ease-in-out",
-  // };
-
   const menuStyle = {
     position: "fixed",
     bottom: isSmallScreen ? { base: 5, md: "50%" } : { base: 5, md: 120 },
@@ -339,7 +324,7 @@ export function HomeBody() {
         w="90%"
         display={{ base: "normal", md: "flex" }}
         column={{ md: 1, lg: 2, xl: 2 }}
-        spacing={10}
+        spacing={5}
         mt={-10}
       >
         <Box border="1px solid #E1E1E1" w={{ base: "100%", md: "30%" }} p={5}>

@@ -34,10 +34,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LoginContext } from "../../component/LoginProvider";
+import { useImmer } from "use-immer";
 
 function LikeContainer({ like, onClick }) {
   if (like === null) {
-    return <Spinner />;
+    return <Spinner color="orange" />;
   }
   return (
     <Button
@@ -60,23 +61,35 @@ function LikeContainer({ like, onClick }) {
 
 export function GearView() {
   const { gear_id } = useParams();
-  const [gearboard, setGearboard] = useState(null);
+  const [gearBoard, setGearBoard] = useState(null);
+  const [commentCount, updateCommentCount] = useImmer({ commentcount: 0 });
   const toast = useToast();
   const navigate = useNavigate();
   const [like, setLike] = useState(null);
   const { isAuthenticated, hasAccess, isAdmin } = useContext(LoginContext);
 
   useEffect(() => {
+    console.log("useEffect for GearView triggered");
     axios
-      .get("/api/gearboard/gear_id/" + gear_id)
-      .then((response) => setGearboard(response.data));
+      .get(`/api/gearboard/gear_id/${gear_id}`)
+      .then((response) => {
+        const { commentcount, ...gearDataWithoutCommentCount } = response.data;
+        setGearBoard(gearDataWithoutCommentCount);
+        updateCommentCount(commentcount);
+      })
+      .catch((error) => {
+        console.error("Error fetching gearboard:", error);
+      });
 
     axios
-      .get("/api/gearlike/board/" + gear_id)
-      .then((response) => setLike(response.data));
-  }, []);
+      .get(`/api/gearlike/board/${gear_id}`)
+      .then((response) => setLike(response.data))
+      .catch((error) => {
+        console.error("Error fetching gearlike:", error);
+      });
+  }, [gear_id]);
 
-  if (gearboard == null) {
+  if (gearBoard === null) {
     return <Spinner />;
   }
 
@@ -90,7 +103,7 @@ export function GearView() {
   function handleLike() {
     if (isAuthenticated()) {
       axios
-        .post("/api/gearlike", { gearboardId: gearboard.gear_id })
+        .post("/api/gearlike", { gearboardId: gearBoard.gear_id })
         .then((response) => setLike(response.data))
         .catch((error) =>
           toast({
@@ -112,18 +125,18 @@ export function GearView() {
     <Box>
       {/* ---------- 이미지 헤더 ---------- */}
       <Box w="full" h="350px" overflow="hidden" position="relative">
-        {gearboard.files.length > 0 && (
+        {gearBoard.files.length > 0 && (
           <Box
             w="100%"
-            key={gearboard.files[0].id}
+            key={gearBoard.files[0].id}
             position="absolute"
             top="25%"
             transform="translateY(-25%)"
           >
             <Image
               width="100%"
-              src={gearboard.files[0].url}
-              alt={gearboard.files[0].name}
+              src={gearBoard.files[0].url}
+              alt={gearBoard.files[0].name}
               objectFit="contain"
             />
           </Box>
@@ -131,28 +144,28 @@ export function GearView() {
       </Box>
       <Box w={{ base: "90%", md: "70%" }} mx="auto" mt={5}>
         <Heading size="lg" mt={10}>
-          {gearboard.gear_title}
+          {gearBoard.gear_title}
         </Heading>
         <Tag variant="undefined" size="md" my={3}>
           <Avatar
-            src={gearboard.file_url}
+            src={gearBoard.file_url}
             size="xs"
             mr={2}
-            name={gearboard.file_name}
+            name={gearBoard.file_name}
           />
-          <TagLabel>{gearboard.member_name}</TagLabel>
+          <TagLabel>{gearBoard.member_name}</TagLabel>
         </Tag>
         <Flex w="100%" justify="space-between" alignItems="center" mb={3}>
           <Box>
             <Tag variant="undefined" size="md" color="gray">
               <TagLeftIcon as={FontAwesomeIcon} icon={faClock} />
               <TagLabel>
-                {new Date(gearboard.gear_inserted).toLocaleDateString("ko-KR", {
+                {new Date(gearBoard.gear_inserted).toLocaleDateString("ko-KR", {
                   year: "numeric",
                   month: "2-digit",
                   day: "2-digit",
                 })}{" "}
-                {new Date(gearboard.gear_inserted)
+                {new Date(gearBoard.gear_inserted)
                   .toLocaleTimeString("en-US", {
                     hour: "numeric",
                     minute: "2-digit",
@@ -162,20 +175,18 @@ export function GearView() {
             </Tag>
             <Tag variant="undefined" size="md" color="gray">
               <TagLeftIcon as={FontAwesomeIcon} icon={faEye} />
-              <TagLabel>{gearboard.gear_views}</TagLabel>
+              <TagLabel>{gearBoard.gear_views}</TagLabel>
             </Tag>
             <Tag variant="undefined" size="md" color="gray">
               <TagLeftIcon as={FontAwesomeIcon} icon={faThumbsUp} />
-              <TagLabel>{gearboard.countLike}</TagLabel>
+              <TagLabel>{gearBoard.countLike}</TagLabel>
             </Tag>
             <Tag variant="undefined" size="md" color="gray">
               <TagLeftIcon as={FontAwesomeIcon} icon={faComments} />
-              <TagLabel>
-                {gearboard.commentcount !== null ? gearboard.commentcount : 0}
-              </TagLabel>
+              <TagLabel>{commentCount !== null ? commentCount : 0}</TagLabel>
             </Tag>
           </Box>
-          {(hasAccess(gearboard.member_id) || isAdmin()) && (
+          {(hasAccess(gearBoard.member_id) || isAdmin()) && (
             <ButtonGroup variant="ghost" size="md">
               <IconButton
                 colorScheme="orange"
@@ -191,10 +202,10 @@ export function GearView() {
           )}
         </Flex>
         <Text whiteSpace="pre-wrap" fontSize="md" lineHeight="30px" my={10}>
-          {gearboard.gear_content}
+          {gearBoard.gear_content}
         </Text>
         {/* 이미지 출력*/}
-        {gearboard.files.map((file) => (
+        {gearBoard.files.map((file) => (
           <Box key={file.id} my="5px">
             <Image width="100%" src={file.url} alt={file.name} />
           </Box>
@@ -210,16 +221,16 @@ export function GearView() {
           p={3}
           _hover={{ bgColor: "gray.100" }}
         >
-          <Avatar src={gearboard.file_url} alt={gearboard.file_name} />
+          <Avatar src={gearBoard.file_url} alt={gearBoard.file_name} />
           <Box ml={3}>
             <Text fontWeight="bold">
-              {gearboard.member_name}
+              {gearBoard.member_name}
               <Tag ml={3} colorScheme="orange" size="sm">
                 <TagLeftIcon as={FontAwesomeIcon} icon={faEnvelope} />
-                <TagLabel>{gearboard.member_email}</TagLabel>
+                <TagLabel>{gearBoard.member_email}</TagLabel>
               </Tag>
             </Text>
-            <Text mt={1}>{gearboard.member_introduce}</Text>
+            <Text mt={1}>{gearBoard.member_introduce}</Text>
           </Box>
         </Flex>
         <Box w="full" borderY="1px solid #E1E1E1" my={10} py={3}>
@@ -227,11 +238,11 @@ export function GearView() {
             첨부파일
           </Text>
           <Flex mt={2} px={3}>
-            {[...Array(Math.ceil(gearboard.files.length / 4))].map(
+            {[...Array(Math.ceil(gearBoard.files.length / 4))].map(
               (_, columnIndex) => (
                 <Box key={columnIndex} flex="1">
                   <List spacing={2}>
-                    {gearboard.files
+                    {gearBoard.files
                       .slice(columnIndex * 4, (columnIndex + 1) * 4)
                       .map((file) => (
                         <ListItem key={file.id}>
@@ -256,10 +267,13 @@ export function GearView() {
         <Text fontSize="xl" className="specialHeadings" fontWeight="bold">
           댓글
           <Text as="span" color="orange" fontSize="xl" ml={2}>
-            {gearboard.commentcount}
+            {commentCount}
           </Text>
         </Text>
-        <GearCommentContainer />
+        <GearCommentContainer
+          commentCount={commentCount}
+          updateCommentCount={updateCommentCount}
+        />
       </Box>
     </Box>
   );

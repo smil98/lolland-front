@@ -76,12 +76,8 @@ const routes = createBrowserRouter(
       {/* 이벤트 페이지 */}
       <Route path="productEvent" element={<ProductEventList />} />
 
-      {/* 리뷰 */}
-
       {/* 장바구니 */}
       <Route path="cart" element={<Cart />} />
-
-      {/* Q&A */}
 
       {/* 결제 */}
       <Route path="pay" element={<ProductPay />} />

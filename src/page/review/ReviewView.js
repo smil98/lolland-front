@@ -115,6 +115,7 @@ export const ReviewView = ({ product_id, productDetailImg }) => {
   const navigate = useNavigate();
   const [editableRating, setEditableRating] = useState(0);
   const [totalReviews, setTotalReviews] = useState(0);
+  const [canLeaveReview, setCanLeaveReview] = useState(false);
 
   const handleRatingChange = (newRating) => {
     setEditableRating(newRating);
@@ -131,7 +132,7 @@ export const ReviewView = ({ product_id, productDetailImg }) => {
         params: { product_id: product_id, page: page },
       })
       .then((response) => {
-        const { reviewList, totalReviews } = response.data;
+        const { reviewList, totalReviews, canLeaveReview } = response.data;
         setReviewList((prevReviews) => {
           const uniqueReviews = reviewList.filter(
             (newReview) =>
@@ -142,6 +143,7 @@ export const ReviewView = ({ product_id, productDetailImg }) => {
           return [...prevReviews, ...uniqueReviews];
         });
         setTotalReviews(totalReviews);
+        setCanLeaveReview(canLeaveReview);
       })
       .catch((error) => {
         toast({
@@ -367,6 +369,7 @@ export const ReviewView = ({ product_id, productDetailImg }) => {
               color="white"
               height="undefined"
               icon={<FontAwesomeIcon icon={faPaperPlane} />}
+              isDisabled={!canLeaveReview}
               onClick={() => {
                 if (rate !== 0) {
                   handleSubmit();

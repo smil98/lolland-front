@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
   IconButton,
   Stack,
   StackDivider,
@@ -15,23 +14,33 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { LoginContext } from "../../component/LoginProvider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 
-export function GearCommentContainer() {
+export function GearCommentContainer({ commentCount, updateCommentCount }) {
   const { gear_id } = useParams();
   const toast = useToast();
   const navigate = useNavigate();
   const [newComment, setNewComment] = useState("");
   const [commentList, setCommentList] = useState([]);
   const { isAuthenticated, hasAccess, isAdmin } = useContext(LoginContext);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   useEffect(() => {
+    console.log("useEffect for GearCommentContainer triggered");
     fetchCommentList();
-  }, []);
+  }, [gear_id]);
 
   function fetchCommentList() {
-    axios
+    return axios
       .get("/api/gcomment/list?gear_id=" + gear_id)
-      .then((response) => setCommentList(response.data));
+      .then((response) => {
+        setCommentList(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        return [];
+      });
   }
 
   function handleDelete(comment) {
@@ -39,6 +48,9 @@ export function GearCommentContainer() {
       axios
         .delete("/api/gcomment/remove/" + comment.id)
         .then(() => {
+          updateCommentCount((draft) => {
+            draft.commentcount -= 1;
+          });
           fetchCommentList();
           navigate(`/gearlist/gear_id/${comment.boardid}`);
         })
@@ -60,6 +72,9 @@ export function GearCommentContainer() {
           comment: newComment,
         })
         .then(() => {
+          updateCommentCount((draft) => {
+            draft.commentcount += 1;
+          });
           fetchCommentList();
         });
     } else
@@ -67,6 +82,35 @@ export function GearCommentContainer() {
         title: "비회원은 댓글을 작성할 수 없습니다",
         description: "로그인 후 시도해주세요",
         status: "warning",
+      });
+  }
+
+  async function handleRefresh() {
+    setIsButtonDisabled(true);
+    console.log(isButtonDisabled);
+    await new Promise((resolve) =>
+      setTimeout(() => {
+        resolve();
+      }, 30000),
+    );
+    setIsButtonDisabled(false);
+    console.log(isButtonDisabled);
+    // refreshComment();
+  }
+
+  function refreshComment() {
+    fetchCommentList()
+      .then((commentList) => {
+        updateCommentCount((draft) => {
+          if (typeof draft === "object" && draft !== null) {
+            draft.commentcount = commentList ? commentList.length : 0;
+          } else {
+            draft = { commentcount: commentList ? commentList.length : 0 };
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error refreshing comment:", error);
       });
   }
 
@@ -78,7 +122,12 @@ export function GearCommentContainer() {
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
         />
-        <Button colorScheme="orange" w="80px" h="80px" onClick={handleSubmit}>
+        <Button
+          colorScheme="orange"
+          w="80px"
+          h="80px"
+          onClick={() => handleSubmit()}
+        >
           등록
         </Button>
       </Flex>
@@ -129,6 +178,23 @@ export function GearCommentContainer() {
           </Box>
         ))}
       </Stack>
+      <IconButton
+        my={3}
+        w="full"
+        icon={<FontAwesomeIcon icon={faArrowsRotate} />}
+        onClick={(e) => {
+          console.log("button clicked");
+          setIsButtonDisabled((prevState) => !prevState); // Toggle the state
+          console.log(isButtonDisabled); // Log the current value
+          setTimeout(() => {
+            console.log("timer ends");
+            setIsButtonDisabled((prevState) => !prevState); // Toggle the state after the timeout
+            console.log(isButtonDisabled); // Log the current value after the update
+          }, 3000);
+        }}
+        disabled={isButtonDisabled}
+        _disabled={{ bgColor: "black", color: "white" }}
+      />
     </Box>
   );
 }
